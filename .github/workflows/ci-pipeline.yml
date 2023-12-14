@@ -1,0 +1,14 @@
+name: CI Pipeline
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  ci-cd:
+    uses: ./.github/workflows/ci-pipeline-gradle-template.yml
+    with:
+      java-version: 11
