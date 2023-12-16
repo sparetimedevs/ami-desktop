@@ -3,9 +3,9 @@ import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.9.20"
-    id("org.jetbrains.compose") version "1.5.10"
-    id("com.diffplug.spotless") version "6.22.0"
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.compose)
+    alias(libs.plugins.spotless)
 }
 
 repositories {
@@ -17,23 +17,16 @@ repositories {
 
 dependencies {
     implementation(compose.desktop.currentOs)
-    val arrowVersion = "1.2.1"
-    val amiMusicDomainVersion = "0.0.1-SNAPSHOT"
-    val kotlinxCoroutinesVersion = "1.7.3"
-    val decomposeVersion = "2.1.4"
-    val reaktiveVersion = "1.3.0"
-    val kotestVersion = "5.8.0"
-    val kotestAssertionsArrowVersion = "1.4.0"
-    implementation("io.arrow-kt:arrow-core:$arrowVersion")
-    implementation("com.sparetimedevs.ami:type-safe-music-domain:$amiMusicDomainVersion")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxCoroutinesVersion")
-    implementation("com.arkivanov.decompose:decompose-jvm:$decomposeVersion")
-    implementation("com.arkivanov.decompose:extensions-compose-jetbrains-jvm:$decomposeVersion")
-    implementation("com.badoo.reaktive:reaktive-jvm:$reaktiveVersion")
-    implementation("com.badoo.reaktive:coroutines-interop-jvm:$reaktiveVersion")
-    testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
-    testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
-    testImplementation("io.kotest.extensions:kotest-assertions-arrow:$kotestAssertionsArrowVersion")
+    implementation(libs.ami.music.cdm.kotlin)
+    implementation(libs.arrow.core)
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.decompose.jvm)
+    implementation(libs.decompose.compose.jetbrains.jvm)
+    implementation(libs.reaktive.jvm)
+    implementation(libs.reaktive.coroutines.interop.jvm)
+    testImplementation(libs.kotest.runner.junit5)
+    testImplementation(libs.kotest.assertions.core)
+    testImplementation(libs.kotest.assertions.arrow)
 }
 
 tasks.withType<Test>().configureEach { useJUnitPlatform() }
