@@ -1,0 +1,28 @@
+[versions]
+kotlin-version = "1.9.20"
+compose-version = "1.5.10"
+spotless-version = "6.22.0"
+ami-music-cdm-kotlin-version = "0.0.1-SNAPSHOT"
+arrow-version = "1.2.1"
+coroutines-version = "1.7.3"
+decompose-version = "2.1.4"
+reaktive-version = "1.3.0"
+kotest-version = "5.8.0"
+kotest-assertions-arrow-version = "1.4.0"
+
+[libraries]
+ami-music-cdm-kotlin = { module = "com.sparetimedevs.ami:type-safe-music-domain", version.ref = "ami-music-cdm-kotlin-version" }
+arrow-core = { module = "io.arrow-kt:arrow-core", version.ref = "arrow-version" }
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines-version" }
+decompose-jvm = { module = "com.arkivanov.decompose:decompose-jvm", version.ref = "decompose-version" }
+decompose-compose-jetbrains-jvm = { module = "com.arkivanov.decompose:extensions-compose-jetbrains-jvm", version.ref = "decompose-version" }
+reaktive-jvm = { module = "com.badoo.reaktive:reaktive-jvm", version.ref = "reaktive-version" }
+reaktive-coroutines-interop-jvm = { module = "com.badoo.reaktive:coroutines-interop-jvm", version.ref = "reaktive-version" }
+kotest-runner-junit5 = { module = "io.kotest:kotest-runner-junit5", version.ref = "kotest-version" }
+kotest-assertions-core = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest-version" }
+kotest-assertions-arrow = { module = "io.kotest.extensions:kotest-assertions-arrow", version.ref = "kotest-assertions-arrow-version" }
+
+[plugins]
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin-version" }
+compose = { id = "org.jetbrains.compose", version.ref = "compose-version" }
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless-version" }
