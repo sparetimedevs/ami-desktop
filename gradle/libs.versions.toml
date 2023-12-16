@@ -1,6 +1,6 @@
 [versions]
 kotlin-version = "1.9.20"
-compose-version = "1.5.10"
+compose-version = "1.5.11"
 spotless-version = "6.22.0"
 ami-music-cdm-kotlin-version = "0.0.1-SNAPSHOT"
 arrow-version = "1.2.1"
