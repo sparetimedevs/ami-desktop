@@ -23,10 +23,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
-import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.List
-import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -48,6 +44,9 @@ import com.arkivanov.essenty.statekeeper.StateKeeperDispatcher
 import com.sparetimedevs.ami.app.graphicmusicnotation.DefaultGraphicMusicNotationMultiPaneComponent
 import com.sparetimedevs.ami.app.graphicmusicnotation.GraphicMusicNotationMultiPaneComponent
 import com.sparetimedevs.ami.app.graphicmusicnotation.GraphicMusicNotationMultiPaneContent
+import com.sparetimedevs.ami.app.icon.AmiDesktopAppIcons
+import com.sparetimedevs.ami.app.icon.Pencil
+import com.sparetimedevs.ami.app.icon.Piano
 import com.sparetimedevs.ami.app.piano.PianoComponent
 import com.sparetimedevs.ami.app.piano.PianoContent
 import com.sparetimedevs.ami.app.root.RootComponent.Child
@@ -81,11 +80,10 @@ fun RootContent(component: RootComponent, modifier: Modifier = Modifier) {
                 onClick = component::onPianoTabClicked,
                 icon = {
                     Icon(
-                        imageVector = Icons.Default.List, // TODO add piano logo
+                        imageVector = AmiDesktopAppIcons.Piano,
                         contentDescription = "Piano",
                     )
-                },
-                label = { Text(text = "Piano", softWrap = false) },
+                }
             )
 
             BottomNavigationItem(
@@ -93,11 +91,10 @@ fun RootContent(component: RootComponent, modifier: Modifier = Modifier) {
                 onClick = component::onGraphicMusicNotationTabClicked,
                 icon = {
                     Icon(
-                        imageVector = Icons.Default.LocationOn, // TODO add drawing logo
+                        imageVector = AmiDesktopAppIcons.Pencil,
                         contentDescription = "Graphic music notation",
                     )
-                },
-                label = { Text(text = "Graphic", softWrap = false) },
+                }
             )
         }
     }

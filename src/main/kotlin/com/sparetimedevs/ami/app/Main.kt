@@ -92,7 +92,7 @@ fun main() {
         Window(
             onCloseRequest = { isCloseRequested = true },
             state = windowState,
-            title = "AMI",
+            title = "Ami",
             onKeyEvent = ::handleKeyEvent
         ) {
             Surface(modifier = Modifier.fillMaxSize()) {
