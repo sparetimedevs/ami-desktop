@@ -48,12 +48,6 @@ const val ACTION_MOVE = 2
 var motionEvent by mutableStateOf(ACTION_IDLE)
 val backgroundColor: Color = Color.White
 
-/*
- * What is important here is that drawing from AMI music score or from input on screen should yield the same image.
- * So, when a drawing is saved as AMI score and later on rendered, it should be equal to the original.
- * Alternatively, an intermediate model could be used. Maybe `androidx.compose.ui.graphics.ImageBitmap`
- * or `androidx.compose.ui.graphics.vector.ImageVector`.
- */
 @Composable
 fun DrawingGraphicMusicNotationContent(
     component: DrawingGraphicMusicNotationComponent,
