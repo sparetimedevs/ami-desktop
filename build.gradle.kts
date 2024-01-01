@@ -31,11 +31,6 @@ dependencies {
 
 tasks.withType<Test>().configureEach { useJUnitPlatform() }
 
-// compose.desktop {
-//    application {
-//        mainClass = "MainKt"
-//    }
-// }
 compose.desktop {
     application {
         mainClass = "com.sparetimedevs.ami.app.MainKt"
