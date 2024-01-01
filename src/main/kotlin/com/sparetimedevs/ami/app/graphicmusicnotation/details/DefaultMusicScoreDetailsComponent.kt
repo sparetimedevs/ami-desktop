@@ -17,6 +17,7 @@
 package com.sparetimedevs.ami.app.graphicmusicnotation.details
 
 import arrow.core.Either
+import arrow.core.right
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
@@ -29,9 +30,8 @@ import com.sparetimedevs.ami.app.graphicmusicnotation.vector.asPathData
 import com.sparetimedevs.ami.app.utils.disposableScope
 import com.sparetimedevs.ami.core.DomainError
 import com.sparetimedevs.ami.core.asEitherWithAccumulatedValidationErrors
-import com.sparetimedevs.ami.music.data.kotlin.measure.Measure
+import com.sparetimedevs.ami.music.core.replaceMeasuresInScore
 import com.sparetimedevs.ami.music.data.kotlin.part.Part
-import com.sparetimedevs.ami.music.data.kotlin.part.PartId
 import com.sparetimedevs.ami.music.data.kotlin.score.Score
 import com.sparetimedevs.ami.music.data.kotlin.score.ScoreId
 
@@ -43,9 +43,17 @@ internal class DefaultMusicScoreDetailsComponent(
     ComponentContext by componentContext,
     DisposableScope by componentContext.disposableScope() {
 
-    private val _scoreValue = MutableValue(emptyScore())
+    private val _modeValue = MutableValue(GraphicMusicNotationMode.DRAWING)
+    override val modeValue: Value<GraphicMusicNotationMode> = _modeValue
 
+    private val _scoreValue = MutableValue(emptyScore())
     override val scoreValue: Value<Score> = _scoreValue
+
+    override suspend fun changeMode(newValue: GraphicMusicNotationMode): Unit {
+        // When changing modes, it makes sense to make sure the score is up-to-date.
+        updateAndGetScore()
+        _modeValue.update { newValue }
+    }
 
     override fun onMenuClicked() {
         println("now show the menu")
@@ -69,18 +77,24 @@ internal class DefaultMusicScoreDetailsComponent(
         println("now show pop up screen to confirm saving? Or just save")
     }
 
-    override suspend fun getUpdatedScoreAccordingToCurrentPathData(): Either<DomainError, Score> =
-        pathDataRepository
-            .getPathData()
-            .asAmiMeasures(pathDataRepository.getGraphicProperties())
-            .map { measures -> replaceMeasuresInScore(measures) }
-            .asEitherWithAccumulatedValidationErrors()
-
-    private fun replaceMeasuresInScore(measures: List<Measure>): Score {
-        val parts = listOf(Part(PartId(), measures))
-
-        return _scoreValue.updateAndGet { it.copy(parts = parts) }
-    }
+    override suspend fun updateAndGetScore(): Either<DomainError, Score> =
+        when (_modeValue.value) {
+            GraphicMusicNotationMode.DRAWING ->
+                pathDataRepository
+                    .getPathData()
+                    .asAmiMeasures(pathDataRepository.getGraphicProperties())
+                    .map { measures ->
+                        if (measures.isEmpty()) {
+                            _scoreValue.value
+                        } else {
+                            _scoreValue.updateAndGet {
+                                replaceMeasuresInScore(measures, _scoreValue.value)
+                            }
+                        }
+                    }
+                    .asEitherWithAccumulatedValidationErrors()
+            GraphicMusicNotationMode.READING -> _scoreValue.value.right()
+        }
 
     private fun emptyScore(): Score {
         val parts = emptyList<Part>()

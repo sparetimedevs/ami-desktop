@@ -31,7 +31,7 @@ class MidiPlayer(settings: MidiPlayerSettings, scope: CoroutineScope) :
         settings.metronomeMidiChannelNumber,
         settings.scoreMidiChannelNumber,
         settings.metronome,
-        settings.enableMetronome,
+        settings.isMetronomeEnabled,
         scope
     ) {
 

@@ -24,13 +24,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
-import com.sparetimedevs.ami.app.PlayerContext
+import com.sparetimedevs.ami.app.metronome.MetronomeButton
 import com.sparetimedevs.ami.app.player.PlayPauseMidiPlayerButton
+import com.sparetimedevs.ami.app.player.PlayerContext
 
 @Composable
 internal fun MusicScoreDetailsContent(component: MusicScoreDetailsComponent) {
 
     val score by component.scoreValue.subscribeAsState()
+
+    val mode by component.modeValue.subscribeAsState()
 
     val scoreDisplayTitle = score.title?.value ?: score.id.value
 
@@ -43,12 +46,19 @@ internal fun MusicScoreDetailsContent(component: MusicScoreDetailsComponent) {
             }
         },
         actions = {
-            PlayPauseMidiPlayerButton(
-                { component.getUpdatedScoreAccordingToCurrentPathData() },
-                playerContext
-            ) { context ->
+            PlayPauseMidiPlayerButton({ component.updateAndGetScore() }, playerContext) { context ->
                 playerContext = context
             }
+            MetronomeButton(playerContext.playerSettings.isMetronomeEnabled) { isMetronomeEnabled ->
+                playerContext =
+                    playerContext.copy(
+                        playerSettings =
+                            playerContext.playerSettings.copy(
+                                isMetronomeEnabled = isMetronomeEnabled
+                            )
+                    )
+            }
+            GraphicMusicNotationModeButton(mode, component::changeMode)
             Text(text = "More")
         }
     )
