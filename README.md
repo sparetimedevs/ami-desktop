@@ -2,6 +2,26 @@
 
 Ami (Accessible music information) desktop is a desktop application with various music related capabilities.
 
+## Functionality
+
+### Simple piano
+
+A very simple implementation of a digital piano.
+
+Limitations:
+
+- Not right key layout
+- Not all keys
+
+### Graphic music notation drawer and player
+
+Draw and play graphic music notation
+
+Limitations:
+
+- Only support for 4 measures
+- Only support for 4/4 time signature
+
 ## License
 
     Copyright (c) 2023 sparetimedevs and respective authors and developers.
