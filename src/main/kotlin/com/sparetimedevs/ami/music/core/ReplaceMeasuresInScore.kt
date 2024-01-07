@@ -14,28 +14,17 @@
  * limitations under the License.
  */
 
-package com.sparetimedevs.ami.app.graphicmusicnotation.details
+package com.sparetimedevs.ami.music.core
 
-import arrow.core.Either
-import com.arkivanov.decompose.value.Value
-import com.sparetimedevs.ami.core.DomainError
+import com.sparetimedevs.ami.core.replace
+import com.sparetimedevs.ami.music.data.kotlin.measure.Measure
 import com.sparetimedevs.ami.music.data.kotlin.score.Score
 
-interface MusicScoreDetailsComponent {
-
-    val modeValue: Value<GraphicMusicNotationMode>
-
-    val scoreValue: Value<Score>
-
-    suspend fun changeMode(newValue: GraphicMusicNotationMode): Unit
-
-    fun onMenuClicked()
-
-    fun onNewScoreClicked()
-
-    fun onLoadScoreClicked(score: Score)
-
-    fun onSaveScoreClicked()
-
-    suspend fun updateAndGetScore(): Either<DomainError, Score>
+fun replaceMeasuresInScore(measures: List<Measure>, score: Score): Score {
+    if (measures.isEmpty()) return score
+    val parts = score.parts
+    val newPlusOriginal = parts[0].measures.replace(measures)
+    val newPart = parts[0].copy(measures = newPlusOriginal)
+    val newParts = parts.replace(listOf(newPart))
+    return score.copy(parts = newParts)
 }

@@ -36,7 +36,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import arrow.core.Either
-import com.sparetimedevs.ami.app.PlayerContext
 import com.sparetimedevs.ami.core.DomainError
 import com.sparetimedevs.ami.midi.openMidiDevice
 import com.sparetimedevs.ami.midi.play

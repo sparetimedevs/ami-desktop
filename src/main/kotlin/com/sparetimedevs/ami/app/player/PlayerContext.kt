@@ -14,28 +14,13 @@
  * limitations under the License.
  */
 
-package com.sparetimedevs.ami.app.graphicmusicnotation.details
+package com.sparetimedevs.ami.app.player
 
-import arrow.core.Either
-import com.arkivanov.decompose.value.Value
-import com.sparetimedevs.ami.core.DomainError
-import com.sparetimedevs.ami.music.data.kotlin.score.Score
+import com.sparetimedevs.ami.midi.MidiPlayerSettings
+import kotlinx.coroutines.Job
 
-interface MusicScoreDetailsComponent {
-
-    val modeValue: Value<GraphicMusicNotationMode>
-
-    val scoreValue: Value<Score>
-
-    suspend fun changeMode(newValue: GraphicMusicNotationMode): Unit
-
-    fun onMenuClicked()
-
-    fun onNewScoreClicked()
-
-    fun onLoadScoreClicked(score: Score)
-
-    fun onSaveScoreClicked()
-
-    suspend fun updateAndGetScore(): Either<DomainError, Score>
-}
+data class PlayerContext(
+    val playerJob: Job = Job(),
+    val playerState: PlayerState = PlayerState.PAUSED,
+    val playerSettings: MidiPlayerSettings = MidiPlayerSettings()
+)

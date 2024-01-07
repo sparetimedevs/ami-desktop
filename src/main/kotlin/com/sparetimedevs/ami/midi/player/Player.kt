@@ -40,7 +40,7 @@ abstract class Player(
         Int, // TODO model this differently, so that it is not tight to MIDI, but instead
     // PlayerChannel or PlayerInstrument??
     private val metronome: Metronome,
-    private val enableMetronome: Boolean,
+    private val isMetronomeEnabled: Boolean,
     private val scope: CoroutineScope = CoroutineScope(Dispatchers.Default)
 ) {
 
@@ -79,7 +79,7 @@ abstract class Player(
         if (!playing) return
         println("Playing measures $measures")
         play(measures.flatMap { measure -> measure.notes }, at, scoreMidiChannelNumber)
-        if (enableMetronome) play(metronomeNotes, at, metronomeMidiChannelNumber)
+        if (isMetronomeEnabled) play(metronomeNotes, at, metronomeMidiChannelNumber)
     }
 
     fun play(notes: List<Note>, at: LocalDateTime, onMidiChannelNumber: Int) {

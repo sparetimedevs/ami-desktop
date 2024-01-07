@@ -61,7 +61,7 @@ data class MidiPlayerSettings(
     val metronomeMidiChannelNumber: Int = 0,
     val scoreMidiChannelNumber: Int = 1,
     val metronome: Metronome = Metronome(beatsPerBar = 4, bpm = 120),
-    val enableMetronome: Boolean = false
+    val isMetronomeEnabled: Boolean = false
 )
 
 suspend fun play(score: Score, playerSettings: MidiPlayerSettings): Unit = coroutineScope {
