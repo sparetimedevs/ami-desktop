@@ -1,5 +1,5 @@
 [versions]
-kotlin-version = "1.9.21"
+kotlin-version = "1.9.22"
 compose-version = "1.5.11"
 spotless-version = "6.23.3"
 ami-music-cdm-kotlin-version = "0.0.1-SNAPSHOT"
