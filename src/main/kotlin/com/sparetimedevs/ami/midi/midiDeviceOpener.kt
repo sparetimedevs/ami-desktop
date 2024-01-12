@@ -36,12 +36,7 @@ private fun getDefaultSynthesizer(): Synthesizer {
     defaultSynthesizer.open()
 
     val metronomeMidiInstr =
-        1 // Acoustic Grand Piano (maybe want to change this into drums? Or dynamically
-    // configurable)
-    //    val midiInstr = 1 // Acoustic Grand Piano
-    //    val midiInstr = 38 // Slap Bass
-    //    val midiInstr = 6 // Chorused Piano
-    //    val midiInstr = 17 // Hammond
+        116 // Woodblock (maybe want to change this into drums? Or dynamically configurable)
     val midiInstr = 30 // Overdriven Guitar
 
     val metronomeInstrument = defaultSynthesizer.availableInstruments[metronomeMidiInstr]

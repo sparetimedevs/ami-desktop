@@ -79,7 +79,11 @@ abstract class Player(
         if (!playing) return
         println("Playing measures $measures")
         play(measures.flatMap { measure -> measure.notes }, at, scoreMidiChannelNumber)
-        if (isMetronomeEnabled) play(metronomeNotes, at, metronomeMidiChannelNumber)
+        if (isMetronomeEnabled) {
+            val metronomeNotesForAllMeasures =
+                listOf((0..measures.size - 1)).flatten().flatMap { metronomeNotes }
+            play(metronomeNotesForAllMeasures, at, metronomeMidiChannelNumber)
+        }
     }
 
     fun play(notes: List<Note>, at: LocalDateTime, onMidiChannelNumber: Int) {
