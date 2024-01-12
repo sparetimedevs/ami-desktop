@@ -30,10 +30,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.arkivanov.decompose.Child
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
+import com.sparetimedevs.ami.app.graphicmusicnotation.details.GraphicMusicNotationMode
 import com.sparetimedevs.ami.app.graphicmusicnotation.details.MusicScoreDetailsComponent
 import com.sparetimedevs.ami.app.graphicmusicnotation.details.MusicScoreDetailsContent
 import com.sparetimedevs.ami.app.graphicmusicnotation.drawing.DrawingGraphicMusicNotationComponent
 import com.sparetimedevs.ami.app.graphicmusicnotation.drawing.DrawingGraphicMusicNotationContent
+import com.sparetimedevs.ami.app.graphicmusicnotation.read.ReadGraphicMusicNotationComponent
+import com.sparetimedevs.ami.app.graphicmusicnotation.read.ReadGraphicMusicNotationContent
 
 @Composable
 internal fun GraphicMusicNotationMultiPaneContent(
@@ -65,13 +68,30 @@ internal fun GraphicMusicNotationMultiPaneContent(
             }
         }
 
+    val readPane: @Composable (Child.Created<*, ReadGraphicMusicNotationComponent>) -> Unit =
+        remember {
+            movableContentOf { (config, component) ->
+                saveableStateHolder.SaveableStateProvider(key = config.javaClass.simpleName) {
+                    ReadGraphicMusicNotationContent(
+                        component = component,
+                        modifier = modifier.fillMaxSize()
+                    )
+                }
+            }
+        }
+
     saveableStateHolder.OldDetailsKeyRemoved(
         selectedDetailsKey = children.topAppBarDetailsChild.configuration.javaClass.simpleName
     )
 
+    val mode by children.topAppBarDetailsChild.instance.modeValue.subscribeAsState()
+
     Column(modifier = modifier) {
         topAppBarDetailsPane(children.topAppBarDetailsChild)
-        drawingPane(children.drawingAreaChild)
+        when (mode) {
+            GraphicMusicNotationMode.DRAWING -> drawingPane(children.drawingAreaChild)
+            GraphicMusicNotationMode.READING -> readPane(children.readAreaChild)
+        }
     }
 }
 
