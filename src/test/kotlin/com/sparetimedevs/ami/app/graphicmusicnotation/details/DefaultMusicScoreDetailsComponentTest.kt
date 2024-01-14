@@ -32,6 +32,7 @@ import com.sparetimedevs.ami.music.data.kotlin.note.NoteValue
 import com.sparetimedevs.ami.music.data.kotlin.note.Octave
 import com.sparetimedevs.ami.music.data.kotlin.note.Pitch
 import com.sparetimedevs.ami.music.example.getExampleScoreHeighHoNobodyHome
+import com.sparetimedevs.ami.test.data.createEmptyScore
 import io.kotest.assertions.arrow.core.shouldBeRight
 import io.kotest.core.spec.style.StringSpec
 
@@ -75,6 +76,36 @@ class DefaultMusicScoreDetailsComponentTest :
 
         "updateAndGetScore should return updated score when there are changes made to it in drawing mode" {
             val score = getExampleScoreHeighHoNobodyHome()
+
+            component.changeMode(GraphicMusicNotationMode.DRAWING)
+            component.onLoadScoreClicked(score)
+
+            val pathData: List<PathNode> =
+                PathBuilder().moveTo(x = 87.5f, y = 700.0f).horizontalLineTo(x = 587.5f).getNodes()
+            pathDataRepository.replacePathData(pathData)
+
+            val result = component.updateAndGetScore()
+
+            val expectedMeasures: List<Measure> =
+                listOf(
+                    Measure(
+                        null,
+                        listOf(
+                            Note.Pitched(
+                                NoteDuration(NoteValue.WHOLE),
+                                NoteAttributes(null, null, null, null),
+                                Pitch(NoteName.C, Octave.unsafeCreate(4))
+                            )
+                        )
+                    )
+                )
+            val expectedScore = replaceMeasuresInScore(expectedMeasures, score)
+
+            result shouldBeRight expectedScore
+        }
+
+        "updateAndGetScore should return updated score when there are changes made to it in drawing mode and Score part was empty" {
+            val score = createEmptyScore()
 
             component.changeMode(GraphicMusicNotationMode.DRAWING)
             component.onLoadScoreClicked(score)
