@@ -11,4 +11,4 @@ jobs:
   ci-cd:
     uses: sparetimedevs/github-actions-base/.github/workflows/ci-pipeline-gradle-template.yml@main
     with:
-      java-version: 11
+      java-version: 21

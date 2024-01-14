@@ -50,7 +50,7 @@ tasks.withType<KotlinCompile> {
                 //            "-Xuse-k2",
                 "-Xbackend-threads=4",
             )
-        jvmTarget = "11"
+        jvmTarget = "21"
         languageVersion = "1.8"
     }
 }
