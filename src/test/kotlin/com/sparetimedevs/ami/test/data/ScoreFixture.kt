@@ -14,24 +14,14 @@
  * limitations under the License.
  */
 
-package com.sparetimedevs.ami.music.core
+package com.sparetimedevs.ami.test.data
 
-import com.sparetimedevs.ami.core.replace
-import com.sparetimedevs.ami.music.data.kotlin.measure.Measure
 import com.sparetimedevs.ami.music.data.kotlin.part.Part
-import com.sparetimedevs.ami.music.data.kotlin.part.PartId
 import com.sparetimedevs.ami.music.data.kotlin.score.Score
+import com.sparetimedevs.ami.music.data.kotlin.score.ScoreId
 
-fun replaceMeasuresInScore(measures: List<Measure>, score: Score): Score {
-    if (measures.isEmpty()) return score
-    val parts = score.parts
-    val updatedParts =
-        if (parts.isNotEmpty()) {
-            val updatedMeasures = parts[0].measures.replace(measures)
-            val updatedPart = parts[0].copy(measures = updatedMeasures)
-            parts.replace(listOf(updatedPart))
-        } else {
-            listOf(Part(PartId.unsafeCreate("p-1"), measures))
-        }
-    return score.copy(parts = updatedParts)
+fun createEmptyScore(): Score {
+    val parts = emptyList<Part>()
+
+    return Score(ScoreId(), null, parts)
 }

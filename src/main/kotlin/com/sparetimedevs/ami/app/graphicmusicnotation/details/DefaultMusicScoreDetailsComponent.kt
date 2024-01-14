@@ -16,6 +16,7 @@
 
 package com.sparetimedevs.ami.app.graphicmusicnotation.details
 
+import androidx.compose.ui.graphics.vector.PathNode
 import arrow.core.Either
 import arrow.core.right
 import com.arkivanov.decompose.ComponentContext
@@ -68,9 +69,13 @@ internal class DefaultMusicScoreDetailsComponent(
     override fun onLoadScoreClicked(score: Score) {
         println("now load the score $score")
         _scoreValue.update { score }
-        pathDataRepository.replacePathData(
-            score.parts[0].measures.asPathData(pathDataRepository.getGraphicProperties())
-        )
+        val pathData: List<PathNode> =
+            if (score.parts.isNotEmpty()) {
+                score.parts[0].measures.asPathData(pathDataRepository.getGraphicProperties())
+            } else {
+                emptyList()
+            }
+        pathDataRepository.replacePathData(pathData)
     }
 
     override fun onSaveScoreClicked() {
