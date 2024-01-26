@@ -33,8 +33,8 @@ import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
 import com.sparetimedevs.ami.app.graphicmusicnotation.details.GraphicMusicNotationMode
 import com.sparetimedevs.ami.app.graphicmusicnotation.details.MusicScoreDetailsComponent
 import com.sparetimedevs.ami.app.graphicmusicnotation.details.MusicScoreDetailsContent
-import com.sparetimedevs.ami.app.graphicmusicnotation.drawing.DrawingGraphicMusicNotationComponent
-import com.sparetimedevs.ami.app.graphicmusicnotation.drawing.DrawingGraphicMusicNotationContent
+import com.sparetimedevs.ami.app.graphicmusicnotation.draw.DrawGraphicMusicNotationComponent
+import com.sparetimedevs.ami.app.graphicmusicnotation.draw.DrawGraphicMusicNotationContent
 import com.sparetimedevs.ami.app.graphicmusicnotation.read.ReadGraphicMusicNotationComponent
 import com.sparetimedevs.ami.app.graphicmusicnotation.read.ReadGraphicMusicNotationContent
 
@@ -56,11 +56,11 @@ internal fun GraphicMusicNotationMultiPaneContent(
             }
         }
 
-    val drawingPane: @Composable (Child.Created<*, DrawingGraphicMusicNotationComponent>) -> Unit =
+    val drawPane: @Composable (Child.Created<*, DrawGraphicMusicNotationComponent>) -> Unit =
         remember {
             movableContentOf { (config, component) ->
                 saveableStateHolder.SaveableStateProvider(key = config.javaClass.simpleName) {
-                    DrawingGraphicMusicNotationContent(
+                    DrawGraphicMusicNotationContent(
                         component = component,
                         modifier = modifier.fillMaxSize()
                     )
@@ -89,7 +89,7 @@ internal fun GraphicMusicNotationMultiPaneContent(
     Column(modifier = modifier) {
         topAppBarDetailsPane(children.topAppBarDetailsChild)
         when (mode) {
-            GraphicMusicNotationMode.DRAWING -> drawingPane(children.drawingAreaChild)
+            GraphicMusicNotationMode.DRAWING -> drawPane(children.drawAreaChild)
             GraphicMusicNotationMode.READING -> readPane(children.readAreaChild)
         }
     }

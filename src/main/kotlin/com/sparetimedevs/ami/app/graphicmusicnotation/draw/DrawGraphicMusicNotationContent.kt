@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.sparetimedevs.ami.app.graphicmusicnotation.drawing
+package com.sparetimedevs.ami.app.graphicmusicnotation.draw
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -49,8 +49,8 @@ var motionEvent by mutableStateOf(ACTION_IDLE)
 val backgroundColor: Color = Color.White
 
 @Composable
-fun DrawingGraphicMusicNotationContent(
-    component: DrawingGraphicMusicNotationComponent,
+fun DrawGraphicMusicNotationContent(
+    component: DrawGraphicMusicNotationComponent,
     modifier: Modifier = Modifier
 ) {
     var currentPosition by remember { mutableStateOf(Offset.Unspecified) }
@@ -109,7 +109,7 @@ fun DrawingGraphicMusicNotationContent(
 }
 
 private fun processFirstPoint(
-    component: DrawingGraphicMusicNotationComponent,
+    component: DrawGraphicMusicNotationComponent,
     currentPosition: Offset
 ): Unit {
     val yValuesOfBackdrop =
@@ -160,7 +160,7 @@ fun List<PathNode>.asComposePath(): Path {
     return parser.addPathNodes(this).toPath(path)
 }
 
-private fun DrawScope.drawBackdrop(component: DrawingGraphicMusicNotationComponent): Unit {
+private fun DrawScope.drawBackdrop(component: DrawGraphicMusicNotationComponent): Unit {
     component.getBackdrop().forEach { l: TheLineThatRepresentsAPitch ->
         drawPath(
             path = l.pathData.asComposePath(),
@@ -170,7 +170,7 @@ private fun DrawScope.drawBackdrop(component: DrawingGraphicMusicNotationCompone
     }
 }
 
-private fun performUndoWhenApplicable(component: DrawingGraphicMusicNotationComponent): Unit {
+private fun performUndoWhenApplicable(component: DrawGraphicMusicNotationComponent): Unit {
     if (shouldUndoLastCreatedLine()) component.undoLastCreatedLine()
     // And then set the boolean we checked to false.
 }

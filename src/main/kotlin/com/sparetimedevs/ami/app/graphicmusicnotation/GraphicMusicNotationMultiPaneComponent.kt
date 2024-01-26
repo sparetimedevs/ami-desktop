@@ -19,7 +19,7 @@ package com.sparetimedevs.ami.app.graphicmusicnotation
 import com.arkivanov.decompose.Child
 import com.arkivanov.decompose.value.Value
 import com.sparetimedevs.ami.app.graphicmusicnotation.details.MusicScoreDetailsComponent
-import com.sparetimedevs.ami.app.graphicmusicnotation.drawing.DrawingGraphicMusicNotationComponent
+import com.sparetimedevs.ami.app.graphicmusicnotation.draw.DrawGraphicMusicNotationComponent
 import com.sparetimedevs.ami.app.graphicmusicnotation.read.ReadGraphicMusicNotationComponent
 
 interface GraphicMusicNotationMultiPaneComponent {
@@ -28,7 +28,7 @@ interface GraphicMusicNotationMultiPaneComponent {
 
     data class Children(
         val topAppBarDetailsChild: Child.Created<*, MusicScoreDetailsComponent>,
-        val drawingAreaChild: Child.Created<*, DrawingGraphicMusicNotationComponent>,
+        val drawAreaChild: Child.Created<*, DrawGraphicMusicNotationComponent>,
         val readAreaChild: Child.Created<*, ReadGraphicMusicNotationComponent>,
     )
 }
