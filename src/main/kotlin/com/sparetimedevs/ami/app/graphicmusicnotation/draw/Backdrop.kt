@@ -23,12 +23,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.ImageComposeScene
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.Density
 import kotlinx.coroutines.Dispatchers
 import org.jetbrains.skia.Image
+
+val backgroundColor: Color = Color.White
 
 @Composable
 fun drawBackdrop(component: DrawGraphicMusicNotationComponent, modifier: Modifier = Modifier) {
@@ -54,7 +57,7 @@ fun drawBackdropToImage(
         ImageComposeScene(
             width = with,
             height = height,
-            density = Density(1f), // Or whatever you need
+            density = Density(1f), // Is this the right value?
             coroutineContext = Dispatchers.Unconfined
         ) {
             Canvas(modifier = modifier.fillMaxSize().background(backgroundColor)) {
