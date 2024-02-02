@@ -28,18 +28,25 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 val backgroundColor: Color = Color.White
 
 @Composable
-fun drawBackdrop(component: DrawGraphicMusicNotationComponent, modifier: Modifier = Modifier) {
+fun DrawBackdrop(
+    modifier: Modifier = Modifier,
+    backdropLines: List<TheLineThatRepresentsAPitch>,
+    lineThickness: Float
+) {
     Canvas(modifier = modifier.fillMaxSize().background(backgroundColor)) {
-        drawBackdrop(component)
+        drawBackdrop(backdropLines, lineThickness)
     }
 }
 
-private fun DrawScope.drawBackdrop(component: DrawGraphicMusicNotationComponent): Unit {
-    component.getBackdrop().forEach { l: TheLineThatRepresentsAPitch ->
+private fun DrawScope.drawBackdrop(
+    backdropLines: List<TheLineThatRepresentsAPitch>,
+    lineThickness: Float
+): Unit {
+    backdropLines.forEach { l: TheLineThatRepresentsAPitch ->
         drawPath(
             path = l.pathData.asComposePath(),
             color = l.color,
-            style = Stroke(width = component.getLineThickness())
+            style = Stroke(width = lineThickness)
         )
     }
 }

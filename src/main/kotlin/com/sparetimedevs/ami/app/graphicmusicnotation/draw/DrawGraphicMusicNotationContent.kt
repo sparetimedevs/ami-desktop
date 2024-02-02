@@ -62,7 +62,7 @@ fun DrawGraphicMusicNotationContent(
     ) {
         var currentPosition by remember { mutableStateOf(Offset.Unspecified) }
 
-        drawBackdrop(component, modifier)
+        DrawBackdrop(modifier, component.getBackdrop(), component.getLineThickness())
 
         Canvas(
             modifier =
