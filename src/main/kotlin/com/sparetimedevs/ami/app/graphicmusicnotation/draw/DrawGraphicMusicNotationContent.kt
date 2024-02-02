@@ -31,12 +31,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.graphics.toComposeImageBitmap
 import androidx.compose.ui.graphics.vector.PathBuilder
 import androidx.compose.ui.graphics.vector.PathNode
 import androidx.compose.ui.graphics.vector.PathParser
@@ -58,42 +56,38 @@ fun DrawGraphicMusicNotationContent(
     component: DrawGraphicMusicNotationComponent,
     modifier: Modifier = Modifier
 ) {
-    var currentPosition by remember { mutableStateOf(Offset.Unspecified) }
-
-    val backdropImage = drawBackdropToImage(component)
-
     Box(
         modifier =
             modifier.verticalScroll(rememberScrollState()).horizontalScroll(rememberScrollState())
     ) {
+        var currentPosition by remember { mutableStateOf(Offset.Unspecified) }
+
+        drawBackdrop(component, modifier)
+
         Canvas(
             modifier =
-                Modifier.height(800.dp)
-                    .width(2000.dp)
-                    .drawBehind { drawImage(backdropImage.toComposeImageBitmap()) }
-                    .pointerInput(Unit) {
-                        awaitEachGesture {
-                            awaitFirstDown().also {
-                                motionEvent = ACTION_DOWN
-                                currentPosition = it.position
-                            }
-
-                            do {
-                                // This PointerEvent contains details including events, id, position
-                                // and
-                                // more
-                                val event: PointerEvent = awaitPointerEvent()
-                                event.changes.forEach { pointerInputChange: PointerInputChange ->
-                                    if (pointerInputChange.positionChange() != Offset.Zero)
-                                        pointerInputChange.consume()
-                                }
-                                motionEvent = ACTION_MOVE
-                                currentPosition = event.changes.first().position
-                            } while (event.changes.any { it.pressed })
-
-                            motionEvent = ACTION_IDLE
+                Modifier.height(800.dp).width(2000.dp).pointerInput(Unit) {
+                    awaitEachGesture {
+                        awaitFirstDown().also {
+                            motionEvent = ACTION_DOWN
+                            currentPosition = it.position
                         }
+
+                        do {
+                            // This PointerEvent contains details including events, id, position and
+                            // more
+                            val event: PointerEvent = awaitPointerEvent()
+                            event.changes.forEach { pointerInputChange: PointerInputChange ->
+                                if (pointerInputChange.positionChange() != Offset.Zero)
+                                    pointerInputChange.consume()
+                            }
+                            motionEvent = ACTION_MOVE
+                            currentPosition = event.changes.first().position
+                        } while (event.changes.any { it.pressed })
+
+                        motionEvent = ACTION_IDLE
                     }
+                }
         ) {
             when (motionEvent) {
                 ACTION_IDLE -> {
