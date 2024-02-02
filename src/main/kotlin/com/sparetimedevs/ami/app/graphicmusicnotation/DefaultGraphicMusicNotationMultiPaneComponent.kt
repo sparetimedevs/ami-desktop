@@ -31,8 +31,8 @@ import com.badoo.reaktive.subject.behavior.BehaviorSubject
 import com.sparetimedevs.ami.app.graphicmusicnotation.GraphicMusicNotationMultiPaneComponent.Children
 import com.sparetimedevs.ami.app.graphicmusicnotation.details.DefaultMusicScoreDetailsComponent
 import com.sparetimedevs.ami.app.graphicmusicnotation.details.MusicScoreDetailsComponent
-import com.sparetimedevs.ami.app.graphicmusicnotation.drawing.DefaultDrawingGraphicMusicNotationComponent
-import com.sparetimedevs.ami.app.graphicmusicnotation.drawing.DrawingGraphicMusicNotationComponent
+import com.sparetimedevs.ami.app.graphicmusicnotation.draw.DefaultDrawGraphicMusicNotationComponent
+import com.sparetimedevs.ami.app.graphicmusicnotation.draw.DrawGraphicMusicNotationComponent
 import com.sparetimedevs.ami.app.graphicmusicnotation.read.DefaultReadGraphicMusicNotationComponent
 import com.sparetimedevs.ami.app.graphicmusicnotation.read.ReadGraphicMusicNotationComponent
 import com.sparetimedevs.ami.app.graphicmusicnotation.repository.PathDataRepositoryImpl
@@ -67,9 +67,9 @@ internal class DefaultGraphicMusicNotationMultiPaneComponent(componentContext: C
                     topAppBarDetailsChild =
                         children.find { it.instance is MusicScoreDetailsComponent }
                             as Child.Created<*, MusicScoreDetailsComponent>,
-                    drawingAreaChild =
-                        children.find { it.instance is DrawingGraphicMusicNotationComponent }
-                            as Child.Created<*, DrawingGraphicMusicNotationComponent>,
+                    drawAreaChild =
+                        children.find { it.instance is DrawGraphicMusicNotationComponent }
+                            as Child.Created<*, DrawGraphicMusicNotationComponent>,
                     readAreaChild =
                         children.find { it.instance is ReadGraphicMusicNotationComponent }
                             as Child.Created<*, ReadGraphicMusicNotationComponent>,
@@ -82,7 +82,7 @@ internal class DefaultGraphicMusicNotationMultiPaneComponent(componentContext: C
     private fun child(config: Config, componentContext: ComponentContext): Any =
         when (config) {
             is Config.TopAppBarDetailsPane -> topAppBarDetailsComponent(componentContext)
-            is Config.DrawingPane -> drawingGraphicMusicNotationComponent(componentContext)
+            is Config.DrawPane -> drawingGraphicMusicNotationComponent(componentContext)
             is Config.ReadPane -> readGraphicMusicNotationComponent(componentContext)
         }
 
@@ -96,8 +96,8 @@ internal class DefaultGraphicMusicNotationMultiPaneComponent(componentContext: C
 
     private fun drawingGraphicMusicNotationComponent(
         componentContext: ComponentContext
-    ): DrawingGraphicMusicNotationComponent =
-        DefaultDrawingGraphicMusicNotationComponent(
+    ): DrawGraphicMusicNotationComponent =
+        DefaultDrawGraphicMusicNotationComponent(
             componentContext = componentContext,
             pathDataRepository = pathDataRepository
         )
@@ -114,7 +114,7 @@ internal class DefaultGraphicMusicNotationMultiPaneComponent(componentContext: C
 
         @Parcelize object TopAppBarDetailsPane : Config
 
-        @Parcelize object DrawingPane : Config
+        @Parcelize object DrawPane : Config
 
         @Parcelize object ReadPane : Config
     }
@@ -126,7 +126,7 @@ internal class DefaultGraphicMusicNotationMultiPaneComponent(componentContext: C
             get() =
                 listOfNotNull(
                     SimpleChildNavState(Config.TopAppBarDetailsPane, Status.ACTIVE),
-                    SimpleChildNavState(Config.DrawingPane, Status.ACTIVE),
+                    SimpleChildNavState(Config.DrawPane, Status.ACTIVE),
                     SimpleChildNavState(Config.ReadPane, Status.ACTIVE)
                 )
     }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.sparetimedevs.ami.app.graphicmusicnotation.drawing
+package com.sparetimedevs.ami.app.graphicmusicnotation.draw
 
 import androidx.compose.ui.graphics.vector.PathBuilder
 import androidx.compose.ui.graphics.vector.PathNode
@@ -25,7 +25,7 @@ import com.sparetimedevs.ami.graphic.GraphicProperties
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 
-class DefaultDrawingGraphicMusicNotationComponentTest :
+class DefaultDrawGraphicMusicNotationComponentTest :
     StringSpec({
         val testComponentContext: ComponentContext = getTestComponentContext()
         val graphicProperties =
@@ -38,8 +38,8 @@ class DefaultDrawingGraphicMusicNotationComponentTest :
                 wholeStepExpressedInY = 50.0
             )
         val pathDataRepository = PathDataRepositoryImpl(graphicProperties)
-        val component: DrawingGraphicMusicNotationComponent =
-            DefaultDrawingGraphicMusicNotationComponent(testComponentContext, pathDataRepository)
+        val component: DrawGraphicMusicNotationComponent =
+            DefaultDrawGraphicMusicNotationComponent(testComponentContext, pathDataRepository)
 
         "getLineThickness" { component.getLineThickness() shouldBe 25f }
 

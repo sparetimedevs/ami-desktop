@@ -14,13 +14,17 @@
  * limitations under the License.
  */
 
-package com.sparetimedevs.ami.app.graphicmusicnotation.drawing
+package com.sparetimedevs.ami.app.graphicmusicnotation.draw
 
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -30,7 +34,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.vector.PathBuilder
 import androidx.compose.ui.graphics.vector.PathNode
@@ -39,6 +42,7 @@ import androidx.compose.ui.input.pointer.PointerEvent
 import androidx.compose.ui.input.pointer.PointerInputChange
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.positionChange
+import androidx.compose.ui.unit.dp
 import kotlin.math.absoluteValue
 
 const val ACTION_IDLE = 0
@@ -46,70 +50,75 @@ const val ACTION_DOWN = 1
 const val ACTION_MOVE = 2
 
 var motionEvent by mutableStateOf(ACTION_IDLE)
-val backgroundColor: Color = Color.White
 
 @Composable
-fun DrawingGraphicMusicNotationContent(
-    component: DrawingGraphicMusicNotationComponent,
+fun DrawGraphicMusicNotationContent(
+    component: DrawGraphicMusicNotationComponent,
     modifier: Modifier = Modifier
 ) {
-    var currentPosition by remember { mutableStateOf(Offset.Unspecified) }
-
-    Canvas(
+    Box(
         modifier =
-            modifier.fillMaxSize().background(backgroundColor).pointerInput(Unit) {
-                awaitEachGesture {
-                    awaitFirstDown().also {
-                        motionEvent = ACTION_DOWN
-                        currentPosition = it.position
-                    }
-
-                    do {
-                        // This PointerEvent contains details including events, id, position and
-                        // more
-                        val event: PointerEvent = awaitPointerEvent()
-                        event.changes.forEach { pointerInputChange: PointerInputChange ->
-                            if (pointerInputChange.positionChange() != Offset.Zero)
-                                pointerInputChange.consume()
-                        }
-                        motionEvent = ACTION_MOVE
-                        currentPosition = event.changes.first().position
-                    } while (event.changes.any { it.pressed })
-
-                    motionEvent = ACTION_IDLE
-                }
-            }
+            modifier.verticalScroll(rememberScrollState()).horizontalScroll(rememberScrollState())
     ) {
-        when (motionEvent) {
-            ACTION_IDLE -> {
-                // Do nothing
-                // Maybe while motion event is idle, an undo is performed
-                performUndoWhenApplicable(component)
-            }
-            ACTION_DOWN -> {
-                processFirstPoint(component, currentPosition)
-            }
-            ACTION_MOVE -> {
-                if (currentPosition != Offset.Unspecified) {
-                    // Sometimes the awaitFirstDown is not triggered? (This is also an issue for
-                    // subsequent lines.)
-                    val newPathNodeForHorizontalLine: PathNode =
-                        PathBuilder().horizontalLineTo(currentPosition.x).getNodes().first()
-                    component.addToPathData(newPathNodeForHorizontalLine)
+        var currentPosition by remember { mutableStateOf(Offset.Unspecified) }
+
+        DrawBackdrop(modifier, component.getBackdrop(), component.getLineThickness())
+
+        Canvas(
+            modifier =
+                Modifier.height(800.dp).width(2000.dp).pointerInput(Unit) {
+                    awaitEachGesture {
+                        awaitFirstDown().also {
+                            motionEvent = ACTION_DOWN
+                            currentPosition = it.position
+                        }
+
+                        do {
+                            // This PointerEvent contains details including events, id, position and
+                            // more
+                            val event: PointerEvent = awaitPointerEvent()
+                            event.changes.forEach { pointerInputChange: PointerInputChange ->
+                                if (pointerInputChange.positionChange() != Offset.Zero)
+                                    pointerInputChange.consume()
+                            }
+                            motionEvent = ACTION_MOVE
+                            currentPosition = event.changes.first().position
+                        } while (event.changes.any { it.pressed })
+
+                        motionEvent = ACTION_IDLE
+                    }
+                }
+        ) {
+            when (motionEvent) {
+                ACTION_IDLE -> {
+                    // Do nothing
+                    // Maybe while motion event is idle, an undo is performed
+                    performUndoWhenApplicable(component)
+                }
+                ACTION_DOWN -> {
+                    processFirstPoint(component, currentPosition)
+                }
+                ACTION_MOVE -> {
+                    if (currentPosition != Offset.Unspecified) {
+                        // Sometimes the awaitFirstDown is not triggered? (This is also an issue for
+                        // subsequent lines.)
+                        val newPathNodeForHorizontalLine: PathNode =
+                            PathBuilder().horizontalLineTo(currentPosition.x).getNodes().first()
+                        component.addToPathData(newPathNodeForHorizontalLine)
+                    }
                 }
             }
+            drawPath(
+                path = component.getPathData().asComposePath(),
+                color = Color.Black,
+                style = Stroke(width = component.getLineThickness())
+            )
         }
-        drawBackdrop(component)
-        drawPath(
-            path = component.getPathData().asComposePath(),
-            color = Color.Black,
-            style = Stroke(width = component.getLineThickness())
-        )
     }
 }
 
 private fun processFirstPoint(
-    component: DrawingGraphicMusicNotationComponent,
+    component: DrawGraphicMusicNotationComponent,
     currentPosition: Offset
 ): Unit {
     val yValuesOfBackdrop =
@@ -160,17 +169,7 @@ fun List<PathNode>.asComposePath(): Path {
     return parser.addPathNodes(this).toPath(path)
 }
 
-private fun DrawScope.drawBackdrop(component: DrawingGraphicMusicNotationComponent): Unit {
-    component.getBackdrop().forEach { l: TheLineThatRepresentsAPitch ->
-        drawPath(
-            path = l.pathData.asComposePath(),
-            color = l.color,
-            style = Stroke(width = component.getLineThickness())
-        )
-    }
-}
-
-private fun performUndoWhenApplicable(component: DrawingGraphicMusicNotationComponent): Unit {
+private fun performUndoWhenApplicable(component: DrawGraphicMusicNotationComponent): Unit {
     if (shouldUndoLastCreatedLine()) component.undoLastCreatedLine()
     // And then set the boolean we checked to false.
 }

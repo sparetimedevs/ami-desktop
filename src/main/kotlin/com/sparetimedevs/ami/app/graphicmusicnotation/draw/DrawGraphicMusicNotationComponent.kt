@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.sparetimedevs.ami.app.graphicmusicnotation.drawing
+package com.sparetimedevs.ami.app.graphicmusicnotation.draw
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.PathBuilder
@@ -25,7 +25,7 @@ import com.sparetimedevs.ami.music.data.kotlin.note.NoteName
 import com.sparetimedevs.ami.music.data.kotlin.note.Octave
 import com.sparetimedevs.ami.music.data.kotlin.note.Pitch
 
-interface DrawingGraphicMusicNotationComponent {
+interface DrawGraphicMusicNotationComponent {
 
     fun getLineThickness(): Float
 
@@ -38,10 +38,10 @@ interface DrawingGraphicMusicNotationComponent {
     fun getBackdrop(): List<TheLineThatRepresentsAPitch>
 }
 
-class DefaultDrawingGraphicMusicNotationComponent(
+class DefaultDrawGraphicMusicNotationComponent(
     componentContext: ComponentContext,
     private val pathDataRepository: PathDataRepository
-) : DrawingGraphicMusicNotationComponent, ComponentContext by componentContext {
+) : DrawGraphicMusicNotationComponent, ComponentContext by componentContext {
 
     override fun getLineThickness(): Float = THICKNESS_OF_LINES
 
