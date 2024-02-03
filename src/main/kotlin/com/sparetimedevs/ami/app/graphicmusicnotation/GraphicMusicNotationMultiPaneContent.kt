@@ -35,6 +35,8 @@ import com.sparetimedevs.ami.app.graphicmusicnotation.details.MusicScoreDetailsC
 import com.sparetimedevs.ami.app.graphicmusicnotation.details.MusicScoreDetailsContent
 import com.sparetimedevs.ami.app.graphicmusicnotation.draw.DrawGraphicMusicNotationComponent
 import com.sparetimedevs.ami.app.graphicmusicnotation.draw.DrawGraphicMusicNotationContent
+import com.sparetimedevs.ami.app.graphicmusicnotation.draw.PlaceGraphicMusicNotationContent
+import com.sparetimedevs.ami.app.graphicmusicnotation.place.PlaceGraphicMusicNotationComponent
 import com.sparetimedevs.ami.app.graphicmusicnotation.read.ReadGraphicMusicNotationComponent
 import com.sparetimedevs.ami.app.graphicmusicnotation.read.ReadGraphicMusicNotationContent
 
@@ -80,6 +82,18 @@ internal fun GraphicMusicNotationMultiPaneContent(
             }
         }
 
+    val placePane: @Composable (Child.Created<*, PlaceGraphicMusicNotationComponent>) -> Unit =
+        remember {
+            movableContentOf { (config, component) ->
+                saveableStateHolder.SaveableStateProvider(key = config.javaClass.simpleName) {
+                    PlaceGraphicMusicNotationContent(
+                        component = component,
+                        modifier = modifier.fillMaxSize()
+                    )
+                }
+            }
+        }
+
     saveableStateHolder.OldDetailsKeyRemoved(
         selectedDetailsKey = children.topAppBarDetailsChild.configuration.javaClass.simpleName
     )
@@ -91,6 +105,7 @@ internal fun GraphicMusicNotationMultiPaneContent(
         when (mode) {
             GraphicMusicNotationMode.DRAWING -> drawPane(children.drawAreaChild)
             GraphicMusicNotationMode.READING -> readPane(children.readAreaChild)
+            GraphicMusicNotationMode.PLACING -> placePane(children.placeAreaChild)
         }
     }
 }
