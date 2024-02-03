@@ -37,6 +37,6 @@ class DefaultPlaceGraphicMusicNotationComponent(
     override fun getPathData(): List<PathNode> = pathDataRepository.getPathData()
 
     companion object {
-        private const val THICKNESS_OF_LINES = 25.0f
+        private const val THICKNESS_OF_LINES = 5.0f
     }
 }

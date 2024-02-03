@@ -28,6 +28,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import com.sparetimedevs.ami.app.graphicmusicnotation.place.PlaceGraphicMusicNotationBackdrop
 import com.sparetimedevs.ami.app.graphicmusicnotation.place.PlaceGraphicMusicNotationComponent
 
 @Composable
@@ -41,7 +42,7 @@ fun PlaceGraphicMusicNotationContent(
     ) {
         var currentPosition by remember { mutableStateOf(Offset.Unspecified) }
 
-        //        DrawBackdrop(modifier, component.getBackdrop(), component.getLineThickness())
+        PlaceGraphicMusicNotationBackdrop(modifier, component.getLineThickness())
 
         Text("Here we are going to make the awesome place graphic music notation functionality")
 
