@@ -22,46 +22,153 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.vector.PathBuilder
 import androidx.compose.ui.unit.dp
-import com.sparetimedevs.ami.app.graphicmusicnotation.draw.TheLineThatRepresentsAPitch
 import com.sparetimedevs.ami.app.graphicmusicnotation.draw.asComposePath
 import com.sparetimedevs.ami.music.data.kotlin.note.NoteName
 import com.sparetimedevs.ami.music.data.kotlin.note.Octave
 import com.sparetimedevs.ami.music.data.kotlin.note.Pitch
 
-val backgroundColor: Color = Color.White
+val backgroundColor: Color = Color(0xFFFAF5F0)
 
 @Composable
 fun PlaceGraphicMusicNotationBackdrop(modifier: Modifier = Modifier, lineThickness: Float) {
     Canvas(modifier = modifier.height(800.dp).width(2000.dp).background(backgroundColor)) {
-        //        drawBackdrop(lineThickness)
-        drawLineOfCrosses(lineThickness)
+        drawGridOfCrosses(lineThickness)
     }
 }
 
-private fun DrawScope.drawLineOfCrosses(lineThickness: Float): Unit {
-    val color: Color = Color(0xFF9B00FB)
+private fun DrawScope.drawGridOfCrosses(lineThickness: Float): Unit {
+    val octave: Octave = Octave.unsafeCreate(4)
     val size: Float = 24f
-    val offsetX: Float = 87.5f
-    val offsetY: Float = 400f
-    (1..500).toList().forEach { crossNumber -> this.drawCross(lineThickness, crossNumber, color) }
+    val offsetX: Float = 57.5f
+    val offsetY: Float = 370f
+    val oneOctave: List<PitchAndColor> =
+        listOf(
+            PitchAndColor(
+                pitch = Pitch(noteName = NoteName.B, octave = octave),
+                color = Color(0xFFD000C9),
+                contrastColor = Color(0xFF444444)
+            ),
+            PitchAndColor(
+                pitch = Pitch(noteName = NoteName.A_SHARP, octave = octave),
+                color = Color(0xFF9B00FB),
+                contrastColor = Color.Gray
+            ),
+            PitchAndColor(
+                pitch = Pitch(noteName = NoteName.A, octave = octave),
+                color = Color(0xFF4823AC),
+                contrastColor = Color(0xFFFAF5F0)
+            ),
+            PitchAndColor(
+                pitch = Pitch(noteName = NoteName.G_SHARP, octave = octave),
+                color = Color(0xFF2846DA),
+                contrastColor = Color(0xFFFAF5F0)
+            ),
+            PitchAndColor(
+                pitch = Pitch(noteName = NoteName.G, octave = octave),
+                color = Color(0xFF355D4B),
+                contrastColor = Color(0xFFFAF5F0)
+            ),
+            PitchAndColor(
+                pitch = Pitch(noteName = NoteName.F_SHARP, octave = octave),
+                color = Color(0xFF60AA28),
+                contrastColor = Color(0xFF444444)
+            ),
+            PitchAndColor(
+                pitch = Pitch(noteName = NoteName.F, octave = octave),
+                color = Color(0xFFA6F138),
+                contrastColor = Color(0xFF444444)
+            ),
+            PitchAndColor(
+                pitch = Pitch(noteName = NoteName.E, octave = octave),
+                color = Color(0xFFF3F33A),
+                contrastColor = Color(0xFF444444)
+            ),
+            PitchAndColor(
+                pitch = Pitch(noteName = NoteName.D_SHARP, octave = octave),
+                color = Color(0xFFF2C82F),
+                contrastColor = Color(0xFF444444)
+            ),
+            PitchAndColor(
+                pitch = Pitch(noteName = NoteName.D, octave = octave),
+                color = Color(0xFFDB9423),
+                contrastColor = Color.Gray
+            ),
+            PitchAndColor(
+                pitch = Pitch(noteName = NoteName.C_SHARP, octave = octave),
+                color = Color(0xFFDD5812),
+                contrastColor = Color.Gray
+            ),
+            PitchAndColor(
+                pitch = Pitch(noteName = NoteName.C, octave = octave),
+                color = Color(0xFFD00040),
+                contrastColor = Color.Gray
+            )
+        )
+    oneOctave.forEachIndexed { crossColumnNumber, pitchAndColor ->
+        val _offsetY: Float = offsetY + (crossColumnNumber * size * 2f)
+        this.drawLine(
+            pitchAndColor.contrastColor,
+            Offset(offsetX, _offsetY),
+            Offset(offsetX + 2000f, _offsetY),
+            size * 2
+        )
+        this.drawLineOfCrosses(
+            crossColumnNumber,
+            pitchAndColor,
+            lineThickness,
+            size,
+            offsetX,
+            offsetY
+        )
+    }
 }
 
-private fun DrawScope.drawCross(lineThickness: Float, crossNumber: Int, color: Color): Unit {
-    val size: Float = 24f
-    val offsetX: Float = 57.5f + (crossNumber * size * 1.25f)
-    val offsetY: Float = 400f
+private fun DrawScope.drawLineOfCrosses(
+    crossColumnNumber: Int,
+    pitchAndColor: PitchAndColor,
+    lineThickness: Float,
+    size: Float,
+    offsetX: Float,
+    offsetY: Float
+): Unit {
+    val color: Color = pitchAndColor.color
+    (1..500).toList().forEach { crossRowNumber ->
+        this.drawCross(
+            crossRowNumber,
+            crossColumnNumber,
+            color,
+            lineThickness,
+            size,
+            offsetX,
+            offsetY
+        )
+    }
+}
+
+private fun DrawScope.drawCross(
+    crossRowNumber: Int,
+    crossColumnNumber: Int,
+    color: Color,
+    lineThickness: Float,
+    size: Float,
+    offsetX: Float,
+    offsetY: Float
+): Unit {
+    val _offsetX: Float = offsetX + (crossRowNumber * size * 2f)
+    val _offsetY: Float = offsetY + (crossColumnNumber * size * 2f)
     drawPath(
         path =
             PathBuilder()
-                .moveTo(0f + offsetX, offsetY)
-                .horizontalLineTo(size + offsetX)
-                .moveTo(0f + offsetX + (size / 2), offsetY - (size / 2))
-                .verticalLineTo((size / 2) + offsetY)
+                .moveTo(0f + _offsetX, _offsetY)
+                .horizontalLineTo(size + _offsetX)
+                .moveTo(0f + _offsetX + (size / 2), _offsetY - (size / 2))
+                .verticalLineTo((size / 2) + _offsetY)
                 .getNodes()
                 .asComposePath(),
         color = color,
@@ -69,25 +176,4 @@ private fun DrawScope.drawCross(lineThickness: Float, crossNumber: Int, color: C
     )
 }
 
-private fun DrawScope.drawBackdrop(lineThickness: Float): Unit {
-    backdropLines(lineThickness).forEach { l: TheLineThatRepresentsAPitch ->
-        drawPath(
-            path = l.pathData.asComposePath(),
-            color = l.color,
-            style = Stroke(width = lineThickness)
-        )
-    }
-}
-
-private fun backdropLines(lineThickness: Float): List<TheLineThatRepresentsAPitch> =
-    listOf(
-        TheLineThatRepresentsAPitch(
-            pitch = Pitch(noteName = NoteName.B, octave = Octave.unsafeCreate(4)),
-            color = Color(0xFFD000C9),
-            pathData =
-                PathBuilder()
-                    .moveTo(0f + 87.5f, 1 * lineThickness + 400f)
-                    .horizontalLineTo(500f + 87.5f)
-                    .getNodes()
-        )
-    )
+data class PitchAndColor(val pitch: Pitch, val color: Color, val contrastColor: Color)
