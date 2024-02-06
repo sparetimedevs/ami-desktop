@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.compose)
     alias(libs.plugins.spotless)
+    alias(libs.plugins.pitest)
 }
 
 repositories {
@@ -27,6 +28,20 @@ dependencies {
     testImplementation(libs.kotest.runner.junit5)
     testImplementation(libs.kotest.assertions.core)
     testImplementation(libs.kotest.assertions.arrow)
+
+    // Required for pitest. A future version of the pitest gradle plugin may make this unnecessary.
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.9.2")
+
+    pitest("com.arcmutate:base:1.3.0")
+    pitest("com.arcmutate:pitest-kotlin-plugin:1.2.0")
+}
+
+pitest {
+    targetClasses.set(listOf("com.sparetimedevs.ami.*"))
+    pitestVersion.set("1.15.3")
+    junit5PluginVersion.set("1.2.0")
+    outputFormats.set(listOf("XML", "HTML"))
+    exportLineCoverage.set(true)
 }
 
 tasks.withType<Test>().configureEach { useJUnitPlatform() }
