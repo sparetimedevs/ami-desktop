@@ -42,6 +42,7 @@ pitest {
     junit5PluginVersion.set("1.2.0")
     outputFormats.set(listOf("XML", "HTML"))
     exportLineCoverage.set(true)
+    features.set(listOf("+exclusion")) // See file resources/exclusions.pitest
 }
 
 tasks.withType<Test>().configureEach { useJUnitPlatform() }
