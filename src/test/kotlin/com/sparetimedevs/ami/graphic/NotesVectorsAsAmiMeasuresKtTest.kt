@@ -28,6 +28,7 @@ import com.sparetimedevs.ami.music.data.kotlin.note.NoteName
 import com.sparetimedevs.ami.music.data.kotlin.note.NoteValue
 import com.sparetimedevs.ami.music.data.kotlin.note.Octave
 import com.sparetimedevs.ami.music.data.kotlin.note.Pitch
+import com.sparetimedevs.ami.test.data.createPitchedNote
 import io.kotest.assertions.arrow.core.shouldBeLeft
 import io.kotest.assertions.arrow.core.shouldBeRight
 import io.kotest.core.spec.style.StringSpec
@@ -195,6 +196,52 @@ class NotesVectorsAsAmiMeasuresKtTest :
                             NoteDuration(NoteValue.QUARTER),
                             NoteAttributes(null, null, null, null),
                             Pitch(NoteName.A_FLAT, Octave.unsafeCreate(5))
+                        )
+                    )
+                )
+
+            val result = asAmiMeasure(notesVectorsForOneMeasure)
+
+            result shouldBeRight expectedResult
+        }
+
+        "asAmiMeasure should return measure with notes for all possible note names except sharp variants" {
+            val notesVectorsForOneMeasure =
+                listOf<NoteVectors>(
+                    NoteVectors(Vector(0.0, 24.0), Vector(25.0, 24.0)),
+                    NoteVectors(Vector(25.0, 24.5), Vector(50.0, 24.5)),
+                    NoteVectors(Vector(50.0, 25.0), Vector(75.0, 25.0)),
+                    NoteVectors(Vector(75.0, 25.5), Vector(100.0, 25.5)),
+                    NoteVectors(Vector(100.0, 26.0), Vector(125.0, 26.0)),
+                    NoteVectors(Vector(125.0, 26.5), Vector(150.0, 26.5)),
+                    NoteVectors(Vector(150.0, 27.0), Vector(175.0, 27.0)),
+                    NoteVectors(Vector(175.0, 27.5), Vector(200.0, 27.5)),
+                    NoteVectors(Vector(200.0, 28.0), Vector(225.0, 28.0)),
+                    NoteVectors(Vector(225.0, 28.5), Vector(250.0, 28.5)),
+                    NoteVectors(Vector(250.0, 29.0), Vector(275.0, 29.0)),
+                    NoteVectors(Vector(275.0, 29.5), Vector(300.0, 29.5)),
+                    NoteVectors(Vector(300.0, 30.0), Vector(325.0, 30.0))
+                )
+            val expectedResult: Measure =
+                Measure(
+                    null,
+                    listOf(
+                        createPitchedNote(noteName = NoteName.A_FLAT, duration = NoteValue._16TH),
+                        createPitchedNote(noteName = NoteName.A, duration = NoteValue._16TH),
+                        createPitchedNote(noteName = NoteName.B_FLAT, duration = NoteValue._16TH),
+                        createPitchedNote(noteName = NoteName.B, duration = NoteValue._16TH),
+                        createPitchedNote(noteName = NoteName.C, duration = NoteValue._16TH),
+                        createPitchedNote(noteName = NoteName.D_FLAT, duration = NoteValue._16TH),
+                        createPitchedNote(noteName = NoteName.D, duration = NoteValue._16TH),
+                        createPitchedNote(noteName = NoteName.E_FLAT, duration = NoteValue._16TH),
+                        createPitchedNote(noteName = NoteName.E, duration = NoteValue._16TH),
+                        createPitchedNote(noteName = NoteName.F, duration = NoteValue._16TH),
+                        createPitchedNote(noteName = NoteName.G_FLAT, duration = NoteValue._16TH),
+                        createPitchedNote(noteName = NoteName.G, duration = NoteValue._16TH),
+                        createPitchedNote(
+                            noteName = NoteName.A_FLAT,
+                            duration = NoteValue._16TH,
+                            octave = Octave.unsafeCreate(5)
                         )
                     )
                 )
