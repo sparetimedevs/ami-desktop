@@ -117,7 +117,7 @@ private fun noteName(height: Double): Either<ValidationError, NoteName> {
 
     val noteName =
         when (height) {
-            0.0 -> NoteName.A_FLAT.right() // or G_SHARP from another octave.
+            0.0 -> NoteName.A_FLAT.right() // or G_SHARP from one lower octave
             0.5 -> NoteName.A.right()
             1.0 -> NoteName.B_FLAT.right() // or A_SHARP
             1.5 -> NoteName.B.right()
@@ -129,7 +129,6 @@ private fun noteName(height: Double): Either<ValidationError, NoteName> {
             4.5 -> NoteName.F.right()
             5.0 -> NoteName.G_FLAT.right() // or F_SHARP
             5.5 -> NoteName.G.right()
-            6.0 -> NoteName.G_SHARP.right() // or A_FLAT //Maybe this should not be here...?
             else -> ValidationError("Unable to map height to NoteName").left()
         }
 
