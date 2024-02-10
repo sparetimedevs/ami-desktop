@@ -17,15 +17,11 @@
 package com.sparetimedevs.ami.core
 
 /**
- * Immutable, returns new List.
+ * Immutable operation. Returns an immutable list instead of mutating the existing list.
  *
  * Replaces first items in the list with new items.
  */
-fun <T> List<T>.replace(newItems: List<T>): List<T> {
-    val originalItemsToKeep =
-        if (newItems.size < this.size) {
-            this.drop(newItems.size)
-        } else emptyList()
-    val newItemsPlusOriginalItemsToKeep = newItems + originalItemsToKeep
-    return newItemsPlusOriginalItemsToKeep
-}
+fun <T> List<T>.replace(newItems: List<T>): List<T> =
+    if (newItems.size < this.size) {
+        newItems + this.drop(newItems.size)
+    } else newItems
