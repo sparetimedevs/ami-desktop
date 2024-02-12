@@ -30,7 +30,7 @@ dependencies {
     testImplementation(libs.kotest.assertions.arrow)
 
     // Required for pitest. A future version of the pitest gradle plugin may make this unnecessary.
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.9.2")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.10.2")
 
     pitest("com.arcmutate:base:1.3.0")
     pitest("com.arcmutate:pitest-kotlin-plugin:1.2.0")
