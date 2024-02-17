@@ -1,7 +1,8 @@
 [versions]
-kotlin-version = "1.9.21"
-compose-version = "1.5.11"
+kotlin-version = "1.9.22"
+compose-version = "1.5.12"
 spotless-version = "6.25.0"
+pitest-version = "1.15.0"
 ami-music-cdm-kotlin-version = "0.0.1-SNAPSHOT"
 arrow-version = "1.2.1"
 coroutines-version = "1.7.3"
@@ -26,3 +27,4 @@ kotest-assertions-arrow = { module = "io.kotest.extensions:kotest-assertions-arr
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin-version" }
 compose = { id = "org.jetbrains.compose", version.ref = "compose-version" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless-version" }
+pitest = { id = "info.solidsoft.pitest", version.ref = "pitest-version" }

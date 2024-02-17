@@ -22,9 +22,9 @@ import com.sparetimedevs.ami.music.data.kotlin.part.Part
 import com.sparetimedevs.ami.music.data.kotlin.part.PartId
 import com.sparetimedevs.ami.music.data.kotlin.score.Score
 
-fun replaceMeasuresInScore(measures: List<Measure>, score: Score): Score {
-    if (measures.isEmpty()) return score
-    val parts = score.parts
+fun Score.replaceMeasures(measures: List<Measure>): Score {
+    if (measures.isEmpty()) return this
+    val parts = this.parts
     val updatedParts =
         if (parts.isNotEmpty()) {
             val updatedMeasures = parts[0].measures.replace(measures)
@@ -33,5 +33,5 @@ fun replaceMeasuresInScore(measures: List<Measure>, score: Score): Score {
         } else {
             listOf(Part(PartId.unsafeCreate("p-1"), measures))
         }
-    return score.copy(parts = updatedParts)
+    return this.copy(parts = updatedParts)
 }
