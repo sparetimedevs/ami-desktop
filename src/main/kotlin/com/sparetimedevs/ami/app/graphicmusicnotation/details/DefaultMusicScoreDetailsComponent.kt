@@ -31,7 +31,7 @@ import com.sparetimedevs.ami.app.graphicmusicnotation.vector.asPathData
 import com.sparetimedevs.ami.app.utils.disposableScope
 import com.sparetimedevs.ami.core.DomainError
 import com.sparetimedevs.ami.core.asEitherWithAccumulatedValidationErrors
-import com.sparetimedevs.ami.music.core.replaceMeasuresInScore
+import com.sparetimedevs.ami.music.core.replaceMeasures
 import com.sparetimedevs.ami.music.data.kotlin.part.Part
 import com.sparetimedevs.ami.music.data.kotlin.score.Score
 import com.sparetimedevs.ami.music.data.kotlin.score.ScoreId
@@ -92,9 +92,7 @@ internal class DefaultMusicScoreDetailsComponent(
                         if (measures.isEmpty()) {
                             _scoreValue.value
                         } else {
-                            _scoreValue.updateAndGet {
-                                replaceMeasuresInScore(measures, _scoreValue.value)
-                            }
+                            _scoreValue.updateAndGet { it.replaceMeasures(measures) }
                         }
                     }
                     .asEitherWithAccumulatedValidationErrors()

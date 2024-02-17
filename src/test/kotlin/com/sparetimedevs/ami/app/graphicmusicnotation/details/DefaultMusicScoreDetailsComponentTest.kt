@@ -22,7 +22,7 @@ import com.arkivanov.decompose.ComponentContext
 import com.sparetimedevs.ami.app.graphicmusicnotation.repository.PathDataRepositoryImpl
 import com.sparetimedevs.ami.getTestComponentContext
 import com.sparetimedevs.ami.graphic.GraphicProperties
-import com.sparetimedevs.ami.music.core.replaceMeasuresInScore
+import com.sparetimedevs.ami.music.core.replaceMeasures
 import com.sparetimedevs.ami.music.data.kotlin.measure.Measure
 import com.sparetimedevs.ami.music.data.kotlin.note.Note
 import com.sparetimedevs.ami.music.data.kotlin.note.NoteAttributes
@@ -99,7 +99,7 @@ class DefaultMusicScoreDetailsComponentTest :
                         )
                     )
                 )
-            val expectedScore = replaceMeasuresInScore(expectedMeasures, score)
+            val expectedScore = score.replaceMeasures(expectedMeasures)
 
             result shouldBeRight expectedScore
         }
@@ -129,7 +129,7 @@ class DefaultMusicScoreDetailsComponentTest :
                         )
                     )
                 )
-            val expectedScore = replaceMeasuresInScore(expectedMeasures, score)
+            val expectedScore = score.replaceMeasures(expectedMeasures)
 
             result shouldBeRight expectedScore
         }
