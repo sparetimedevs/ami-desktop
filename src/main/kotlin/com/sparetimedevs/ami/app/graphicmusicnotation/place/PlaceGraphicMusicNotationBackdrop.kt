@@ -33,11 +33,11 @@ import com.sparetimedevs.ami.music.data.kotlin.note.NoteName
 import com.sparetimedevs.ami.music.data.kotlin.note.Octave
 import com.sparetimedevs.ami.music.data.kotlin.note.Pitch
 
-val backgroundColor: Color = Color(0xFFFAF5F0)
+val BackgroundColor: Color = Color(0xFFFAF5F0)
 
 @Composable
 fun PlaceGraphicMusicNotationBackdrop(modifier: Modifier = Modifier, lineThickness: Float) {
-    Canvas(modifier = modifier.height(800.dp).width(2000.dp).background(backgroundColor)) {
+    Canvas(modifier = modifier.height(800.dp).width(2000.dp).background(BackgroundColor)) {
         drawGridOfCrosses(lineThickness)
     }
 }

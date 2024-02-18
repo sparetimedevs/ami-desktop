@@ -35,8 +35,8 @@ import com.sparetimedevs.ami.app.graphicmusicnotation.details.MusicScoreDetailsC
 import com.sparetimedevs.ami.app.graphicmusicnotation.details.MusicScoreDetailsContent
 import com.sparetimedevs.ami.app.graphicmusicnotation.draw.DrawGraphicMusicNotationComponent
 import com.sparetimedevs.ami.app.graphicmusicnotation.draw.DrawGraphicMusicNotationContent
-import com.sparetimedevs.ami.app.graphicmusicnotation.draw.PlaceGraphicMusicNotationContent
 import com.sparetimedevs.ami.app.graphicmusicnotation.place.PlaceGraphicMusicNotationComponent
+import com.sparetimedevs.ami.app.graphicmusicnotation.place.PlaceGraphicMusicNotationContent
 import com.sparetimedevs.ami.app.graphicmusicnotation.read.ReadGraphicMusicNotationComponent
 import com.sparetimedevs.ami.app.graphicmusicnotation.read.ReadGraphicMusicNotationContent
 
