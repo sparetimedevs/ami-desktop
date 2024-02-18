@@ -111,11 +111,11 @@ private fun DrawScope.drawGridOfCrosses(lineThickness: Float): Unit {
             )
         )
     oneOctave.forEachIndexed { crossColumnNumber, pitchAndColor ->
-        val _offsetY: Float = offsetY + (crossColumnNumber * size * 2f)
+        val y: Float = calcY(offsetY, crossColumnNumber, size)
         this.drawLine(
             pitchAndColor.contrastColor,
-            Offset(offsetX, _offsetY),
-            Offset(offsetX + 2000f, _offsetY),
+            Offset(offsetX, y),
+            Offset(offsetX + 2000f, y),
             size * 2
         )
         this.drawLineOfCrosses(
@@ -160,15 +160,15 @@ private fun DrawScope.drawCross(
     offsetX: Float,
     offsetY: Float
 ): Unit {
-    val _offsetX: Float = offsetX + (crossRowNumber * size * 2f)
-    val _offsetY: Float = offsetY + (crossColumnNumber * size * 2f)
+    val x: Float = calcX(offsetX, crossRowNumber, size)
+    val y: Float = calcY(offsetY, crossColumnNumber, size)
     drawPath(
         path =
             PathBuilder()
-                .moveTo(0f + _offsetX, _offsetY)
-                .horizontalLineTo(size + _offsetX)
-                .moveTo(0f + _offsetX + (size / 2), _offsetY - (size / 2))
-                .verticalLineTo((size / 2) + _offsetY)
+                .moveTo(0f + x, y)
+                .horizontalLineTo(size + x)
+                .moveTo(0f + x + (size / 2), y - (size / 2))
+                .verticalLineTo((size / 2) + y)
                 .getNodes()
                 .asComposePath(),
         color = color,
@@ -177,3 +177,9 @@ private fun DrawScope.drawCross(
 }
 
 data class PitchAndColor(val pitch: Pitch, val color: Color, val contrastColor: Color)
+
+fun calcX(offsetX: Float, crossRowNumber: Int, size: Float): Float =
+    offsetX + (crossRowNumber * size * 2f)
+
+fun calcY(offsetY: Float, crossColumnNumber: Int, size: Float): Float =
+    offsetY + (crossColumnNumber * size * 2f)

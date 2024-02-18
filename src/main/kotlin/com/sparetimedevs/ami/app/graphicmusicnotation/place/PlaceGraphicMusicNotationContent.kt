@@ -114,20 +114,49 @@ fun PlaceGraphicMusicNotationContent(
             }
 
             val circleColor: Color = Color(0xFFFF7272)
-            val getCircleWidth = 30.0f
+            val getCircleSize = 30.0f
+
+            val offsetX = 117.5f
+            val offsetY = 370.0f
+            val crossSize = 24.0f
+
+            val x1: Float = calcX(offsetX, 0, crossSize)
+            val y1: Float = calcY(offsetY, 0, crossSize)
+            val x2: Float = calcX(offsetX, 1, crossSize)
+            val y2: Float = calcY(offsetY, 1, crossSize)
+            val x3Start: Float = calcX(offsetX, 2, crossSize)
+            val y3Start: Float = calcY(offsetY, 2, crossSize)
+            val x3End: Float = calcX(offsetX, 3, crossSize)
+            val x4CStart: Float = calcX(offsetX, 4, crossSize)
+            val y4CStart: Float = calcY(offsetY, 11, crossSize)
+            val x4CEnd: Float = calcX(offsetX, 7, crossSize)
+            val x4EStart: Float = calcX(offsetX, 4, crossSize)
+            val y4EStart: Float = calcY(offsetY, 7, crossSize)
+            val x4EEnd: Float = calcX(offsetX, 7, crossSize)
+            val x4GStart: Float = calcX(offsetX, 4, crossSize)
+            val y4GStart: Float = calcY(offsetY, 4, crossSize)
+            val x4GEnd: Float = calcX(offsetX, 7, crossSize)
 
             val pathData: List<PathNode> =
                 PathBuilder()
-                    .moveTo(x = 87.5f, y = 700.0f)
-                    .horizontalLineTo(x = 587.5f)
-                    .moveTo(x = 90.0f, y = 500.0f)
+                    .moveTo(x = x1, y = y1)
                     .lineToRelative(0.0f, 0.0f)
+                    .moveTo(x = x2, y = y2)
+                    .lineToRelative(0.0f, 0.0f)
+                    .moveTo(x = x3Start, y = y3Start)
+                    .horizontalLineTo(x = x3End)
+                    .moveTo(x = x4CStart, y = y4CStart)
+                    .horizontalLineTo(x = x4CEnd)
+                    .moveTo(x = x4EStart, y = y4EStart)
+                    .horizontalLineTo(x = x4EEnd)
+                    .moveTo(x = x4GStart, y = y4GStart)
+                    .horizontalLineTo(x = x4GEnd)
                     .getNodes()
 
             drawPath(
                 path = pathData.asComposePath(),
                 color = circleColor,
-                style = Stroke(width = getCircleWidth, cap = StrokeCap.Round)
+                style = Stroke(width = getCircleSize, cap = StrokeCap.Round)
             )
         }
     }
