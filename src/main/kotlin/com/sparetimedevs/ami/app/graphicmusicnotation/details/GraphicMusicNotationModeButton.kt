@@ -42,11 +42,11 @@ fun GraphicMusicNotationModeButton(
         onClick = {
             when (currentMode) {
                 GraphicMusicNotationMode.DRAWING ->
-                    coroutineScope.launch { changeModeFunction(GraphicMusicNotationMode.PLACING) }
+                    coroutineScope.launch { changeModeFunction(GraphicMusicNotationMode.READING) }
                 GraphicMusicNotationMode.READING ->
                     coroutineScope.launch { changeModeFunction(GraphicMusicNotationMode.PLACING) }
                 GraphicMusicNotationMode.PLACING ->
-                    coroutineScope.launch { changeModeFunction(GraphicMusicNotationMode.READING) }
+                    coroutineScope.launch { changeModeFunction(GraphicMusicNotationMode.DRAWING) }
             }
         },
         content = {
