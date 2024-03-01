@@ -34,8 +34,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogWindow
 import com.sparetimedevs.ami.app.player.PlayerState
-import com.sparetimedevs.ami.music.example.getExampleScore
 import com.sparetimedevs.ami.music.example.getExampleScoreAsturias
+import com.sparetimedevs.ami.music.example.getExampleScoreFrereJacques
 import com.sparetimedevs.ami.music.example.getExampleScoreHeighHoNobodyHome
 
 @Composable
@@ -73,11 +73,11 @@ fun TopAppBarTitleDropDown(
                         Button(
                             onClick = {
                                 selectedIndex = -1
-                                component.onLoadScoreClicked(getExampleScore())
+                                component.onLoadScoreClicked(getExampleScoreFrereJacques())
                                 onValueChange(PlayerState.PAUSE)
                             }
                         ) {
-                            Text("Load example score")
+                            Text("Load Frère Jacques")
                         }
                         Button(
                             onClick = {

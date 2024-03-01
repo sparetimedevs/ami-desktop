@@ -103,7 +103,7 @@ fun DrawGraphicMusicNotationContent(
                         // Sometimes the awaitFirstDown is not triggered? (This is also an issue for
                         // subsequent lines.)
                         val newPathNodeForHorizontalLine: PathNode =
-                            PathBuilder().horizontalLineTo(currentPosition.x).getNodes().first()
+                            PathBuilder().horizontalLineTo(currentPosition.x).nodes.first()
                         component.addToPathData(newPathNodeForHorizontalLine)
                     }
                 }
@@ -135,7 +135,7 @@ private fun processFirstPoint(
         }
 
     val newPathNodeForStartingPoint: PathNode =
-        PathBuilder().moveTo(currentPosition.x, yOnBackdrop).getNodes().first()
+        PathBuilder().moveTo(currentPosition.x, yOnBackdrop).nodes.first()
     component.addToPathData(newPathNodeForStartingPoint)
 }
 

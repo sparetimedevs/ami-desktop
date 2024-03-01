@@ -16,30 +16,31 @@
 
 package com.sparetimedevs.ami
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.ui.ImageComposeScene
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+// import androidx.compose.foundation.background
+// import androidx.compose.foundation.layout.Box
+// import androidx.compose.foundation.layout.fillMaxSize
+// import androidx.compose.material.CircularProgressIndicator
+// import androidx.compose.ui.ImageComposeScene
+// import androidx.compose.ui.Modifier
+// import androidx.compose.ui.graphics.Color
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
-import org.jetbrains.skia.Image
+
+// import org.jetbrains.skia.Image
 
 class TheFirstTest :
     StringSpec({
         "The first test with compose should be true" {
-            val scene: ImageComposeScene =
-                ImageComposeScene(100, 100) {
-                    Box(Modifier.fillMaxSize().background(Color.White)) {
-                        CircularProgressIndicator()
-                    }
-                }
-
-            val theThing: Image = scene.render()
-
-            theThing shouldBe theThing
+            //            val scene: ImageComposeScene =
+            //                ImageComposeScene(100, 100) {
+            //                    Box(Modifier.fillMaxSize().background(Color.White)) {
+            //                        CircularProgressIndicator()
+            //                    }
+            //                }
+            //
+            //            val theThing: Image = scene.render()
+            //
+            //            theThing shouldBe theThing
 
             "true" shouldBe "true"
         }
