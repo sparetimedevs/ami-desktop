@@ -17,12 +17,8 @@
 package ui.details
 
 import androidx.compose.ui.test.ExperimentalTestApi
-import androidx.compose.ui.test.assertHasClickAction
-import androidx.compose.ui.test.assertTextEquals
-import androidx.compose.ui.test.onChild
-import androidx.compose.ui.test.onChildAt
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
 import com.arkivanov.decompose.ComponentContext
@@ -30,14 +26,18 @@ import com.sparetimedevs.ami.app.graphicmusicnotation.details.DefaultMusicScoreD
 import com.sparetimedevs.ami.app.graphicmusicnotation.details.MusicScoreDetailsComponent
 import com.sparetimedevs.ami.app.graphicmusicnotation.details.MusicScoreDetailsContent
 import com.sparetimedevs.ami.app.graphicmusicnotation.repository.PathDataRepositoryImpl
+import com.sparetimedevs.ami.app.graphicmusicnotation.vector.asPathData
 import com.sparetimedevs.ami.getTestComponentContext
 import com.sparetimedevs.ami.graphic.GraphicProperties
+import com.sparetimedevs.ami.music.example.getExampleScoreFrereJacques
 import io.kotest.core.spec.style.StringSpec
+import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.shouldBe
 
 @OptIn(ExperimentalTestApi::class)
 class MusicScoreDetailsContentTest :
     StringSpec({
-        "The second test with compose should be true" {
+        "Loading an existing score should set PathData" {
             runComposeUiTest {
                 val testComponentContext: ComponentContext = getTestComponentContext()
                 val graphicProperties =
@@ -55,11 +55,23 @@ class MusicScoreDetailsContentTest :
 
                 setContent { MusicScoreDetailsContent(musicScoreDetailsComponent) }
 
-                onNodeWithText("More").assertTextEquals("More")
-                onNodeWithText("Load").assertDoesNotExist()
-                onRoot().onChild().onChildAt(0).assertHasClickAction()
-                onRoot().onChild().onChildAt(0).performClick()
-                onNodeWithText("Load").assertExists()
+                val initialPathData = pathDataRepository.getPathData()
+                initialPathData.shouldBeEmpty()
+
+                onNodeWithTag("score-dropdown-menu-load").assertDoesNotExist()
+                onNodeWithTag("score-dropdown-menu").performClick()
+                onNodeWithTag("score-dropdown-menu-load").assertExists()
+                onNodeWithTag("score-dropdown-menu-load").performClick()
+                onNodeWithText("Load Frère Jacques").assertExists()
+                onNodeWithText("Load Frère Jacques").performClick()
+
+                val resultPathData = pathDataRepository.getPathData()
+
+                resultPathData shouldBe
+                    getExampleScoreFrereJacques()
+                        .parts[0]
+                        .measures
+                        .asPathData(pathDataRepository.getGraphicProperties())
             }
         }
     })
