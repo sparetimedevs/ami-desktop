@@ -14,7 +14,6 @@ repositories {
     maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
     google()
     maven("https://oss.sonatype.org/content/repositories/snapshots/")
-    mavenLocal() // TODO remove before merging.
 }
 
 dependencies {
