@@ -8,7 +8,7 @@ arrow-version = "1.2.1"
 coroutines-version = "1.8.0"
 decompose-version = "2.2.2-compose-experimental"
 reaktive-version = "2.0.1"
-kotest-version = "5.8.0"
+kotest-version = "5.8.1"
 kotest-assertions-arrow-version = "1.4.0"
 
 [libraries]
