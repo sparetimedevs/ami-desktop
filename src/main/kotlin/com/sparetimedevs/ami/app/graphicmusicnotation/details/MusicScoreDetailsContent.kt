@@ -26,7 +26,8 @@ import androidx.compose.runtime.setValue
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
 import com.sparetimedevs.ami.app.metronome.MetronomeButton
 import com.sparetimedevs.ami.app.player.PlayPauseMidiPlayerButton
-import com.sparetimedevs.ami.app.player.PlayerContext
+import com.sparetimedevs.ami.player.PlayerContext
+import com.sparetimedevs.ami.player.PlayerSettings
 
 @Composable
 internal fun MusicScoreDetailsContent(component: MusicScoreDetailsComponent) {
@@ -37,7 +38,9 @@ internal fun MusicScoreDetailsContent(component: MusicScoreDetailsComponent) {
 
     val scoreDisplayTitle = score.title?.value ?: score.id.value
 
-    var playerContext by remember { mutableStateOf(PlayerContext()) }
+    var playerContext by remember {
+        mutableStateOf(PlayerContext(playerSettings = PlayerSettings()))
+    }
 
     TopAppBar(
         title = {

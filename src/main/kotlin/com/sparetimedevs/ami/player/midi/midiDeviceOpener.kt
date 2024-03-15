@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.sparetimedevs.ami.midi
+package com.sparetimedevs.ami.player.midi
 
 import javax.sound.midi.MidiDevice
 import javax.sound.midi.MidiSystem

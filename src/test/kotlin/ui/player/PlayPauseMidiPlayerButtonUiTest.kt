@@ -23,11 +23,11 @@ import androidx.compose.ui.test.runComposeUiTest
 import arrow.core.Either
 import arrow.core.right
 import com.sparetimedevs.ami.app.player.PlayPauseMidiPlayerButton
-import com.sparetimedevs.ami.app.player.PlayerContext
 import com.sparetimedevs.ami.app.player.PlayerState
 import com.sparetimedevs.ami.core.DomainError
 import com.sparetimedevs.ami.music.data.kotlin.score.Score
 import com.sparetimedevs.ami.music.example.getExampleScoreFrereJacques
+import com.sparetimedevs.ami.test.helper.createTestPlayerContext
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 
@@ -39,7 +39,7 @@ class PlayPauseMidiPlayerButtonUiTest :
                 val getScore: suspend () -> Either<DomainError, Score> = suspend {
                     getExampleScoreFrereJacques().right()
                 }
-                var playerContext = PlayerContext()
+                var playerContext = createTestPlayerContext()
 
                 setContent {
                     PlayPauseMidiPlayerButton(getScore, playerContext) { context ->

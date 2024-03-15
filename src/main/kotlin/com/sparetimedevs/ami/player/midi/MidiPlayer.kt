@@ -14,40 +14,36 @@
  * limitations under the License.
  */
 
-package com.sparetimedevs.ami.midi.player
+package com.sparetimedevs.ami.player.midi
 
-import com.sparetimedevs.ami.midi.Metronome
-import com.sparetimedevs.ami.midi.MidiPlayerSettings
 import com.sparetimedevs.ami.music.data.kotlin.note.Note
 import com.sparetimedevs.ami.music.data.kotlin.note.NoteName
 import com.sparetimedevs.ami.music.data.kotlin.note.Pitch
+import com.sparetimedevs.ami.player.Metronome
+import com.sparetimedevs.ami.player.Player
+import com.sparetimedevs.ami.player.PlayerSettings
 import java.time.Duration
+import javax.sound.midi.MidiDevice
 import javax.sound.midi.Receiver
 import javax.sound.midi.ShortMessage
 import kotlinx.coroutines.CoroutineScope
 
-class MidiPlayer(settings: MidiPlayerSettings, scope: CoroutineScope) :
-    Player(
-        settings.metronomeMidiChannelNumber,
-        settings.scoreMidiChannelNumber,
-        settings.metronome,
-        settings.isMetronomeEnabled,
-        scope
-    ) {
+class MidiPlayer(settings: PlayerSettings, midiDevice: MidiDevice, scope: CoroutineScope) :
+    Player(settings, scope) {
 
-    private val receiver: Receiver = settings.midiDevice.receiver
+    private val receiver: Receiver = midiDevice.receiver
 
-    override fun playNote(note: Note, onMidiChannelNumber: Int) {
+    override fun playNote(note: Note, onChannelNumber: Int) {
         println("Playing $note on thread ${Thread.currentThread().name}")
         val midinote = helperFunForPitchOfNoteToMidiNoteValue(note)
         //        val midiVel = (127f * note.amp).toInt() // TODO we don't have a volume attribute
         // yet (or any indication of how loud a note should be played).
         val midiVel = (127f * 0.5f).toInt()
-        val noteOnMsg = ShortMessage(ShortMessage.NOTE_ON, onMidiChannelNumber, midinote, midiVel)
+        val noteOnMsg = ShortMessage(ShortMessage.NOTE_ON, onChannelNumber, midinote, midiVel)
         receiver.send(noteOnMsg, -1)
     }
 
-    override fun stopNote(note: Note, onMidiChannelNumber: Int) {
+    override fun stopNote(note: Note, onChannelNumber: Int) {
         val midinote = helperFunForPitchOfNoteToMidiNoteValue(note)
         //        val midiVel = (127f * note.amp).toInt() // TODO we don't have a volume attribute
         // yet (or any indication of how loud a note should be played).
@@ -55,7 +51,7 @@ class MidiPlayer(settings: MidiPlayerSettings, scope: CoroutineScope) :
         // val noteOffAt = playAt.plus((note.duration * metronome.millisPerBeat).toLong(),
         // ChronoUnit.MILLIS)
 
-        val noteOffMsg = ShortMessage(ShortMessage.NOTE_OFF, onMidiChannelNumber, midinote, midiVel)
+        val noteOffMsg = ShortMessage(ShortMessage.NOTE_OFF, onChannelNumber, midinote, midiVel)
         receiver.send(noteOffMsg, -1)
     }
 }

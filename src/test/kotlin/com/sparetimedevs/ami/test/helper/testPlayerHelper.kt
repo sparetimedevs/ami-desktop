@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package com.sparetimedevs.ami.app.player
+package com.sparetimedevs.ami.test.helper
 
-import com.sparetimedevs.ami.midi.MidiPlayerSettings
-import kotlinx.coroutines.Job
+import com.sparetimedevs.ami.player.PlayerSettings
+import com.sparetimedevs.ami.test.impl.TestPlayer
+import kotlinx.coroutines.coroutineScope
 
-data class PlayerContext(
-    val playerJob: Job = Job(),
-    val playerState: PlayerState = PlayerState.PAUSED,
-    val playerSettings: MidiPlayerSettings = MidiPlayerSettings()
-)
+suspend fun createTestPlayer(): TestPlayer = coroutineScope {
+    val playerSettings = PlayerSettings()
+    TestPlayer(playerSettings, this)
+}

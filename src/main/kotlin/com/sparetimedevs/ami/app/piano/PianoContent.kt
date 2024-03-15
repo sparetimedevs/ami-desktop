@@ -39,9 +39,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.sparetimedevs.ami.midi.MidiPlayerSettings
-import com.sparetimedevs.ami.midi.player.MidiPlayer
-import com.sparetimedevs.ami.midi.player.Player
 import com.sparetimedevs.ami.music.data.kotlin.note.Note
 import com.sparetimedevs.ami.music.data.kotlin.note.NoteAttributes
 import com.sparetimedevs.ami.music.data.kotlin.note.NoteDuration
@@ -49,12 +46,17 @@ import com.sparetimedevs.ami.music.data.kotlin.note.NoteName
 import com.sparetimedevs.ami.music.data.kotlin.note.NoteValue
 import com.sparetimedevs.ami.music.data.kotlin.note.Octave
 import com.sparetimedevs.ami.music.data.kotlin.note.Pitch
+import com.sparetimedevs.ami.player.Player
+import com.sparetimedevs.ami.player.PlayerSettings
+import com.sparetimedevs.ami.player.midi.MidiPlayer
+import com.sparetimedevs.ami.player.midi.openMidiDevice
 
 @Composable
 fun PianoContent() {
     val coroutineScope = rememberCoroutineScope()
-    val playerSettings = MidiPlayerSettings()
-    val player: Player = MidiPlayer(playerSettings, coroutineScope)
+    val playerSettings = PlayerSettings()
+    val midiDevice = openMidiDevice()
+    val player: Player = MidiPlayer(playerSettings, midiDevice, coroutineScope)
     Box(modifier = Modifier.fillMaxSize()) {
         Row(
             modifier =
@@ -70,7 +72,7 @@ fun PianoContent() {
 }
 
 @Composable
-fun PianoKeysForOctave(octave: Octave, player: Player, playerSettings: MidiPlayerSettings): Unit {
+fun PianoKeysForOctave(octave: Octave, player: Player, playerSettings: PlayerSettings): Unit {
     PianoKey(Pitch(noteName = NoteName.C, octave = octave), player, playerSettings)
     PianoKeyBlack(Pitch(noteName = NoteName.C_SHARP, octave = octave), player, playerSettings)
     PianoKey(Pitch(noteName = NoteName.D, octave = octave), player, playerSettings)
@@ -98,7 +100,7 @@ fun PianoKeysForOctave(octave: Octave, player: Player, playerSettings: MidiPlaye
 }
 
 @Composable
-fun PianoKey(pitch: Pitch, player: Player, playerSettings: MidiPlayerSettings): Unit {
+fun PianoKey(pitch: Pitch, player: Player, playerSettings: PlayerSettings): Unit {
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
 
@@ -106,14 +108,17 @@ fun PianoKey(pitch: Pitch, player: Player, playerSettings: MidiPlayerSettings): 
         Note.Pitched(NoteDuration(NoteValue.MAXIMA), NoteAttributes(null, null, null, null), pitch)
     if (isPressed) {
         println("Pressed : ${pitch.noteName}")
-        player.playNote(wrapInNoteUntilWeHaveSomethingBetter, playerSettings.scoreMidiChannelNumber)
+        player.playNote(
+            wrapInNoteUntilWeHaveSomethingBetter,
+            playerSettings.scorePlayerChannelNumber
+        )
         // Use if + DisposableEffect to wait for the press action is completed
         DisposableEffect(Unit) {
             onDispose {
                 println("released : ${pitch.noteName}")
                 player.stopNote(
                     wrapInNoteUntilWeHaveSomethingBetter,
-                    playerSettings.scoreMidiChannelNumber
+                    playerSettings.scorePlayerChannelNumber
                 )
             }
         }
@@ -131,7 +136,7 @@ fun PianoKey(pitch: Pitch, player: Player, playerSettings: MidiPlayerSettings): 
 }
 
 @Composable
-fun PianoKeyBlack(pitch: Pitch, player: Player, playerSettings: MidiPlayerSettings): Unit {
+fun PianoKeyBlack(pitch: Pitch, player: Player, playerSettings: PlayerSettings): Unit {
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
 
@@ -139,14 +144,17 @@ fun PianoKeyBlack(pitch: Pitch, player: Player, playerSettings: MidiPlayerSettin
         Note.Pitched(NoteDuration(NoteValue.MAXIMA), NoteAttributes(null, null, null, null), pitch)
     if (isPressed) {
         println("Pressed : ${pitch.noteName}")
-        player.playNote(wrapInNoteUntilWeHaveSomethingBetter, playerSettings.scoreMidiChannelNumber)
+        player.playNote(
+            wrapInNoteUntilWeHaveSomethingBetter,
+            playerSettings.scorePlayerChannelNumber
+        )
         // Use if + DisposableEffect to wait for the press action is completed
         DisposableEffect(Unit) {
             onDispose {
                 println("released : ${pitch.noteName}")
                 player.stopNote(
                     wrapInNoteUntilWeHaveSomethingBetter,
-                    playerSettings.scoreMidiChannelNumber
+                    playerSettings.scorePlayerChannelNumber
                 )
             }
         }

@@ -38,9 +38,11 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import arrow.core.Either
 import com.sparetimedevs.ami.core.DomainError
-import com.sparetimedevs.ami.midi.openMidiDevice
-import com.sparetimedevs.ami.midi.play
 import com.sparetimedevs.ami.music.data.kotlin.score.Score
+import com.sparetimedevs.ami.player.PlayerContext
+import com.sparetimedevs.ami.player.midi.MidiPlayer
+import com.sparetimedevs.ami.player.midi.openMidiDevice
+import com.sparetimedevs.ami.player.play
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.launch
@@ -83,7 +85,7 @@ fun PlayPauseMidiPlayerButton(
     when (playerContext.playerState) {
         PlayerState.PLAY -> {
             // Open MIDI device
-            val playerSettingsNow = playerContext.playerSettings.copy(midiDevice = openMidiDevice())
+            val midiDevice = openMidiDevice()
             // Start playing midi
             val job: Job =
                 coroutineScope.launch {
@@ -93,16 +95,14 @@ fun PlayPauseMidiPlayerButton(
                                 println("Error: $error")
                                 domainError = error
                             },
-                            { score -> play(score, playerSettingsNow) }
+                            { score ->
+                                val player =
+                                    MidiPlayer(playerContext.playerSettings, midiDevice, this)
+                                play(score, player) { midiDevice.close() }
+                            }
                         )
                 }
-            onValueChange(
-                playerContext.copy(
-                    playerJob = job,
-                    playerState = PlayerState.PLAYING,
-                    playerSettings = playerSettingsNow
-                )
-            )
+            onValueChange(playerContext.copy(playerJob = job, playerState = PlayerState.PLAYING))
         }
         PlayerState.PAUSE -> {
             // Stop playing midi

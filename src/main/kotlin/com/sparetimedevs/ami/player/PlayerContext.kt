@@ -14,15 +14,13 @@
  * limitations under the License.
  */
 
-package com.sparetimedevs.ami.midi
+package com.sparetimedevs.ami.player
 
-data class Metronome(val bpm: Int, val beatsPerBar: Int = 16) {
-    val millisPerBeat: Long
-        get() = (secsPerBeat * 1000).toLong()
+import com.sparetimedevs.ami.app.player.PlayerState
+import kotlinx.coroutines.Job
 
-    val millisPerBar: Long
-        get() = beatsPerBar * millisPerBeat
-
-    private val secsPerBeat: Double
-        get() = 60.0 / bpm
-}
+data class PlayerContext(
+    val playerJob: Job = Job(),
+    val playerState: PlayerState = PlayerState.PAUSED,
+    val playerSettings: PlayerSettings
+)
