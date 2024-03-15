@@ -34,6 +34,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import arrow.core.Either
 import com.sparetimedevs.ami.core.DomainError
@@ -56,7 +57,7 @@ fun PlayPauseMidiPlayerButton(
     var domainError: DomainError? by remember { mutableStateOf(null) }
 
     TextButton(
-        modifier = Modifier.padding(10.dp),
+        modifier = Modifier.padding(10.dp).testTag("play-pause-midi-player-button"),
         onClick = {
             when (playerContext.playerState) {
                 PlayerState.PAUSED,

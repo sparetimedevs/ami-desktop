@@ -59,7 +59,8 @@ fun TopAppBarTitleDropDown(
                             selectedIndex = -1
                             component.onNewScoreClicked()
                             onValueChange(PlayerState.PAUSE)
-                        }
+                        },
+                        modifier = Modifier.testTag("create-new-score")
                     ) {
                         Text("New")
                     }
