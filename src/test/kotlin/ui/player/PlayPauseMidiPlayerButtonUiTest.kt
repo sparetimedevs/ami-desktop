@@ -32,7 +32,6 @@ import com.sparetimedevs.ami.core.DomainError
 import com.sparetimedevs.ami.music.data.kotlin.score.Score
 import com.sparetimedevs.ami.music.example.getExampleScore
 import com.sparetimedevs.ami.player.PlayerContext
-import com.sparetimedevs.ami.player.PlayerSettings
 import com.sparetimedevs.ami.test.impl.TestPlayer
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
@@ -53,8 +52,7 @@ class PlayPauseMidiPlayerButtonUiTest :
 
                 val job = SupervisorJob()
                 val coroutineScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
-                val playerSettings = PlayerSettings()
-                val player = TestPlayer(playerSettings)
+                val player = TestPlayer()
 
                 setContent {
                     var playerContext by remember {

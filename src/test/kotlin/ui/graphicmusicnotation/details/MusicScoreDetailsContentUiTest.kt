@@ -32,6 +32,8 @@ import com.sparetimedevs.ami.app.graphicmusicnotation.vector.asPathData
 import com.sparetimedevs.ami.getTestComponentContext
 import com.sparetimedevs.ami.graphic.GraphicProperties
 import com.sparetimedevs.ami.music.example.getExampleScoreFrereJacques
+import com.sparetimedevs.ami.player.PlayerSettings
+import com.sparetimedevs.ami.test.impl.TestPlayer
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.shouldBe
@@ -39,6 +41,8 @@ import io.kotest.matchers.shouldBe
 @OptIn(ExperimentalTestApi::class)
 class MusicScoreDetailsContentUiTest :
     StringSpec({
+        val player = TestPlayer(PlayerSettings())
+
         "Loading an existing score should set PathData" {
             runComposeUiTest {
                 val testComponentContext: ComponentContext = getTestComponentContext()
@@ -55,7 +59,7 @@ class MusicScoreDetailsContentUiTest :
                 val musicScoreDetailsComponent: MusicScoreDetailsComponent =
                     DefaultMusicScoreDetailsComponent(testComponentContext, pathDataRepository)
 
-                setContent { MusicScoreDetailsContent(musicScoreDetailsComponent) }
+                setContent { MusicScoreDetailsContent(musicScoreDetailsComponent, player) }
 
                 val initialPathData = pathDataRepository.getPathData()
                 initialPathData.shouldBeEmpty()
@@ -96,7 +100,7 @@ class MusicScoreDetailsContentUiTest :
                 val musicScoreDetailsComponent: MusicScoreDetailsComponent =
                     DefaultMusicScoreDetailsComponent(testComponentContext, pathDataRepository)
 
-                setContent { MusicScoreDetailsContent(musicScoreDetailsComponent) }
+                setContent { MusicScoreDetailsContent(musicScoreDetailsComponent, player) }
 
                 val initialPathData = pathDataRepository.getPathData()
                 initialPathData shouldBe
@@ -138,7 +142,7 @@ class MusicScoreDetailsContentUiTest :
                 val musicScoreDetailsComponent: MusicScoreDetailsComponent =
                     DefaultMusicScoreDetailsComponent(testComponentContext, pathDataRepository)
 
-                setContent { MusicScoreDetailsContent(musicScoreDetailsComponent) }
+                setContent { MusicScoreDetailsContent(musicScoreDetailsComponent, player) }
 
                 val initialPathData = pathDataRepository.getPathData()
                 initialPathData shouldBe

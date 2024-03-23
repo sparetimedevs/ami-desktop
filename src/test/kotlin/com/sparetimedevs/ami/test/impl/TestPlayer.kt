@@ -32,7 +32,7 @@ class TestDevice {
     fun notesPlayed(): List<String> = allTheThings.toList()
 }
 
-class TestPlayer(settings: PlayerSettings) : Player(settings) {
+class TestPlayer(settings: PlayerSettings = PlayerSettings()) : Player(settings) {
 
     private val testDevice: TestDevice = TestDevice()
 
