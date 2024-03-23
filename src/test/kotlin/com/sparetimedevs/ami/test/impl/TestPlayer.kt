@@ -19,6 +19,7 @@ package com.sparetimedevs.ami.test.impl
 import androidx.compose.runtime.mutableStateListOf
 import com.sparetimedevs.ami.music.data.kotlin.note.Note
 import com.sparetimedevs.ami.player.Player
+import com.sparetimedevs.ami.player.PlayerSettings
 
 class TestDevice(val testString: String) {
 
@@ -31,7 +32,7 @@ class TestDevice(val testString: String) {
     fun notesPlayed(): List<String> = allTheThings.toList()
 }
 
-class TestPlayer : Player() {
+class TestPlayer(settings: PlayerSettings) : Player(settings) {
 
     private val testDevice: TestDevice = TestDevice("test device")
 

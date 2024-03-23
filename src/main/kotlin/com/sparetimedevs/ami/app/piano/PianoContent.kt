@@ -54,7 +54,7 @@ import com.sparetimedevs.ami.player.midi.openMidiDevice
 fun PianoContent() {
     val playerSettings = PlayerSettings()
     val midiDevice = openMidiDevice()
-    val player: Player = MidiPlayer(midiDevice)
+    val player: Player = MidiPlayer(midiDevice, playerSettings)
     Box(modifier = Modifier.fillMaxSize()) {
         Row(
             modifier =

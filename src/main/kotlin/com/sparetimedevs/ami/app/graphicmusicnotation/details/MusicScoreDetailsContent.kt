@@ -25,16 +25,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
+import com.sparetimedevs.ami.app.dependencyModule
 import com.sparetimedevs.ami.app.metronome.MetronomeButton
 import com.sparetimedevs.ami.app.player.PlayPauseMidiPlayerButton
 import com.sparetimedevs.ami.player.Player
 import com.sparetimedevs.ami.player.PlayerContext
-import com.sparetimedevs.ami.player.PlayerSettings
-import com.sparetimedevs.ami.player.midi.MidiPlayer
-import com.sparetimedevs.ami.player.midi.openMidiDevice
 
 @Composable
-internal fun MusicScoreDetailsContent(component: MusicScoreDetailsComponent) {
+internal fun MusicScoreDetailsContent(
+    component: MusicScoreDetailsComponent,
+    player: Player = dependencyModule.player
+) {
 
     val score by component.scoreValue.subscribeAsState()
 
@@ -44,13 +45,14 @@ internal fun MusicScoreDetailsContent(component: MusicScoreDetailsComponent) {
 
     val coroutineScope = rememberCoroutineScope()
     var playerContext by remember {
-        mutableStateOf(
-            PlayerContext(playerCoroutineScope = coroutineScope, playerSettings = PlayerSettings())
-        )
+        mutableStateOf(PlayerContext(playerCoroutineScope = coroutineScope))
     }
 
-    val midiDevice = openMidiDevice()
-    val player: Player = MidiPlayer(midiDevice)
+    //    val midiDevice = openMidiDevice()
+    //    val playerSettings = PlayerSettings()
+    //    val player: Player = MidiPlayer(midiDevice, playerSettings) // TODO or should this be a
+    // remember
+    //    val player2: Player by remember { mutableStateOf(MidiPlayer(midiDevice, playerSettings)) }
 
     TopAppBar(
         title = {
@@ -63,14 +65,8 @@ internal fun MusicScoreDetailsContent(component: MusicScoreDetailsComponent) {
                 context ->
                 playerContext = context
             }
-            MetronomeButton(playerContext.playerSettings.isMetronomeEnabled) { isMetronomeEnabled ->
-                playerContext =
-                    playerContext.copy(
-                        playerSettings =
-                            playerContext.playerSettings.copy(
-                                isMetronomeEnabled = isMetronomeEnabled
-                            )
-                    )
+            MetronomeButton(player.isMetronomeEnabled()) { isMetronomeEnabled ->
+                player.setMetronomeEnabled(isMetronomeEnabled)
             }
             GraphicMusicNotationModeButton(mode, component::changeMode)
             Text(text = "More")

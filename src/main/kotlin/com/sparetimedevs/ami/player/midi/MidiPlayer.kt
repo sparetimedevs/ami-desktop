@@ -21,14 +21,14 @@ import com.sparetimedevs.ami.music.data.kotlin.note.NoteName
 import com.sparetimedevs.ami.music.data.kotlin.note.Pitch
 import com.sparetimedevs.ami.player.Metronome
 import com.sparetimedevs.ami.player.Player
-import java.math.BigInteger
+import com.sparetimedevs.ami.player.PlayerSettings
+import com.sparetimedevs.ami.player.midi.message.AllSoundOffMidiMessage
 import java.time.Duration
 import javax.sound.midi.MidiDevice
-import javax.sound.midi.MidiMessage
 import javax.sound.midi.Receiver
 import javax.sound.midi.ShortMessage
 
-class MidiPlayer(midiDevice: MidiDevice) : Player() {
+class MidiPlayer(midiDevice: MidiDevice, playerSettings: PlayerSettings) : Player(playerSettings) {
 
     private val receiver: Receiver = midiDevice.receiver
 
@@ -58,12 +58,6 @@ class MidiPlayer(midiDevice: MidiDevice) : Player() {
         val allSoundOffOnChannel1MidiMessage = AllSoundOffMidiMessage(1)
         receiver.send(allSoundOffOnChannel1MidiMessage, -1)
     }
-    // TODO maybe the midiDevice.close should be outside of the control of the Player? (Opening is
-    // also not it's concern.)
-    //    override suspend fun stop() {
-    //        super@MidiPlayer.stop()
-    //        midiDevice.close()
-    //    }
 }
 
 fun helperFunForPitchOfNoteToMidiNoteValue(note: Note): Int =
@@ -123,25 +117,4 @@ fun helperFunForDurationOfNoteToJavaTimeDuration(note: Note, metronome: Metronom
     val millis = (note.duration.value * 4 * metronome.millisPerBeat).toLong()
 
     return Duration.ofMillis(millis)
-}
-
-class AllSoundOffMidiMessage(data: ByteArray) : MidiMessage(data) {
-
-    constructor(channel: Int) : this(ByteArray(3)) {
-        // https://midi.org/summary-of-midi-1-0-messages
-        // All sound off on channel specified
-
-        data[0] = (ShortMessage.CONTROL_CHANGE or channel).toByte()
-        // data[0] = BigInteger("10110001", 2).toByte()
-        data[1] = BigInteger("01111000", 2).toByte()
-        data[2] = BigInteger("00000000", 2).toByte()
-
-        length = 3
-    }
-
-    override fun clone(): Any {
-        val newData = ByteArray(length)
-        System.arraycopy(data, 0, newData, 0, newData.size)
-        return AllSoundOffMidiMessage(newData)
-    }
 }

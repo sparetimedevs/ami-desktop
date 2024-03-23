@@ -24,5 +24,5 @@ data class PlayerContext(
     val playerCoroutineScope: CoroutineScope,
     val playerJob: Job = Job(),
     val playerState: PlayerState = PlayerState.PAUSED,
-    val playerSettings: PlayerSettings
+    //    val playerSettings: PlayerSettings
 )

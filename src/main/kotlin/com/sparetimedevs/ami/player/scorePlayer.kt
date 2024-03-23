@@ -23,21 +23,20 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.runBlocking
 
-suspend fun play(score: Score, player: Player, playerSettings: PlayerSettings): Unit =
-    coroutineScope {
-        try {
-            // score.parts[0] can throw `java.lang.IndexOutOfBoundsException: Empty list doesn't
-            // contain
-            // element at index 0`
-            // It would be good to avoid it.
-            player.play(playerSettings, score.parts[0].measures, LocalDateTime.now())
-            while (this.isActive) {
-                // Do nothing, just keep going while the coroutine is active.
-                // Do add a delay, else this while loop keeps on going too fast.
-                delay(500L)
-            }
-        } finally {
-            println("Stopping player...")
-            runBlocking { player.stop() }
+suspend fun play(score: Score, player: Player): Unit = coroutineScope {
+    try {
+        // score.parts[0] can throw `java.lang.IndexOutOfBoundsException: Empty list doesn't
+        // contain
+        // element at index 0`
+        // It would be good to avoid it.
+        player.play(score.parts[0].measures, LocalDateTime.now())
+        while (this.isActive) {
+            // Do nothing, just keep going while the coroutine is active.
+            // Do add a delay, else this while loop keeps on going too fast.
+            delay(500L)
         }
+    } finally {
+        println("Stopping player...")
+        runBlocking { player.stop() }
     }
+}

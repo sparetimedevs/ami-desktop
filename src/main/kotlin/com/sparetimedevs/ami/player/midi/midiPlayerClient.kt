@@ -49,7 +49,7 @@ fun main() {
         )
 
     runBlocking {
-        val player = MidiPlayer(midiDevice)
-        play(score, player, playerSettings)
+        val player = MidiPlayer(midiDevice, playerSettings)
+        play(score, player)
     }
 }

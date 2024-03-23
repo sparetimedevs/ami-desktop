@@ -14,19 +14,23 @@
  * limitations under the License.
  */
 
-package com.sparetimedevs.ami.core
+package com.sparetimedevs.ami.app
 
-import com.sparetimedevs.ami.player.midi.AllSoundOffMidiMessage
-import io.kotest.core.spec.style.StringSpec
-import io.kotest.matchers.shouldBe
+import com.sparetimedevs.ami.player.Player
+import com.sparetimedevs.ami.player.PlayerSettings
+import com.sparetimedevs.ami.player.midi.MidiPlayer
+import com.sparetimedevs.ami.player.midi.openMidiDevice
 
-class Test2KtTest :
-    StringSpec({
-        "a b c" {
-            val x = AllSoundOffMidiMessage(1)
-            println(Integer.toBinaryString(x.message[0].toInt()))
-            println(Integer.toBinaryString(x.message[1].toInt()))
-            println(Integer.toBinaryString(x.message[2].toInt()))
-            x shouldBe x
-        }
-    })
+interface DependencyModule {
+    val player: Player
+}
+
+val dependencyModule: DependencyModule by lazy {
+    val midiDevice = openMidiDevice()
+    val playerSettings = PlayerSettings()
+    val player: Player = MidiPlayer(midiDevice, playerSettings)
+
+    object : DependencyModule {
+        override val player: Player = player
+    }
+}

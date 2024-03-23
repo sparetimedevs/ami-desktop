@@ -54,16 +54,11 @@ class PlayPauseMidiPlayerButtonUiTest :
                 val job = SupervisorJob()
                 val coroutineScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
                 val playerSettings = PlayerSettings()
-                val player = TestPlayer()
+                val player = TestPlayer(playerSettings)
 
                 setContent {
                     var playerContext by remember {
-                        mutableStateOf(
-                            PlayerContext(
-                                playerCoroutineScope = coroutineScope,
-                                playerSettings = playerSettings
-                            )
-                        )
+                        mutableStateOf(PlayerContext(playerCoroutineScope = coroutineScope))
                     }
                     //                    getPlayerContext = playerContext
 

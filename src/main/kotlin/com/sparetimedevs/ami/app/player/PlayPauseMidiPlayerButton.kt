@@ -91,7 +91,7 @@ fun PlayPauseMidiPlayerButton(
                                 println("Error: $error")
                                 domainError = error
                             },
-                            { score -> play(score, player, playerContext.playerSettings) }
+                            { score -> play(score, player) }
                         )
                 }
             onValueChange(playerContext.copy(playerJob = job, playerState = PlayerState.PLAYING))

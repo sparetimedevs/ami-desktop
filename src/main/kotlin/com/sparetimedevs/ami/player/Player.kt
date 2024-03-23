@@ -31,9 +31,25 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-abstract class Player {
+abstract class Player(playerSettings: PlayerSettings) {
 
-    //    private var playing = true
+    private var playerSettings: PlayerSettings
+
+    init {
+        this.playerSettings = playerSettings
+    }
+
+    fun setPlayerSettings(playerSettings: PlayerSettings) {
+        this.playerSettings = playerSettings
+    }
+
+    fun getPlayerSettings(): PlayerSettings = this.playerSettings
+
+    fun setMetronomeEnabled(isMetronomeEnabled: Boolean) {
+        this.playerSettings = playerSettings.copy(isMetronomeEnabled = isMetronomeEnabled)
+    }
+
+    fun isMetronomeEnabled(): Boolean = this.playerSettings.isMetronomeEnabled
 
     private val metronomeNotes: List<Note> =
         listOf(
@@ -60,18 +76,14 @@ abstract class Player {
         )
 
     open suspend fun stop() {
-        //        playing = false
-        //        delay(playerSettings.metronome.millisPerBeat)
         stopEverything()
     }
 
-    suspend fun play(playerSettings: PlayerSettings, measures: List<Measure>, at: LocalDateTime) {
-        //        if (!playing) return
+    suspend fun play(measures: List<Measure>, at: LocalDateTime) {
         coroutineScope {
             println("Playing measures $measures")
             launch {
                 play(
-                    playerSettings,
                     measures.flatMap { measure -> measure.notes },
                     at,
                     playerSettings.scorePlayerChannelNumber
@@ -81,7 +93,6 @@ abstract class Player {
                 if (playerSettings.isMetronomeEnabled) {
                     val metronomeNotesForAllMeasures = measures.indices.flatMap { metronomeNotes }
                     play(
-                        playerSettings,
                         metronomeNotesForAllMeasures,
                         at,
                         playerSettings.metronomePlayerChannelNumber
@@ -91,12 +102,7 @@ abstract class Player {
         }
     }
 
-    private suspend fun play(
-        playerSettings: PlayerSettings,
-        notes: List<Note>,
-        at: LocalDateTime,
-        onChannelNumber: Int
-    ) {
+    private suspend fun play(notes: List<Note>, at: LocalDateTime, onChannelNumber: Int) {
         val listOfNotesWithTheTotalDurationBeforeThatNoteIsPlayed =
             notes
                 .mapIndexed { index, note ->
@@ -120,11 +126,7 @@ abstract class Player {
 
         listOfNotesWithTheTotalDurationBeforeThatNoteIsPlayed.forEach { (duration, note) ->
             val playAt = at.plus(duration)
-            schedule(playAt) {
-                //                if (playing) {
-                playNote(note, onChannelNumber)
-                //                }
-            }
+            schedule(playAt) { playNote(note, onChannelNumber) }
             val noteOffAt =
                 playAt.plus(
                     helperFunForDurationOfNoteToJavaTimeDuration(note, playerSettings.metronome)
