@@ -14,13 +14,19 @@
  * limitations under the License.
  */
 
-package com.sparetimedevs.ami.test.helper
+package com.sparetimedevs.ami.core
 
-import com.sparetimedevs.ami.player.PlayerSettings
-import com.sparetimedevs.ami.test.impl.TestPlayer
-import kotlinx.coroutines.coroutineScope
+import com.sparetimedevs.ami.player.midi.AllSoundOffMidiMessage
+import io.kotest.core.spec.style.StringSpec
+import io.kotest.matchers.shouldBe
 
-suspend fun createTestPlayer(): TestPlayer = coroutineScope {
-    val playerSettings = PlayerSettings()
-    TestPlayer(playerSettings, this)
-}
+class Test2KtTest :
+    StringSpec({
+        "a b c" {
+            val x = AllSoundOffMidiMessage(1)
+            println(Integer.toBinaryString(x.message[0].toInt()))
+            println(Integer.toBinaryString(x.message[1].toInt()))
+            println(Integer.toBinaryString(x.message[2].toInt()))
+            x shouldBe x
+        }
+    })

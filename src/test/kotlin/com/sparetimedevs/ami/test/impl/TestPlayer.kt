@@ -16,21 +16,28 @@
 
 package com.sparetimedevs.ami.test.impl
 
+import androidx.compose.runtime.mutableStateListOf
 import com.sparetimedevs.ami.music.data.kotlin.note.Note
 import com.sparetimedevs.ami.player.Player
-import com.sparetimedevs.ami.player.PlayerSettings
-import kotlinx.coroutines.CoroutineScope
 
 class TestDevice(val testString: String) {
-    fun send(): Unit {}
+
+    private val allTheThings = mutableStateListOf<String>()
+
+    fun send(message: String): Unit {
+        allTheThings.add(message)
+    }
+
+    fun notesPlayed(): List<String> = allTheThings.toList()
 }
 
-class TestPlayer(settings: PlayerSettings, scope: CoroutineScope) : Player(settings, scope) {
+class TestPlayer : Player() {
 
     private val testDevice: TestDevice = TestDevice("test device")
 
     override fun playNote(note: Note, onChannelNumber: Int) {
         println("Playing $note on thread ${Thread.currentThread().name}")
+        testDevice.send("Playing $note")
         //        val midinote = helperFunForPitchOfNoteToMidiNoteValue(note)
         //        //        val midiVel = (127f * note.amp).toInt() // TODO we don't have a volume
         // attribute
@@ -54,4 +61,10 @@ class TestPlayer(settings: PlayerSettings, scope: CoroutineScope) : Player(setti
         // midinote, midiVel)
         //        receiver.send(noteOffMsg, -1)
     }
+
+    override fun stopEverything() {
+        TODO("Not yet implemented")
+    }
+
+    fun notesPlayed(): List<String> = testDevice.notesPlayed()
 }

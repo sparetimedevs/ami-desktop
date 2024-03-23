@@ -33,7 +33,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -53,10 +52,9 @@ import com.sparetimedevs.ami.player.midi.openMidiDevice
 
 @Composable
 fun PianoContent() {
-    val coroutineScope = rememberCoroutineScope()
     val playerSettings = PlayerSettings()
     val midiDevice = openMidiDevice()
-    val player: Player = MidiPlayer(playerSettings, midiDevice, coroutineScope)
+    val player: Player = MidiPlayer(midiDevice)
     Box(modifier = Modifier.fillMaxSize()) {
         Row(
             modifier =

@@ -22,12 +22,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
 import com.sparetimedevs.ami.app.metronome.MetronomeButton
 import com.sparetimedevs.ami.app.player.PlayPauseMidiPlayerButton
+import com.sparetimedevs.ami.player.Player
 import com.sparetimedevs.ami.player.PlayerContext
 import com.sparetimedevs.ami.player.PlayerSettings
+import com.sparetimedevs.ami.player.midi.MidiPlayer
+import com.sparetimedevs.ami.player.midi.openMidiDevice
 
 @Composable
 internal fun MusicScoreDetailsContent(component: MusicScoreDetailsComponent) {
@@ -38,9 +42,15 @@ internal fun MusicScoreDetailsContent(component: MusicScoreDetailsComponent) {
 
     val scoreDisplayTitle = score.title?.value ?: score.id.value
 
+    val coroutineScope = rememberCoroutineScope()
     var playerContext by remember {
-        mutableStateOf(PlayerContext(playerSettings = PlayerSettings()))
+        mutableStateOf(
+            PlayerContext(playerCoroutineScope = coroutineScope, playerSettings = PlayerSettings())
+        )
     }
+
+    val midiDevice = openMidiDevice()
+    val player: Player = MidiPlayer(midiDevice)
 
     TopAppBar(
         title = {
@@ -49,7 +59,8 @@ internal fun MusicScoreDetailsContent(component: MusicScoreDetailsComponent) {
             }
         },
         actions = {
-            PlayPauseMidiPlayerButton({ component.updateAndGetScore() }, playerContext) { context ->
+            PlayPauseMidiPlayerButton({ component.updateAndGetScore() }, playerContext, player) {
+                context ->
                 playerContext = context
             }
             MetronomeButton(playerContext.playerSettings.isMetronomeEnabled) { isMetronomeEnabled ->

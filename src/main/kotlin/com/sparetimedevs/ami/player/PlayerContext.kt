@@ -17,9 +17,11 @@
 package com.sparetimedevs.ami.player
 
 import com.sparetimedevs.ami.app.player.PlayerState
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 
 data class PlayerContext(
+    val playerCoroutineScope: CoroutineScope,
     val playerJob: Job = Job(),
     val playerState: PlayerState = PlayerState.PAUSED,
     val playerSettings: PlayerSettings
