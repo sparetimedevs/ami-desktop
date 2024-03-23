@@ -44,8 +44,6 @@ private class AllSoundOffMidiMessage(data: ByteArray) : MidiMessage(data) {
         // All sound off on channel specified
 
         data[0] = (ShortMessage.CONTROL_CHANGE or channel).toByte()
-        // data[0] = BigInteger("10110000", 2).toByte() // channel 0
-        // data[0] = BigInteger("10110001", 2).toByte() // channel 1
         data[1] = BigInteger("01111000", 2).toByte()
         data[2] = BigInteger("00000000", 2).toByte()
 
