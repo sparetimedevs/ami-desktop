@@ -9,6 +9,15 @@ on:
 
 jobs:
   ci-cd:
-    uses: sparetimedevs/github-actions-base/.github/workflows/ci-pipeline-gradle-template.yml@main
-    with:
-      java-version: 21
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup xvfb for screen 0
+        run: Xvfb :1 -screen 0 1600x1200x24 &
+      - name: Run Gradle CI Pipeline
+        uses: sparetimedevs/github-actions-base/.github/workflows/ci-pipeline-gradle-template.yml@main
+        with:
+          java-version: 21
+        env:
+          DISPLAY: :1
+      - name: Tear down xvfb
+        run: killall Xvfb
