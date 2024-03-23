@@ -72,7 +72,7 @@ class PlayPauseMidiPlayerButtonUiTest :
 
                 // The TestPlayer plays music way faster than a real player, still, we need to wait
                 // a bit before the TestPlayer is done "playing".
-                runBlocking { delay(500L) }
+                runBlocking { delay(5000L) }
 
                 val isCompletedJob = job.complete()
                 isCompletedJob shouldBe true

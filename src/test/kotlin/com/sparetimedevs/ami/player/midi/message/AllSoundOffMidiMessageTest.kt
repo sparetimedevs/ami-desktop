@@ -18,24 +18,60 @@ package com.sparetimedevs.ami.player.midi.message
 
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
+import java.math.BigInteger
 
 class AllSoundOffMidiMessageTest :
     StringSpec({
-        "a b c" {
-            val x0 = AllSoundOffMidiMessage(0)
-            println(Integer.toBinaryString(x0.message[0].toInt()))
-            println(Integer.toBinaryString(x0.message[1].toInt()))
-            println(Integer.toBinaryString(x0.message[2].toInt()))
-            x0 shouldBe x0
-            val x = AllSoundOffMidiMessage(1)
-            println(Integer.toBinaryString(x.message[0].toInt()))
-            println(Integer.toBinaryString(x.message[1].toInt()))
-            println(Integer.toBinaryString(x.message[2].toInt()))
-            x shouldBe x
-            val x2 = AllSoundOffMidiMessage(2)
-            println(Integer.toBinaryString(x2.message[0].toInt()))
-            println(Integer.toBinaryString(x2.message[1].toInt()))
-            println(Integer.toBinaryString(x2.message[2].toInt()))
-            x2 shouldBe x2
+        "AllSoundOffMidiMessage should be successfully created for all channels" {
+            AllSoundOffOnChannel0MidiMessage.message[0] shouldBe BigInteger("10110000", 2).toByte()
+            AllSoundOffOnChannel1MidiMessage.message[0] shouldBe BigInteger("10110001", 2).toByte()
+            AllSoundOffOnChannel2MidiMessage.message[0] shouldBe BigInteger("10110010", 2).toByte()
+            AllSoundOffOnChannel3MidiMessage.message[0] shouldBe BigInteger("10110011", 2).toByte()
+            AllSoundOffOnChannel4MidiMessage.message[0] shouldBe BigInteger("10110100", 2).toByte()
+            AllSoundOffOnChannel5MidiMessage.message[0] shouldBe BigInteger("10110101", 2).toByte()
+            AllSoundOffOnChannel6MidiMessage.message[0] shouldBe BigInteger("10110110", 2).toByte()
+            AllSoundOffOnChannel7MidiMessage.message[0] shouldBe BigInteger("10110111", 2).toByte()
+            AllSoundOffOnChannel8MidiMessage.message[0] shouldBe BigInteger("10111000", 2).toByte()
+            AllSoundOffOnChannel9MidiMessage.message[0] shouldBe BigInteger("10111001", 2).toByte()
+            AllSoundOffOnChannel10MidiMessage.message[0] shouldBe BigInteger("10111010", 2).toByte()
+            AllSoundOffOnChannel11MidiMessage.message[0] shouldBe BigInteger("10111011", 2).toByte()
+            AllSoundOffOnChannel12MidiMessage.message[0] shouldBe BigInteger("10111100", 2).toByte()
+            AllSoundOffOnChannel13MidiMessage.message[0] shouldBe BigInteger("10111101", 2).toByte()
+            AllSoundOffOnChannel14MidiMessage.message[0] shouldBe BigInteger("10111110", 2).toByte()
+            AllSoundOffOnChannel15MidiMessage.message[0] shouldBe BigInteger("10111111", 2).toByte()
+
+            AllSoundOffOnChannel0MidiMessage.message[1] shouldBe BigInteger("01111000", 2).toByte()
+            AllSoundOffOnChannel1MidiMessage.message[1] shouldBe BigInteger("01111000", 2).toByte()
+            AllSoundOffOnChannel2MidiMessage.message[1] shouldBe BigInteger("01111000", 2).toByte()
+            AllSoundOffOnChannel3MidiMessage.message[1] shouldBe BigInteger("01111000", 2).toByte()
+            AllSoundOffOnChannel4MidiMessage.message[1] shouldBe BigInteger("01111000", 2).toByte()
+            AllSoundOffOnChannel5MidiMessage.message[1] shouldBe BigInteger("01111000", 2).toByte()
+            AllSoundOffOnChannel6MidiMessage.message[1] shouldBe BigInteger("01111000", 2).toByte()
+            AllSoundOffOnChannel7MidiMessage.message[1] shouldBe BigInteger("01111000", 2).toByte()
+            AllSoundOffOnChannel8MidiMessage.message[1] shouldBe BigInteger("01111000", 2).toByte()
+            AllSoundOffOnChannel9MidiMessage.message[1] shouldBe BigInteger("01111000", 2).toByte()
+            AllSoundOffOnChannel10MidiMessage.message[1] shouldBe BigInteger("01111000", 2).toByte()
+            AllSoundOffOnChannel11MidiMessage.message[1] shouldBe BigInteger("01111000", 2).toByte()
+            AllSoundOffOnChannel12MidiMessage.message[1] shouldBe BigInteger("01111000", 2).toByte()
+            AllSoundOffOnChannel13MidiMessage.message[1] shouldBe BigInteger("01111000", 2).toByte()
+            AllSoundOffOnChannel14MidiMessage.message[1] shouldBe BigInteger("01111000", 2).toByte()
+            AllSoundOffOnChannel15MidiMessage.message[1] shouldBe BigInteger("01111000", 2).toByte()
+
+            AllSoundOffOnChannel0MidiMessage.message[2] shouldBe BigInteger("00000000", 2).toByte()
+            AllSoundOffOnChannel1MidiMessage.message[2] shouldBe BigInteger("00000000", 2).toByte()
+            AllSoundOffOnChannel2MidiMessage.message[2] shouldBe BigInteger("00000000", 2).toByte()
+            AllSoundOffOnChannel3MidiMessage.message[2] shouldBe BigInteger("00000000", 2).toByte()
+            AllSoundOffOnChannel4MidiMessage.message[2] shouldBe BigInteger("00000000", 2).toByte()
+            AllSoundOffOnChannel5MidiMessage.message[2] shouldBe BigInteger("00000000", 2).toByte()
+            AllSoundOffOnChannel6MidiMessage.message[2] shouldBe BigInteger("00000000", 2).toByte()
+            AllSoundOffOnChannel7MidiMessage.message[2] shouldBe BigInteger("00000000", 2).toByte()
+            AllSoundOffOnChannel8MidiMessage.message[2] shouldBe BigInteger("00000000", 2).toByte()
+            AllSoundOffOnChannel9MidiMessage.message[2] shouldBe BigInteger("00000000", 2).toByte()
+            AllSoundOffOnChannel10MidiMessage.message[2] shouldBe BigInteger("00000000", 2).toByte()
+            AllSoundOffOnChannel11MidiMessage.message[2] shouldBe BigInteger("00000000", 2).toByte()
+            AllSoundOffOnChannel12MidiMessage.message[2] shouldBe BigInteger("00000000", 2).toByte()
+            AllSoundOffOnChannel13MidiMessage.message[2] shouldBe BigInteger("00000000", 2).toByte()
+            AllSoundOffOnChannel14MidiMessage.message[2] shouldBe BigInteger("00000000", 2).toByte()
+            AllSoundOffOnChannel15MidiMessage.message[2] shouldBe BigInteger("00000000", 2).toByte()
         }
     })

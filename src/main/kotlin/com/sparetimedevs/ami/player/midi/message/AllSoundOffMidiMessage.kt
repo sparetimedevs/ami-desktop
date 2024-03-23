@@ -20,7 +20,24 @@ import java.math.BigInteger
 import javax.sound.midi.MidiMessage
 import javax.sound.midi.ShortMessage
 
-class AllSoundOffMidiMessage(data: ByteArray) : MidiMessage(data) {
+val AllSoundOffOnChannel0MidiMessage: MidiMessage = AllSoundOffMidiMessage(0)
+val AllSoundOffOnChannel1MidiMessage: MidiMessage = AllSoundOffMidiMessage(1)
+val AllSoundOffOnChannel2MidiMessage: MidiMessage = AllSoundOffMidiMessage(2)
+val AllSoundOffOnChannel3MidiMessage: MidiMessage = AllSoundOffMidiMessage(3)
+val AllSoundOffOnChannel4MidiMessage: MidiMessage = AllSoundOffMidiMessage(4)
+val AllSoundOffOnChannel5MidiMessage: MidiMessage = AllSoundOffMidiMessage(5)
+val AllSoundOffOnChannel6MidiMessage: MidiMessage = AllSoundOffMidiMessage(6)
+val AllSoundOffOnChannel7MidiMessage: MidiMessage = AllSoundOffMidiMessage(7)
+val AllSoundOffOnChannel8MidiMessage: MidiMessage = AllSoundOffMidiMessage(8)
+val AllSoundOffOnChannel9MidiMessage: MidiMessage = AllSoundOffMidiMessage(9)
+val AllSoundOffOnChannel10MidiMessage: MidiMessage = AllSoundOffMidiMessage(10)
+val AllSoundOffOnChannel11MidiMessage: MidiMessage = AllSoundOffMidiMessage(11)
+val AllSoundOffOnChannel12MidiMessage: MidiMessage = AllSoundOffMidiMessage(12)
+val AllSoundOffOnChannel13MidiMessage: MidiMessage = AllSoundOffMidiMessage(13)
+val AllSoundOffOnChannel14MidiMessage: MidiMessage = AllSoundOffMidiMessage(14)
+val AllSoundOffOnChannel15MidiMessage: MidiMessage = AllSoundOffMidiMessage(15)
+
+private class AllSoundOffMidiMessage(data: ByteArray) : MidiMessage(data) {
 
     constructor(channel: Int) : this(ByteArray(3)) {
         // https://midi.org/summary-of-midi-1-0-messages
