@@ -21,6 +21,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
@@ -44,12 +45,11 @@ import kotlinx.coroutines.runBlocking
 @OptIn(ExperimentalTestApi::class)
 class PlayPauseMidiPlayerButtonUiTest :
     StringSpec({
-        "TODO test case one12321213" {
+        "Clicking the play button should play the score" {
             runComposeUiTest {
                 val getScore: suspend () -> Either<DomainError, Score> = suspend {
                     getExampleScore().right()
                 }
-                //                var getPlayerContext = createTestPlayerContext()
 
                 val job = SupervisorJob()
                 val coroutineScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
@@ -60,29 +60,23 @@ class PlayPauseMidiPlayerButtonUiTest :
                     var playerContext by remember {
                         mutableStateOf(PlayerContext(playerCoroutineScope = coroutineScope))
                     }
-                    //                    getPlayerContext = playerContext
 
                     PlayPauseMidiPlayerButton(getScore, playerContext, player) { context ->
                         playerContext = context
                     }
                 }
 
-                //                getPlayerContext.playerState shouldBe PlayerState.PAUSED
-                // TODO we can read text on the button! it should read start when paused and pause
-                // when playing.
-                runBlocking { delay(5000L) }
+                onNodeWithTag("play-pause-midi-player-button").assertTextEquals("Play")
                 onNodeWithTag("play-pause-midi-player-button").performClick()
-                runBlocking { delay(5000L) }
-                onNodeWithTag("play-pause-midi-player-button").performClick()
+                onNodeWithTag("play-pause-midi-player-button").assertTextEquals("Pause")
 
-                //                getPlayerContext.playerState shouldBe PlayerState.PLAY
+                // The TestPlayer plays music way faster than a real player, still, we need to wait
+                // a bit before the TestPlayer is done "playing".
+                runBlocking { delay(500L) }
 
-                runBlocking { delay(20000L) }
-                // stop the thingy
-                val f = job.complete()
-                f shouldBe true
-                //                onNodeWithTag("play-pause-midi-player-button").performClick()
-                //                getPlayerContext.playerState shouldBe PlayerState.PLAY
+                val isCompletedJob = job.complete()
+                isCompletedJob shouldBe true
+
                 val expectedNotesPlayed =
                     listOf(
                         "Playing Pitched(duration=NoteDuration(noteValue=QUARTER, modifier=NONE), noteAttributes=NoteAttributes(attack=null, dynamics=null, endDynamics=null, release=null), pitch=Pitch(noteName=C, octave=Octave(value=4), alter=Semitones(value=0.0)))",
@@ -95,9 +89,6 @@ class PlayPauseMidiPlayerButtonUiTest :
                         "Playing Pitched(duration=NoteDuration(noteValue=QUARTER, modifier=NONE), noteAttributes=NoteAttributes(attack=null, dynamics=null, endDynamics=null, release=null), pitch=Pitch(noteName=C, octave=Octave(value=5), alter=Semitones(value=0.0)))"
                     )
                 player.notesPlayed() shouldBe expectedNotesPlayed
-
-                //                    eventually(5.seconds) { player.notesPlayed() shouldBe
-                // expectedNotesPlayed }
             }
         }
     })

@@ -43,13 +43,13 @@ abstract class Player(playerSettings: PlayerSettings) {
         this.playerSettings = playerSettings
     }
 
-    fun getPlayerSettings(): PlayerSettings = this.playerSettings
+    fun getPlayerSettings(): PlayerSettings = playerSettings
 
     fun setMetronomeEnabled(isMetronomeEnabled: Boolean) {
-        this.playerSettings = playerSettings.copy(isMetronomeEnabled = isMetronomeEnabled)
+        playerSettings = playerSettings.copy(isMetronomeEnabled = isMetronomeEnabled)
     }
 
-    fun isMetronomeEnabled(): Boolean = this.playerSettings.isMetronomeEnabled
+    fun isMetronomeEnabled(): Boolean = playerSettings.isMetronomeEnabled
 
     private val metronomeNotes: List<Note> =
         listOf(

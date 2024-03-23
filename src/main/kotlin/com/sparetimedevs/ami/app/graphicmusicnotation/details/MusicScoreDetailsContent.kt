@@ -47,12 +47,8 @@ internal fun MusicScoreDetailsContent(
     var playerContext by remember {
         mutableStateOf(PlayerContext(playerCoroutineScope = coroutineScope))
     }
-
-    //    val midiDevice = openMidiDevice()
-    //    val playerSettings = PlayerSettings()
-    //    val player: Player = MidiPlayer(midiDevice, playerSettings) // TODO or should this be a
-    // remember
-    //    val player2: Player by remember { mutableStateOf(MidiPlayer(midiDevice, playerSettings)) }
+    // This remember of playerSettings is needed to trigger recomposition of UI content.
+    var playerSettings by remember { mutableStateOf(player.getPlayerSettings()) }
 
     TopAppBar(
         title = {
@@ -65,8 +61,9 @@ internal fun MusicScoreDetailsContent(
                 context ->
                 playerContext = context
             }
-            MetronomeButton(player.isMetronomeEnabled()) { isMetronomeEnabled ->
+            MetronomeButton(playerSettings.isMetronomeEnabled) { isMetronomeEnabled ->
                 player.setMetronomeEnabled(isMetronomeEnabled)
+                playerSettings = player.getPlayerSettings()
             }
             GraphicMusicNotationModeButton(mode, component::changeMode)
             Text(text = "More")

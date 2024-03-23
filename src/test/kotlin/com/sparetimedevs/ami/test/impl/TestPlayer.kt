@@ -21,7 +21,7 @@ import com.sparetimedevs.ami.music.data.kotlin.note.Note
 import com.sparetimedevs.ami.player.Player
 import com.sparetimedevs.ami.player.PlayerSettings
 
-class TestDevice(val testString: String) {
+class TestDevice {
 
     private val allTheThings = mutableStateListOf<String>()
 
@@ -34,37 +34,18 @@ class TestDevice(val testString: String) {
 
 class TestPlayer(settings: PlayerSettings) : Player(settings) {
 
-    private val testDevice: TestDevice = TestDevice("test device")
+    private val testDevice: TestDevice = TestDevice()
 
     override fun playNote(note: Note, onChannelNumber: Int) {
-        println("Playing $note on thread ${Thread.currentThread().name}")
         testDevice.send("Playing $note")
-        //        val midinote = helperFunForPitchOfNoteToMidiNoteValue(note)
-        //        //        val midiVel = (127f * note.amp).toInt() // TODO we don't have a volume
-        // attribute
-        //        // yet (or any indication of how loud a note should be played).
-        //        val midiVel = (127f * 0.5f).toInt()
-        //        val noteOnMsg = ShortMessage(ShortMessage.NOTE_ON, onChannelNumber, midinote,
-        // midiVel)
-        //        testDevice.send(noteOnMsg, -1)
     }
 
     override fun stopNote(note: Note, onChannelNumber: Int) {
-        //        val midinote = helperFunForPitchOfNoteToMidiNoteValue(note)
-        //        //        val midiVel = (127f * note.amp).toInt() // TODO we don't have a volume
-        // attribute
-        //        // yet (or any indication of how loud a note should be played).
-        //        val midiVel = (127f * 0.5f).toInt()
-        //        // val noteOffAt = playAt.plus((note.duration * metronome.millisPerBeat).toLong(),
-        //        // ChronoUnit.MILLIS)
-        //
-        //        val noteOffMsg = ShortMessage(ShortMessage.NOTE_OFF, onMidiChannelNumber,
-        // midinote, midiVel)
-        //        receiver.send(noteOffMsg, -1)
+        // No test implementation yet.
     }
 
     override fun stopEverything() {
-        TODO("Not yet implemented")
+        // No test implementation yet.
     }
 
     fun notesPlayed(): List<String> = testDevice.notesPlayed()
