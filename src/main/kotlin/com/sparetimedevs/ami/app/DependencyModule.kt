@@ -14,13 +14,23 @@
  * limitations under the License.
  */
 
-package com.sparetimedevs.ami.app.player
+package com.sparetimedevs.ami.app
 
-import com.sparetimedevs.ami.midi.MidiPlayerSettings
-import kotlinx.coroutines.Job
+import com.sparetimedevs.ami.player.Player
+import com.sparetimedevs.ami.player.PlayerSettings
+import com.sparetimedevs.ami.player.midi.MidiPlayer
+import com.sparetimedevs.ami.player.midi.openMidiDevice
 
-data class PlayerContext(
-    val playerJob: Job = Job(),
-    val playerState: PlayerState = PlayerState.PAUSED,
-    val playerSettings: MidiPlayerSettings = MidiPlayerSettings()
-)
+interface DependencyModule {
+    val player: Player
+}
+
+val dependencyModule: DependencyModule by lazy {
+    val midiDevice = openMidiDevice()
+    val playerSettings = PlayerSettings()
+    val player: Player = MidiPlayer(midiDevice, playerSettings)
+
+    object : DependencyModule {
+        override val player: Player = player
+    }
+}

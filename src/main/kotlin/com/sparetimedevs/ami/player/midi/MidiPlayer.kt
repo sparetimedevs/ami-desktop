@@ -14,40 +14,50 @@
  * limitations under the License.
  */
 
-package com.sparetimedevs.ami.midi.player
+package com.sparetimedevs.ami.player.midi
 
-import com.sparetimedevs.ami.midi.Metronome
-import com.sparetimedevs.ami.midi.MidiPlayerSettings
 import com.sparetimedevs.ami.music.data.kotlin.note.Note
 import com.sparetimedevs.ami.music.data.kotlin.note.NoteName
 import com.sparetimedevs.ami.music.data.kotlin.note.Pitch
+import com.sparetimedevs.ami.player.Metronome
+import com.sparetimedevs.ami.player.Player
+import com.sparetimedevs.ami.player.PlayerSettings
+import com.sparetimedevs.ami.player.midi.message.AllSoundOffOnChannel0MidiMessage
+import com.sparetimedevs.ami.player.midi.message.AllSoundOffOnChannel10MidiMessage
+import com.sparetimedevs.ami.player.midi.message.AllSoundOffOnChannel11MidiMessage
+import com.sparetimedevs.ami.player.midi.message.AllSoundOffOnChannel12MidiMessage
+import com.sparetimedevs.ami.player.midi.message.AllSoundOffOnChannel13MidiMessage
+import com.sparetimedevs.ami.player.midi.message.AllSoundOffOnChannel14MidiMessage
+import com.sparetimedevs.ami.player.midi.message.AllSoundOffOnChannel15MidiMessage
+import com.sparetimedevs.ami.player.midi.message.AllSoundOffOnChannel1MidiMessage
+import com.sparetimedevs.ami.player.midi.message.AllSoundOffOnChannel2MidiMessage
+import com.sparetimedevs.ami.player.midi.message.AllSoundOffOnChannel3MidiMessage
+import com.sparetimedevs.ami.player.midi.message.AllSoundOffOnChannel4MidiMessage
+import com.sparetimedevs.ami.player.midi.message.AllSoundOffOnChannel5MidiMessage
+import com.sparetimedevs.ami.player.midi.message.AllSoundOffOnChannel6MidiMessage
+import com.sparetimedevs.ami.player.midi.message.AllSoundOffOnChannel7MidiMessage
+import com.sparetimedevs.ami.player.midi.message.AllSoundOffOnChannel8MidiMessage
+import com.sparetimedevs.ami.player.midi.message.AllSoundOffOnChannel9MidiMessage
 import java.time.Duration
+import javax.sound.midi.MidiDevice
 import javax.sound.midi.Receiver
 import javax.sound.midi.ShortMessage
-import kotlinx.coroutines.CoroutineScope
 
-class MidiPlayer(settings: MidiPlayerSettings, scope: CoroutineScope) :
-    Player(
-        settings.metronomeMidiChannelNumber,
-        settings.scoreMidiChannelNumber,
-        settings.metronome,
-        settings.isMetronomeEnabled,
-        scope
-    ) {
+class MidiPlayer(midiDevice: MidiDevice, playerSettings: PlayerSettings) : Player(playerSettings) {
 
-    private val receiver: Receiver = settings.midiDevice.receiver
+    private val receiver: Receiver = midiDevice.receiver
 
-    override fun playNote(note: Note, onMidiChannelNumber: Int) {
+    override fun playNote(note: Note, onChannelNumber: Int) {
         println("Playing $note on thread ${Thread.currentThread().name}")
         val midinote = helperFunForPitchOfNoteToMidiNoteValue(note)
         //        val midiVel = (127f * note.amp).toInt() // TODO we don't have a volume attribute
         // yet (or any indication of how loud a note should be played).
         val midiVel = (127f * 0.5f).toInt()
-        val noteOnMsg = ShortMessage(ShortMessage.NOTE_ON, onMidiChannelNumber, midinote, midiVel)
+        val noteOnMsg = ShortMessage(ShortMessage.NOTE_ON, onChannelNumber, midinote, midiVel)
         receiver.send(noteOnMsg, -1)
     }
 
-    override fun stopNote(note: Note, onMidiChannelNumber: Int) {
+    override fun stopNote(note: Note, onChannelNumber: Int) {
         val midinote = helperFunForPitchOfNoteToMidiNoteValue(note)
         //        val midiVel = (127f * note.amp).toInt() // TODO we don't have a volume attribute
         // yet (or any indication of how loud a note should be played).
@@ -55,8 +65,27 @@ class MidiPlayer(settings: MidiPlayerSettings, scope: CoroutineScope) :
         // val noteOffAt = playAt.plus((note.duration * metronome.millisPerBeat).toLong(),
         // ChronoUnit.MILLIS)
 
-        val noteOffMsg = ShortMessage(ShortMessage.NOTE_OFF, onMidiChannelNumber, midinote, midiVel)
+        val noteOffMsg = ShortMessage(ShortMessage.NOTE_OFF, onChannelNumber, midinote, midiVel)
         receiver.send(noteOffMsg, -1)
+    }
+
+    override fun stopEverything() {
+        receiver.send(AllSoundOffOnChannel0MidiMessage, -1)
+        receiver.send(AllSoundOffOnChannel1MidiMessage, -1)
+        receiver.send(AllSoundOffOnChannel2MidiMessage, -1)
+        receiver.send(AllSoundOffOnChannel3MidiMessage, -1)
+        receiver.send(AllSoundOffOnChannel4MidiMessage, -1)
+        receiver.send(AllSoundOffOnChannel5MidiMessage, -1)
+        receiver.send(AllSoundOffOnChannel6MidiMessage, -1)
+        receiver.send(AllSoundOffOnChannel7MidiMessage, -1)
+        receiver.send(AllSoundOffOnChannel8MidiMessage, -1)
+        receiver.send(AllSoundOffOnChannel9MidiMessage, -1)
+        receiver.send(AllSoundOffOnChannel10MidiMessage, -1)
+        receiver.send(AllSoundOffOnChannel11MidiMessage, -1)
+        receiver.send(AllSoundOffOnChannel12MidiMessage, -1)
+        receiver.send(AllSoundOffOnChannel13MidiMessage, -1)
+        receiver.send(AllSoundOffOnChannel14MidiMessage, -1)
+        receiver.send(AllSoundOffOnChannel15MidiMessage, -1)
     }
 }
 

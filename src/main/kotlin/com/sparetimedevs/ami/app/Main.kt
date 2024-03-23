@@ -25,7 +25,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.AlertDialog
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -36,7 +35,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.awt.awtEventOrNull
 import androidx.compose.ui.input.key.Key
@@ -63,9 +61,8 @@ import java.io.File
 import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-@OptIn(ExperimentalDecomposeApi::class, ExperimentalCoroutinesApi::class)
+@OptIn(ExperimentalDecomposeApi::class)
 fun main() {
     overrideSchedulers(main = Dispatchers.Main::asScheduler)
 
@@ -114,7 +111,6 @@ fun main() {
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun SaveStateDialog(
     onSaveState: () -> Unit,
@@ -168,7 +164,6 @@ private fun tryRestoreStateFromFile(): ParcelableContainer? =
         }
     }
 
-@OptIn(ExperimentalComposeUiApi::class)
 private fun handleKeyEvent(keyEvent: KeyEvent): Boolean {
     when (keyEvent.key) {
         Key.Z -> {

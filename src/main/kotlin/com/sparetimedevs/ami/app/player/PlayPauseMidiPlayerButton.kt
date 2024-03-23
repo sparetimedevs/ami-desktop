@@ -31,15 +31,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import arrow.core.Either
 import com.sparetimedevs.ami.core.DomainError
-import com.sparetimedevs.ami.midi.openMidiDevice
-import com.sparetimedevs.ami.midi.play
 import com.sparetimedevs.ami.music.data.kotlin.score.Score
+import com.sparetimedevs.ami.player.Player
+import com.sparetimedevs.ami.player.PlayerContext
+import com.sparetimedevs.ami.player.play
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.launch
@@ -49,14 +50,14 @@ import kotlinx.coroutines.launch
 fun PlayPauseMidiPlayerButton(
     getScore: suspend () -> Either<DomainError, Score>,
     playerContext: PlayerContext,
+    player: Player,
     onValueChange: (PlayerContext) -> Unit
 ) {
 
-    val coroutineScope = rememberCoroutineScope()
     var domainError: DomainError? by remember { mutableStateOf(null) }
 
     TextButton(
-        modifier = Modifier.padding(10.dp),
+        modifier = Modifier.padding(10.dp).testTag("play-pause-midi-player-button"),
         onClick = {
             when (playerContext.playerState) {
                 PlayerState.PAUSED,
@@ -81,31 +82,23 @@ fun PlayPauseMidiPlayerButton(
 
     when (playerContext.playerState) {
         PlayerState.PLAY -> {
-            // Open MIDI device
-            val playerSettingsNow = playerContext.playerSettings.copy(midiDevice = openMidiDevice())
             // Start playing midi
             val job: Job =
-                coroutineScope.launch {
+                playerContext.playerCoroutineScope.launch {
                     getScore()
                         .fold(
                             { error ->
                                 println("Error: $error")
                                 domainError = error
                             },
-                            { score -> play(score, playerSettingsNow) }
+                            { score -> play(score, player) }
                         )
                 }
-            onValueChange(
-                playerContext.copy(
-                    playerJob = job,
-                    playerState = PlayerState.PLAYING,
-                    playerSettings = playerSettingsNow
-                )
-            )
+            onValueChange(playerContext.copy(playerJob = job, playerState = PlayerState.PLAYING))
         }
         PlayerState.PAUSE -> {
             // Stop playing midi
-            coroutineScope.launch { playerContext.playerJob.cancelAndJoin() }
+            playerContext.playerCoroutineScope.launch { playerContext.playerJob.cancelAndJoin() }
             onValueChange(playerContext.copy(playerState = PlayerState.PAUSED))
         }
         PlayerState.PLAYING,

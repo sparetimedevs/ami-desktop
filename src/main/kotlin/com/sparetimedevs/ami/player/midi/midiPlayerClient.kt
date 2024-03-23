@@ -14,16 +14,12 @@
  * limitations under the License.
  */
 
-package com.sparetimedevs.ami.midi
+package com.sparetimedevs.ami.player.midi
 
-import com.sparetimedevs.ami.midi.player.MidiPlayer
-import com.sparetimedevs.ami.music.data.kotlin.score.Score
 import com.sparetimedevs.ami.music.example.getExampleScore
-import java.time.LocalDateTime
-import javax.sound.midi.MidiDevice
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.isActive
+import com.sparetimedevs.ami.player.Metronome
+import com.sparetimedevs.ami.player.PlayerSettings
+import com.sparetimedevs.ami.player.play
 import kotlinx.coroutines.runBlocking
 
 fun main() {
@@ -45,43 +41,15 @@ fun main() {
     val scoreMidiChannelNumber = 1
 
     val playerSettings =
-        MidiPlayerSettings(
-            midiDevice,
+        PlayerSettings(
             metronomeMidiChannelNumber,
             scoreMidiChannelNumber,
             metronome,
             true,
         )
 
-    runBlocking { play(score, playerSettings) }
-}
-
-data class MidiPlayerSettings(
-    val midiDevice: MidiDevice = openMidiDevice(),
-    val metronomeMidiChannelNumber: Int = 0,
-    val scoreMidiChannelNumber: Int = 1,
-    val metronome: Metronome = Metronome(beatsPerBar = 4, bpm = 120),
-    val isMetronomeEnabled: Boolean = false
-)
-
-suspend fun play(score: Score, playerSettings: MidiPlayerSettings): Unit = coroutineScope {
-    val player = MidiPlayer(playerSettings, this)
-
-    try {
-        // score.parts[0] can throw `java.lang.IndexOutOfBoundsException: Empty list doesn't contain
-        // element at index 0`
-        // It would be good to avoid it.
-        player.play(score.parts[0].measures, LocalDateTime.now())
-        while (this.isActive) {
-            // Do nothing, just keep going while the coroutine is active.
-            // Do add a delay, else this while loo[ keeps on going too fast.
-            delay(500L)
-        }
-    } finally {
-        println("Stopping player...")
-        runBlocking {
-            player.stop()
-            playerSettings.midiDevice.close()
-        }
+    runBlocking {
+        val player = MidiPlayer(midiDevice, playerSettings)
+        play(score, player)
     }
 }
