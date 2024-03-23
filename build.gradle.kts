@@ -18,7 +18,7 @@ repositories {
 
 dependencies {
     implementation(compose.desktop.currentOs)
-    implementation(libs.ami.music.cdm.kotlin)
+    implementation(libs.ami.music.sdk.kotlin)
     implementation(libs.arrow.core)
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.decompose.jvm)
@@ -28,6 +28,8 @@ dependencies {
     testImplementation(libs.kotest.runner.junit5)
     testImplementation(libs.kotest.assertions.core)
     testImplementation(libs.kotest.assertions.arrow)
+
+    @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class) implementation(compose.uiTest)
 
     // Required for pitest. A future version of the pitest gradle plugin may make this unnecessary.
     testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.10.2")

@@ -31,11 +31,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogWindow
 import com.sparetimedevs.ami.app.player.PlayerState
-import com.sparetimedevs.ami.music.example.getExampleScore
 import com.sparetimedevs.ami.music.example.getExampleScoreAsturias
+import com.sparetimedevs.ami.music.example.getExampleScoreFrereJacques
 import com.sparetimedevs.ami.music.example.getExampleScoreHeighHoNobodyHome
 
 @Composable
@@ -58,7 +59,8 @@ fun TopAppBarTitleDropDown(
                             selectedIndex = -1
                             component.onNewScoreClicked()
                             onValueChange(PlayerState.PAUSE)
-                        }
+                        },
+                        modifier = Modifier.testTag("create-new-score")
                     ) {
                         Text("New")
                     }
@@ -73,11 +75,11 @@ fun TopAppBarTitleDropDown(
                         Button(
                             onClick = {
                                 selectedIndex = -1
-                                component.onLoadScoreClicked(getExampleScore())
+                                component.onLoadScoreClicked(getExampleScoreFrereJacques())
                                 onValueChange(PlayerState.PAUSE)
                             }
                         ) {
-                            Text("Load example score")
+                            Text("Load Frère Jacques")
                         }
                         Button(
                             onClick = {
@@ -117,7 +119,7 @@ fun TopAppBarTitleDropDown(
                 }
             }
         )
-    Box(modifier = Modifier.wrapContentSize()) {
+    Box(modifier = Modifier.wrapContentSize().testTag("score-dropdown-menu")) {
         Text(text, modifier = Modifier.clickable(onClick = { expanded = true }))
         DropdownMenu(
             expanded = expanded,
@@ -129,7 +131,8 @@ fun TopAppBarTitleDropDown(
                     onClick = {
                         selectedIndex = index
                         expanded = false
-                    }
+                    },
+                    modifier = Modifier.testTag("score-dropdown-menu-${action.text.lowercase()}")
                 ) {
                     Text(text = action.text)
                 }

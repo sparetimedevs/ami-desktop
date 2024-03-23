@@ -42,12 +42,11 @@ class PathDataRepositoryImplTest :
                     .moveTo(x = 87.5f, y = 550.0f)
                     .horizontalLineTo(x = 587.5f)
                     .moveTo(x = 662.5f, y = 575.0f)
-                    .getNodes()
+                    .nodes
 
             pathDataRepository.replacePathData(pathData)
 
-            val pathNode: PathNode =
-                PathBuilder().horizontalLineTo(x = 1157.9323f).getNodes().first()
+            val pathNode: PathNode = PathBuilder().horizontalLineTo(x = 1157.9323f).nodes.first()
 
             val result: List<PathNode> = pathDataRepository.addToPathData(pathNode)
 
@@ -57,7 +56,7 @@ class PathDataRepositoryImplTest :
                     .horizontalLineTo(x = 587.5f)
                     .moveTo(x = 662.5f, y = 575.0f)
                     .horizontalLineTo(x = 1162.5f)
-                    .getNodes()
+                    .nodes
         }
 
         "addToPathData should use only two points to describe one note" {
@@ -67,11 +66,11 @@ class PathDataRepositoryImplTest :
                     .horizontalLineTo(x = 587.5f)
                     .moveTo(x = 662.5f, y = 575.0f)
                     .horizontalLineTo(x = 912.5f)
-                    .getNodes()
+                    .nodes
 
             pathDataRepository.replacePathData(pathData)
 
-            val pathNode: PathNode = PathBuilder().horizontalLineTo(x = 1162.5f).getNodes().first()
+            val pathNode: PathNode = PathBuilder().horizontalLineTo(x = 1162.5f).nodes.first()
 
             val result: List<PathNode> = pathDataRepository.addToPathData(pathNode)
 
@@ -82,6 +81,6 @@ class PathDataRepositoryImplTest :
                     .moveTo(x = 662.5f, y = 575.0f)
                     // There is no `.horizontalLineTo(x = 912.5f)`
                     .horizontalLineTo(x = 1162.5f)
-                    .getNodes()
+                    .nodes
         }
     })

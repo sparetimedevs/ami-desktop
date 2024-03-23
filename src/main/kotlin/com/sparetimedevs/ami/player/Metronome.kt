@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.sparetimedevs.ami.midi
+package com.sparetimedevs.ami.player
 
 data class Metronome(val bpm: Int, val beatsPerBar: Int = 16) {
     val millisPerBeat: Long

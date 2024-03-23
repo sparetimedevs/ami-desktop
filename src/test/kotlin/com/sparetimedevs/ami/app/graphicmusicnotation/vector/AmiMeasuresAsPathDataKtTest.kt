@@ -59,10 +59,7 @@ class AmiMeasuresAsPathDataKtTest :
                 )
 
             val expectedPathData: List<PathNode> =
-                PathBuilder()
-                    .moveTo(x = 87.5f, y = 700.0f)
-                    .lineTo(x = 587.5f, y = 700.0f)
-                    .getNodes()
+                PathBuilder().moveTo(x = 87.5f, y = 700.0f).lineTo(x = 587.5f, y = 700.0f).nodes
 
             val result: List<PathNode> = measure.asPathData(graphicProperties)
 
@@ -100,7 +97,7 @@ class AmiMeasuresAsPathDataKtTest :
                     .lineTo(x = 587.5f, y = 700.0f)
                     .moveTo(x = 662.5f, y = 750.0f)
                     .lineTo(x = 1162.5f, y = 750.0f)
-                    .getNodes()
+                    .nodes
 
             val result: List<PathNode> = measures.asPathData(graphicProperties)
 
@@ -143,7 +140,7 @@ class AmiMeasuresAsPathDataKtTest :
                     .lineTo(x = 2062.5f, y = 575.0f)
                     .moveTo(x = 2062.5f, y = 600.0f)
                     .lineTo(x = 2312.5f, y = 600.0f)
-                    .getNodes()
+                    .nodes
 
             val result: List<PathNode> = measures.asPathData(graphicProperties)
 
