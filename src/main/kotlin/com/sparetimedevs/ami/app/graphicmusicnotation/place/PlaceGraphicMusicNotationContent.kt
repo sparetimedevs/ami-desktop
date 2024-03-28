@@ -106,7 +106,7 @@ fun PlaceGraphicMusicNotationContent(
                         // Sometimes the awaitFirstDown is not triggered? (This is also an issue for
                         // subsequent lines.)
                         val newPathNodeForHorizontalLine: PathNode =
-                            PathBuilder().horizontalLineTo(currentPosition.x).getNodes().first()
+                            PathBuilder().horizontalLineTo(currentPosition.x).nodes.first()
 
                         // component.addToPathData(newPathNodeForHorizontalLine)
                     }
@@ -151,7 +151,7 @@ fun PlaceGraphicMusicNotationContent(
                     .horizontalLineTo(x = x4EEnd)
                     .moveTo(x = x4GStart, y = y4GStart)
                     .horizontalLineTo(x = x4GEnd)
-                    .getNodes()
+                    .nodes
 
             drawPath(
                 path = pathData.asComposePath(),

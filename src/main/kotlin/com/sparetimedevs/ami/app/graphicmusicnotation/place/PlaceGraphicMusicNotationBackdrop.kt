@@ -169,7 +169,7 @@ private fun DrawScope.drawCross(
                 .horizontalLineTo(size + x)
                 .moveTo(0f + x + (size / 2), y - (size / 2))
                 .verticalLineTo((size / 2) + y)
-                .getNodes()
+                .nodes
                 .asComposePath(),
         color = color,
         style = Stroke(width = lineThickness)
