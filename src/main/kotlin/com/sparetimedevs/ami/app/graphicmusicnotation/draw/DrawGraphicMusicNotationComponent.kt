@@ -156,7 +156,7 @@ class DefaultDrawGraphicMusicNotationComponent(
                     PathBuilder()
                         .moveTo(0f + offsetX, 1 * thicknessOfLines + offsetY)
                         .horizontalLineTo(width + offsetX)
-                        .getNodes()
+                        .nodes
             ),
             TheLineThatRepresentsAPitch(
                 pitch = Pitch(noteName = NoteName.A_SHARP, octave = octave),
@@ -165,7 +165,7 @@ class DefaultDrawGraphicMusicNotationComponent(
                     PathBuilder()
                         .moveTo(0f + offsetX, 2 * thicknessOfLines + offsetY)
                         .horizontalLineTo(width + offsetX)
-                        .getNodes()
+                        .nodes
             ),
             TheLineThatRepresentsAPitch(
                 pitch = Pitch(noteName = NoteName.A, octave = octave),
@@ -174,7 +174,7 @@ class DefaultDrawGraphicMusicNotationComponent(
                     PathBuilder()
                         .moveTo(0f + offsetX, 3 * thicknessOfLines + offsetY)
                         .horizontalLineTo(width + offsetX)
-                        .getNodes()
+                        .nodes
             ),
             TheLineThatRepresentsAPitch(
                 pitch = Pitch(noteName = NoteName.G_SHARP, octave = octave),
@@ -183,7 +183,7 @@ class DefaultDrawGraphicMusicNotationComponent(
                     PathBuilder()
                         .moveTo(0f + offsetX, 4 * thicknessOfLines + offsetY)
                         .horizontalLineTo(width + offsetX)
-                        .getNodes()
+                        .nodes
             ),
             TheLineThatRepresentsAPitch(
                 pitch = Pitch(noteName = NoteName.G, octave = octave),
@@ -192,7 +192,7 @@ class DefaultDrawGraphicMusicNotationComponent(
                     PathBuilder()
                         .moveTo(0f + offsetX, 5 * thicknessOfLines + offsetY)
                         .horizontalLineTo(width + offsetX)
-                        .getNodes()
+                        .nodes
             ),
             TheLineThatRepresentsAPitch(
                 pitch = Pitch(noteName = NoteName.F_SHARP, octave = octave),
@@ -201,7 +201,7 @@ class DefaultDrawGraphicMusicNotationComponent(
                     PathBuilder()
                         .moveTo(0f + offsetX, 6 * thicknessOfLines + offsetY)
                         .horizontalLineTo(width + offsetX)
-                        .getNodes()
+                        .nodes
             ),
             TheLineThatRepresentsAPitch(
                 pitch = Pitch(noteName = NoteName.F, octave = octave),
@@ -210,7 +210,7 @@ class DefaultDrawGraphicMusicNotationComponent(
                     PathBuilder()
                         .moveTo(0f + offsetX, 7 * thicknessOfLines + offsetY)
                         .horizontalLineTo(width + offsetX)
-                        .getNodes()
+                        .nodes
             ),
             TheLineThatRepresentsAPitch(
                 pitch = Pitch(noteName = NoteName.E, octave = octave),
@@ -219,7 +219,7 @@ class DefaultDrawGraphicMusicNotationComponent(
                     PathBuilder()
                         .moveTo(0f + offsetX, 8 * thicknessOfLines + offsetY)
                         .horizontalLineTo(width + offsetX)
-                        .getNodes()
+                        .nodes
             ),
             TheLineThatRepresentsAPitch(
                 pitch = Pitch(noteName = NoteName.D_SHARP, octave = octave),
@@ -228,7 +228,7 @@ class DefaultDrawGraphicMusicNotationComponent(
                     PathBuilder()
                         .moveTo(0f + offsetX, 9 * thicknessOfLines + offsetY)
                         .horizontalLineTo(width + offsetX)
-                        .getNodes()
+                        .nodes
             ),
             TheLineThatRepresentsAPitch(
                 pitch = Pitch(noteName = NoteName.D, octave = octave),
@@ -237,7 +237,7 @@ class DefaultDrawGraphicMusicNotationComponent(
                     PathBuilder()
                         .moveTo(0f + offsetX, 10 * thicknessOfLines + offsetY)
                         .horizontalLineTo(width + offsetX)
-                        .getNodes()
+                        .nodes
             ),
             TheLineThatRepresentsAPitch(
                 pitch = Pitch(noteName = NoteName.C_SHARP, octave = octave),
@@ -246,7 +246,7 @@ class DefaultDrawGraphicMusicNotationComponent(
                     PathBuilder()
                         .moveTo(0f + offsetX, 11 * thicknessOfLines + offsetY)
                         .horizontalLineTo(width + offsetX)
-                        .getNodes()
+                        .nodes
             ),
             TheLineThatRepresentsAPitch(
                 pitch = Pitch(noteName = NoteName.C, octave = octave),
@@ -255,7 +255,7 @@ class DefaultDrawGraphicMusicNotationComponent(
                     PathBuilder()
                         .moveTo(0f + offsetX, 12 * thicknessOfLines + offsetY)
                         .horizontalLineTo(width + offsetX)
-                        .getNodes()
+                        .nodes
             )
         )
     }

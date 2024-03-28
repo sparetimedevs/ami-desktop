@@ -18,7 +18,7 @@ repositories {
 
 dependencies {
     implementation(compose.desktop.currentOs)
-    implementation(libs.ami.music.cdm.kotlin)
+    implementation(libs.ami.music.sdk.kotlin)
     implementation(libs.arrow.core)
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.decompose.jvm)
@@ -29,11 +29,13 @@ dependencies {
     testImplementation(libs.kotest.assertions.core)
     testImplementation(libs.kotest.assertions.arrow)
 
+    @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class) implementation(compose.uiTest)
+
     // Required for pitest. A future version of the pitest gradle plugin may make this unnecessary.
     testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.10.2")
 
     pitest("com.arcmutate:base:1.3.0")
-    pitest("com.arcmutate:pitest-kotlin-plugin:1.2.0")
+    pitest("com.arcmutate:pitest-kotlin-plugin:1.2.3")
 }
 
 pitest {

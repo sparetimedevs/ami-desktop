@@ -1,2 +1,4 @@
 Pencil.kt, *, *, *, *, *
 Piano.kt, *, *, *, *, *
+# Currently it is impossible to run UI tests (located in src/test/kotlin/ui/) i.c.w. Arcmutate/Pitest.
+*Content.kt, *, *, *, *, *

@@ -57,7 +57,7 @@ private fun asPathData(
         PathBuilder()
             .moveTo(startX.toFloat(), startY.toFloat())
             .lineTo(endXWithCutOff.toFloat(), endY.toFloat())
-            .getNodes()
+            .nodes
     }
 }
 

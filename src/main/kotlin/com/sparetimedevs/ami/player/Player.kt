@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package com.sparetimedevs.ami.midi.player
+package com.sparetimedevs.ami.player
 
-import com.sparetimedevs.ami.midi.Metronome
 import com.sparetimedevs.ami.music.data.kotlin.measure.Measure
 import com.sparetimedevs.ami.music.data.kotlin.note.Note
 import com.sparetimedevs.ami.music.data.kotlin.note.NoteAttributes
@@ -25,26 +24,32 @@ import com.sparetimedevs.ami.music.data.kotlin.note.NoteName
 import com.sparetimedevs.ami.music.data.kotlin.note.NoteValue
 import com.sparetimedevs.ami.music.data.kotlin.note.Octave
 import com.sparetimedevs.ami.music.data.kotlin.note.Pitch
+import com.sparetimedevs.ami.player.midi.helperFunForDurationOfNoteToJavaTimeDuration
 import java.time.Duration
 import java.time.LocalDateTime
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-abstract class Player(
-    private val metronomeMidiChannelNumber:
-        Int, // TODO model this differently, so that it is not tight to MIDI, but instead
-    // PlayerChannel or PlayerInstrument??
-    private val scoreMidiChannelNumber:
-        Int, // TODO model this differently, so that it is not tight to MIDI, but instead
-    // PlayerChannel or PlayerInstrument??
-    private val metronome: Metronome,
-    private val isMetronomeEnabled: Boolean,
-    private val scope: CoroutineScope = CoroutineScope(Dispatchers.Default)
-) {
+abstract class Player(playerSettings: PlayerSettings) {
 
-    private var playing = true
+    private var playerSettings: PlayerSettings
+
+    init {
+        this.playerSettings = playerSettings
+    }
+
+    fun setPlayerSettings(playerSettings: PlayerSettings) {
+        this.playerSettings = playerSettings
+    }
+
+    fun getPlayerSettings(): PlayerSettings = playerSettings
+
+    fun setMetronomeEnabled(isMetronomeEnabled: Boolean) {
+        playerSettings = playerSettings.copy(isMetronomeEnabled = isMetronomeEnabled)
+    }
+
+    fun isMetronomeEnabled(): Boolean = playerSettings.isMetronomeEnabled
 
     private val metronomeNotes: List<Note> =
         listOf(
@@ -70,23 +75,34 @@ abstract class Player(
             )
         )
 
-    suspend fun stop() {
-        playing = false
-        delay(metronome.millisPerBeat)
+    open suspend fun stop() {
+        stopEverything()
     }
 
-    fun play(measures: List<Measure>, at: LocalDateTime) {
-        if (!playing) return
-        println("Playing measures $measures")
-        play(measures.flatMap { measure -> measure.notes }, at, scoreMidiChannelNumber)
-        if (isMetronomeEnabled) {
-            val metronomeNotesForAllMeasures =
-                listOf((0..measures.size - 1)).flatten().flatMap { metronomeNotes }
-            play(metronomeNotesForAllMeasures, at, metronomeMidiChannelNumber)
+    suspend fun play(measures: List<Measure>, at: LocalDateTime) {
+        coroutineScope {
+            println("Playing measures $measures")
+            launch {
+                play(
+                    measures.flatMap { measure -> measure.notes },
+                    at,
+                    playerSettings.scorePlayerChannelNumber
+                )
+            }
+            launch {
+                if (playerSettings.isMetronomeEnabled) {
+                    val metronomeNotesForAllMeasures = measures.indices.flatMap { metronomeNotes }
+                    play(
+                        metronomeNotesForAllMeasures,
+                        at,
+                        playerSettings.metronomePlayerChannelNumber
+                    )
+                }
+            }
         }
     }
 
-    fun play(notes: List<Note>, at: LocalDateTime, onMidiChannelNumber: Int) {
+    private suspend fun play(notes: List<Note>, at: LocalDateTime, onChannelNumber: Int) {
         val listOfNotesWithTheTotalDurationBeforeThatNoteIsPlayed =
             notes
                 .mapIndexed { index, note ->
@@ -95,7 +111,10 @@ abstract class Player(
                             Duration.ZERO
                         } else {
                             val previousNote: Note = notes[index - 1]
-                            helperFunForDurationOfNoteToJavaTimeDuration(previousNote, metronome)
+                            helperFunForDurationOfNoteToJavaTimeDuration(
+                                previousNote,
+                                playerSettings.metronome
+                            )
                         }
                     durationOfPreviousNote to note
                 }
@@ -107,23 +126,23 @@ abstract class Player(
 
         listOfNotesWithTheTotalDurationBeforeThatNoteIsPlayed.forEach { (duration, note) ->
             val playAt = at.plus(duration)
-            schedule(playAt) {
-                if (playing) {
-                    playNote(note, onMidiChannelNumber)
-                }
-            }
+            schedule(playAt) { playNote(note, onChannelNumber) }
             val noteOffAt =
-                playAt.plus(helperFunForDurationOfNoteToJavaTimeDuration(note, metronome))
-            schedule(noteOffAt) { stopNote(note, onMidiChannelNumber) }
+                playAt.plus(
+                    helperFunForDurationOfNoteToJavaTimeDuration(note, playerSettings.metronome)
+                )
+            schedule(noteOffAt) { stopNote(note, onChannelNumber) }
         }
     }
 
-    abstract fun playNote(note: Note, onMidiChannelNumber: Int)
+    abstract fun playNote(note: Note, onChannelNumber: Int)
 
-    abstract fun stopNote(note: Note, onMidiChannelNumber: Int)
+    abstract fun stopNote(note: Note, onChannelNumber: Int)
 
-    private fun schedule(time: LocalDateTime, function: () -> Unit) {
-        scope.launch {
+    abstract fun stopEverything()
+
+    private suspend fun schedule(time: LocalDateTime, function: () -> Unit) = coroutineScope {
+        launch {
             delay(Duration.between(LocalDateTime.now(), time).toMillis())
             function()
         }

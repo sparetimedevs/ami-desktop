@@ -81,7 +81,7 @@ class DefaultMusicScoreDetailsComponentTest :
             component.onLoadScoreClicked(score)
 
             val pathData: List<PathNode> =
-                PathBuilder().moveTo(x = 87.5f, y = 700.0f).horizontalLineTo(x = 587.5f).getNodes()
+                PathBuilder().moveTo(x = 87.5f, y = 700.0f).horizontalLineTo(x = 587.5f).nodes
             pathDataRepository.replacePathData(pathData)
 
             val result = component.updateAndGetScore()
@@ -111,7 +111,7 @@ class DefaultMusicScoreDetailsComponentTest :
             component.onLoadScoreClicked(score)
 
             val pathData: List<PathNode> =
-                PathBuilder().moveTo(x = 87.5f, y = 700.0f).horizontalLineTo(x = 587.5f).getNodes()
+                PathBuilder().moveTo(x = 87.5f, y = 700.0f).horizontalLineTo(x = 587.5f).nodes
             pathDataRepository.replacePathData(pathData)
 
             val result = component.updateAndGetScore()

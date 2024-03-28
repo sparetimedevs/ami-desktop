@@ -46,7 +46,7 @@ class DefaultDrawGraphicMusicNotationComponentTest :
         "getPathData" { component.getPathData() shouldBe mutableListOf() }
 
         "addToPathData" {
-            val pathNode: PathNode = PathBuilder().moveTo(212.5f, 450f).getNodes().first()
+            val pathNode: PathNode = PathBuilder().moveTo(212.5f, 450f).nodes.first()
 
             val result = component.addToPathData(pathNode)
 
@@ -54,7 +54,7 @@ class DefaultDrawGraphicMusicNotationComponentTest :
         }
 
         "undoLastCreatedLine" {
-            val pathNode: PathNode = PathBuilder().moveTo(212.5f, 450f).getNodes().first()
+            val pathNode: PathNode = PathBuilder().moveTo(212.5f, 450f).nodes.first()
 
             val stage1 = component.addToPathData(pathNode)
 
