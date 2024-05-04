@@ -35,7 +35,7 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.10.2")
 
     pitest("com.arcmutate:base:1.3.0")
-    pitest("com.arcmutate:pitest-kotlin-plugin:1.2.5")
+    pitest("com.arcmutate:pitest-kotlin-plugin:1.2.6")
 }
 
 pitest {
