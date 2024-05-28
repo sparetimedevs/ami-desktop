@@ -1,5 +1,5 @@
 [versions]
-kotlin-version = "1.9.23"
+kotlin-version = "2.0.0"
 compose-version = "1.6.10"
 spotless-version = "6.25.0"
 pitest-version = "1.15.0"
@@ -26,5 +26,6 @@ kotest-assertions-arrow = { module = "io.kotest.extensions:kotest-assertions-arr
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin-version" }
 compose = { id = "org.jetbrains.compose", version.ref = "compose-version" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin-version" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless-version" }
 pitest = { id = "info.solidsoft.pitest", version.ref = "pitest-version" }
