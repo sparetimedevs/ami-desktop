@@ -1,0 +1,7 @@
+#Licence file for pitest extensions
+#Tue Feb 06 09:51:32 GMT 2024
+expires=06/02/2026
+keyVersion=1
+packages=com.sparetimedevs.ami.*
+signature=ZRJBH3kf7ec1eJbQTYmtmphEHmqJd07gCMf07yKh0ulVIIBRbzBCTrRf4wHSQJIRcQhxqgzp0YXyW4usbd8CjATu5uXk3vkBI5aZ+BplPDlId1wEIyoQwmJZF+7q+oU+UWFsQVwElAcC2y/ADIKqblL4k/USJL4tD3UqWw7nVTU\=
+type=OSSS
