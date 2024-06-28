@@ -1,10 +1,13 @@
 import com.diffplug.gradle.spotless.SpotlessExtension
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.compose)
+    alias(libs.plugins.compose.compiler)
     alias(libs.plugins.spotless)
     alias(libs.plugins.pitest)
 }
@@ -32,10 +35,10 @@ dependencies {
     @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class) implementation(compose.uiTest)
 
     // Required for pitest. A future version of the pitest gradle plugin may make this unnecessary.
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.10.2")
+    testRuntimeOnly(libs.junit.platform.launcher)
 
-    pitest("com.arcmutate:base:1.3.0")
-    pitest("com.arcmutate:pitest-kotlin-plugin:1.2.3")
+    pitest(libs.arcmutate.base)
+    pitest(libs.arcmutate.pitest.kotlin.plugin)
 }
 
 pitest {
@@ -61,15 +64,13 @@ compose.desktop {
 }
 
 tasks.withType<KotlinCompile> {
-    kotlinOptions {
-        freeCompilerArgs =
-            listOf(
-                "-Xcontext-receivers",
-                //            "-Xuse-k2",
-                "-Xbackend-threads=4",
-            )
-        jvmTarget = "21"
-        languageVersion = "1.8"
+    compilerOptions {
+        freeCompilerArgs.addAll(
+            "-Xcontext-receivers",
+            "-Xbackend-threads=4",
+        )
+        jvmTarget.set(JvmTarget.JVM_21)
+        languageVersion.set(KotlinVersion.KOTLIN_2_0)
     }
 }
 

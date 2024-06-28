@@ -1,15 +1,18 @@
 [versions]
-kotlin-version = "1.9.22"
-compose-version = "1.6.1"
+kotlin-version = "2.0.0"
+compose-version = "1.6.11"
 spotless-version = "6.25.0"
 pitest-version = "1.15.0"
 ami-music-sdk-kotlin-version = "0.0.1-SNAPSHOT"
-arrow-version = "1.2.3"
-coroutines-version = "1.8.0"
-decompose-version = "2.2.2-compose-experimental"
-reaktive-version = "2.1.0"
-kotest-version = "5.8.1"
+arrow-version = "1.2.4"
+coroutines-version = "1.8.1"
+decompose-version = "2.2.3"
+reaktive-version = "2.2.0"
+kotest-version = "5.9.1"
 kotest-assertions-arrow-version = "1.4.0"
+junit-platform-launcher-version = "1.10.2"
+arcmutate-base-version = "1.3.0"
+arcmutate-pitest-kotlin-plugin-version = "1.2.6"
 
 [libraries]
 ami-music-sdk-kotlin = { module = "com.sparetimedevs.ami:ami-music-sdk-kotlin", version.ref = "ami-music-sdk-kotlin-version" }
@@ -22,9 +25,13 @@ reaktive-coroutines-interop-jvm = { module = "com.badoo.reaktive:coroutines-inte
 kotest-runner-junit5 = { module = "io.kotest:kotest-runner-junit5", version.ref = "kotest-version" }
 kotest-assertions-core = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest-version" }
 kotest-assertions-arrow = { module = "io.kotest.extensions:kotest-assertions-arrow", version.ref = "kotest-assertions-arrow-version" }
+junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher", version.ref = "junit-platform-launcher-version" }
+arcmutate-base = { module = "com.arcmutate:base", version.ref = "arcmutate-base-version" }
+arcmutate-pitest-kotlin-plugin = { module = "com.arcmutate:pitest-kotlin-plugin", version.ref = "arcmutate-pitest-kotlin-plugin-version" }
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin-version" }
 compose = { id = "org.jetbrains.compose", version.ref = "compose-version" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin-version" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless-version" }
 pitest = { id = "info.solidsoft.pitest", version.ref = "pitest-version" }
