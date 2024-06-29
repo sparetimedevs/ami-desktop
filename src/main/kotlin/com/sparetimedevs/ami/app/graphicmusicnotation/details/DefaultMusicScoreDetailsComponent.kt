@@ -84,7 +84,8 @@ internal class DefaultMusicScoreDetailsComponent(
 
     override suspend fun updateAndGetScore(): Either<DomainError, Score> =
         when (_modeValue.value) {
-            GraphicMusicNotationMode.DRAWING ->
+            GraphicMusicNotationMode.DRAWING,
+            GraphicMusicNotationMode.PLACING ->
                 pathDataRepository
                     .getPathData()
                     .asAmiMeasures(pathDataRepository.getGraphicProperties())

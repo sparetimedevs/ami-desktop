@@ -33,6 +33,8 @@ import com.sparetimedevs.ami.app.graphicmusicnotation.details.DefaultMusicScoreD
 import com.sparetimedevs.ami.app.graphicmusicnotation.details.MusicScoreDetailsComponent
 import com.sparetimedevs.ami.app.graphicmusicnotation.draw.DefaultDrawGraphicMusicNotationComponent
 import com.sparetimedevs.ami.app.graphicmusicnotation.draw.DrawGraphicMusicNotationComponent
+import com.sparetimedevs.ami.app.graphicmusicnotation.place.DefaultPlaceGraphicMusicNotationComponent
+import com.sparetimedevs.ami.app.graphicmusicnotation.place.PlaceGraphicMusicNotationComponent
 import com.sparetimedevs.ami.app.graphicmusicnotation.read.DefaultReadGraphicMusicNotationComponent
 import com.sparetimedevs.ami.app.graphicmusicnotation.read.ReadGraphicMusicNotationComponent
 import com.sparetimedevs.ami.app.graphicmusicnotation.repository.PathDataRepositoryImpl
@@ -73,6 +75,9 @@ internal class DefaultGraphicMusicNotationMultiPaneComponent(componentContext: C
                     readAreaChild =
                         children.find { it.instance is ReadGraphicMusicNotationComponent }
                             as Child.Created<*, ReadGraphicMusicNotationComponent>,
+                    placeAreaChild =
+                        children.find { it.instance is PlaceGraphicMusicNotationComponent }
+                            as Child.Created<*, PlaceGraphicMusicNotationComponent>,
                 )
             },
             onStateChanged = { newState, _ -> navState.onNext(newState) },
@@ -84,6 +89,7 @@ internal class DefaultGraphicMusicNotationMultiPaneComponent(componentContext: C
             is Config.TopAppBarDetailsPane -> topAppBarDetailsComponent(componentContext)
             is Config.DrawPane -> drawingGraphicMusicNotationComponent(componentContext)
             is Config.ReadPane -> readGraphicMusicNotationComponent(componentContext)
+            is Config.PlacePane -> placeGraphicMusicNotationComponent(componentContext)
         }
 
     private fun topAppBarDetailsComponent(
@@ -110,6 +116,14 @@ internal class DefaultGraphicMusicNotationMultiPaneComponent(componentContext: C
             pathDataRepository = pathDataRepository
         )
 
+    private fun placeGraphicMusicNotationComponent(
+        componentContext: ComponentContext
+    ): PlaceGraphicMusicNotationComponent =
+        DefaultPlaceGraphicMusicNotationComponent(
+            componentContext = componentContext,
+            pathDataRepository = pathDataRepository
+        )
+
     private sealed interface Config : Parcelable {
 
         @Parcelize object TopAppBarDetailsPane : Config
@@ -117,6 +131,8 @@ internal class DefaultGraphicMusicNotationMultiPaneComponent(componentContext: C
         @Parcelize object DrawPane : Config
 
         @Parcelize object ReadPane : Config
+
+        @Parcelize object PlacePane : Config
     }
 
     @Parcelize
@@ -127,7 +143,8 @@ internal class DefaultGraphicMusicNotationMultiPaneComponent(componentContext: C
                 listOfNotNull(
                     SimpleChildNavState(Config.TopAppBarDetailsPane, Status.ACTIVE),
                     SimpleChildNavState(Config.DrawPane, Status.ACTIVE),
-                    SimpleChildNavState(Config.ReadPane, Status.ACTIVE)
+                    SimpleChildNavState(Config.ReadPane, Status.ACTIVE),
+                    SimpleChildNavState(Config.PlacePane, Status.ACTIVE)
                 )
     }
 }

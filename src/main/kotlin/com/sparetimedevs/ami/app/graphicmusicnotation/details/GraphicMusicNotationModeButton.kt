@@ -28,6 +28,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 
+val FeatureFlagForPlacingFunctionalityOn = false
+
 @Preview
 @Composable
 fun GraphicMusicNotationModeButton(
@@ -40,17 +42,43 @@ fun GraphicMusicNotationModeButton(
     TextButton(
         modifier = Modifier.padding(10.dp),
         onClick = {
-            when (currentMode) {
-                GraphicMusicNotationMode.DRAWING ->
-                    coroutineScope.launch { changeModeFunction(GraphicMusicNotationMode.READING) }
-                GraphicMusicNotationMode.READING ->
-                    coroutineScope.launch { changeModeFunction(GraphicMusicNotationMode.DRAWING) }
+            if (FeatureFlagForPlacingFunctionalityOn) {
+                when (currentMode) {
+                    GraphicMusicNotationMode.DRAWING ->
+                        coroutineScope.launch {
+                            changeModeFunction(GraphicMusicNotationMode.READING)
+                        }
+                    GraphicMusicNotationMode.READING ->
+                        coroutineScope.launch {
+                            changeModeFunction(GraphicMusicNotationMode.PLACING)
+                        }
+                    GraphicMusicNotationMode.PLACING ->
+                        coroutineScope.launch {
+                            changeModeFunction(GraphicMusicNotationMode.DRAWING)
+                        }
+                }
+            } else {
+                when (currentMode) {
+                    GraphicMusicNotationMode.DRAWING ->
+                        coroutineScope.launch {
+                            changeModeFunction(GraphicMusicNotationMode.READING)
+                        }
+                    GraphicMusicNotationMode.READING ->
+                        coroutineScope.launch {
+                            changeModeFunction(GraphicMusicNotationMode.DRAWING)
+                        }
+                    GraphicMusicNotationMode.PLACING ->
+                        coroutineScope.launch {
+                            changeModeFunction(GraphicMusicNotationMode.DRAWING)
+                        }
+                }
             }
         },
         content = {
             when (currentMode) {
                 GraphicMusicNotationMode.DRAWING -> Text(text = "Reading")
                 GraphicMusicNotationMode.READING -> Text(text = "Drawing")
+                GraphicMusicNotationMode.PLACING -> Text(text = "Placing")
             }
         },
         colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colors.secondary),
@@ -60,5 +88,6 @@ fun GraphicMusicNotationModeButton(
 
 enum class GraphicMusicNotationMode {
     DRAWING,
-    READING
+    READING,
+    PLACING
 }

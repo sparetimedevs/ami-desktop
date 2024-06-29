@@ -25,7 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 
-val backgroundColor: Color = Color.White
+val BackgroundColor: Color = Color.White
 
 @Composable
 fun DrawBackdrop(
@@ -33,7 +33,7 @@ fun DrawBackdrop(
     backdropLines: List<TheLineThatRepresentsAPitch>,
     lineThickness: Float
 ) {
-    Canvas(modifier = modifier.fillMaxSize().background(backgroundColor)) {
+    Canvas(modifier = modifier.fillMaxSize().background(BackgroundColor)) {
         drawBackdrop(backdropLines, lineThickness)
     }
 }
