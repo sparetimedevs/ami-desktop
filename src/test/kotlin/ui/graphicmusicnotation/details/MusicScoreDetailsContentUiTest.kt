@@ -25,9 +25,11 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
 import com.arkivanov.decompose.ComponentContext
 import com.sparetimedevs.ami.app.graphicmusicnotation.details.DefaultMusicScoreDetailsComponent
+import com.sparetimedevs.ami.app.graphicmusicnotation.details.DefaultScoreDetailsComponent
 import com.sparetimedevs.ami.app.graphicmusicnotation.details.MarkInvalidInput
 import com.sparetimedevs.ami.app.graphicmusicnotation.details.MusicScoreDetailsComponent
 import com.sparetimedevs.ami.app.graphicmusicnotation.details.MusicScoreDetailsContent
+import com.sparetimedevs.ami.app.graphicmusicnotation.details.ScoreDetailsComponent
 import com.sparetimedevs.ami.app.graphicmusicnotation.repository.PathDataRepositoryImpl
 import com.sparetimedevs.ami.app.graphicmusicnotation.vector.asPathData
 import com.sparetimedevs.ami.getTestComponentContext
@@ -64,8 +66,16 @@ class MusicScoreDetailsContentUiTest :
                         pathDataRepository,
                         markInvalidInput
                     )
+                val scoreDetailsComponent: ScoreDetailsComponent =
+                    DefaultScoreDetailsComponent(testComponentContext, musicScoreDetailsComponent)
 
-                setContent { MusicScoreDetailsContent(musicScoreDetailsComponent, player) }
+                setContent {
+                    MusicScoreDetailsContent(
+                        musicScoreDetailsComponent,
+                        scoreDetailsComponent,
+                        player
+                    )
+                }
 
                 val initialPathData = pathDataRepository.getPathData()
                 initialPathData.shouldBeEmpty()
@@ -110,8 +120,16 @@ class MusicScoreDetailsContentUiTest :
                         pathDataRepository,
                         markInvalidInput
                     )
+                val scoreDetailsComponent: ScoreDetailsComponent =
+                    DefaultScoreDetailsComponent(testComponentContext, musicScoreDetailsComponent)
 
-                setContent { MusicScoreDetailsContent(musicScoreDetailsComponent, player) }
+                setContent {
+                    MusicScoreDetailsContent(
+                        musicScoreDetailsComponent,
+                        scoreDetailsComponent,
+                        player
+                    )
+                }
 
                 val initialPathData = pathDataRepository.getPathData()
                 initialPathData shouldBe
@@ -157,8 +175,16 @@ class MusicScoreDetailsContentUiTest :
                         pathDataRepository,
                         markInvalidInput
                     )
+                val scoreDetailsComponent: ScoreDetailsComponent =
+                    DefaultScoreDetailsComponent(testComponentContext, musicScoreDetailsComponent)
 
-                setContent { MusicScoreDetailsContent(musicScoreDetailsComponent, player) }
+                setContent {
+                    MusicScoreDetailsContent(
+                        musicScoreDetailsComponent,
+                        scoreDetailsComponent,
+                        player
+                    )
+                }
 
                 val initialPathData = pathDataRepository.getPathData()
                 initialPathData shouldBe

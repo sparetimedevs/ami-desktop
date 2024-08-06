@@ -16,28 +16,40 @@
 
 package com.sparetimedevs.ami.app.graphicmusicnotation.details
 
-import arrow.core.Either
 import com.arkivanov.decompose.value.Value
-import com.sparetimedevs.ami.core.DomainError
+import com.sparetimedevs.ami.core.validation.ValidationError
+import com.sparetimedevs.ami.music.data.kotlin.part.PartId
 import com.sparetimedevs.ami.music.data.kotlin.score.Score
 
-interface MusicScoreDetailsComponent {
-
-    val modeValue: Value<GraphicMusicNotationMode>
+interface ScoreDetailsComponent {
 
     val scoreValue: Value<Score>
 
-    suspend fun changeMode(newValue: GraphicMusicNotationMode): Unit
+    val scoreIdValue: Value<String>
 
-    fun onMenuClicked()
+    val scoreTitleValue: Value<String>
 
-    fun onNewScoreClicked()
+    val partIdsValue: Value<List<String>>
 
-    fun onLoadScoreClicked(score: Score)
+    val partNamesValue: Value<Map<PartId, String>>
 
-    fun onSaveScoreClicked()
+    val partInstrumentNamesValue: Value<Map<PartId, String>>
 
-    suspend fun updateAndGetScore(): Either<DomainError, Score>
+    val partMidiChannelsValue: Value<Map<PartId, String>>
 
-    fun updateScore(score: Score)
+    val partMidiProgramsValue: Value<Map<PartId, String>>
+
+    val mappedValidationErrorsValue: Value<List<ValidationError>>
+
+    fun updateScoreId(newValue: String)
+
+    fun updateScoreTitle(newValue: String)
+
+    fun updatePartInstrumentName(partId: PartId, newValue: String)
+
+    fun createNewPart()
+
+    fun updatePartMidiChannel(partId: PartId, newValue: String)
+
+    fun saveScoreDetails(): Unit
 }

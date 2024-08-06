@@ -30,8 +30,8 @@ import com.arkivanov.essenty.parcelable.Parcelize
 import com.badoo.reaktive.subject.behavior.BehaviorSubject
 import com.sparetimedevs.ami.app.graphicmusicnotation.GraphicMusicNotationMultiPaneComponent.Children
 import com.sparetimedevs.ami.app.graphicmusicnotation.details.DefaultMusicScoreDetailsComponent
+import com.sparetimedevs.ami.app.graphicmusicnotation.details.DefaultScoreDetailsComponent
 import com.sparetimedevs.ami.app.graphicmusicnotation.details.MarkInvalidInput
-import com.sparetimedevs.ami.app.graphicmusicnotation.details.MusicScoreDetailsComponent
 import com.sparetimedevs.ami.app.graphicmusicnotation.draw.DefaultDrawGraphicMusicNotationComponent
 import com.sparetimedevs.ami.app.graphicmusicnotation.draw.DrawGraphicMusicNotationComponent
 import com.sparetimedevs.ami.app.graphicmusicnotation.place.DefaultPlaceGraphicMusicNotationComponent
@@ -62,6 +62,7 @@ internal class DefaultGraphicMusicNotationMultiPaneComponent(componentContext: C
     override val children: Value<Children> =
         children(
             source = navigation,
+            //            stateSerializer = null, // TODO
             key = "children",
             initialState = DefaultGraphicMusicNotationMultiPaneComponent::NavigationState,
             navTransformer = { navState, event -> event(navState) },
@@ -69,8 +70,8 @@ internal class DefaultGraphicMusicNotationMultiPaneComponent(componentContext: C
                 @Suppress("UNCHECKED_CAST")
                 Children(
                     topAppBarDetailsChild =
-                        children.find { it.instance is MusicScoreDetailsComponent }
-                            as Child.Created<*, MusicScoreDetailsComponent>,
+                        children.find { it.instance is ScoreComponents }
+                            as Child.Created<*, ScoreComponents>,
                     drawAreaChild =
                         children.find { it.instance is DrawGraphicMusicNotationComponent }
                             as Child.Created<*, DrawGraphicMusicNotationComponent>,
@@ -94,14 +95,20 @@ internal class DefaultGraphicMusicNotationMultiPaneComponent(componentContext: C
             is Config.PlacePane -> placeGraphicMusicNotationComponent(componentContext)
         }
 
-    private fun topAppBarDetailsComponent(
-        componentContext: ComponentContext
-    ): MusicScoreDetailsComponent =
-        DefaultMusicScoreDetailsComponent(
-            componentContext = componentContext,
-            pathDataRepository = pathDataRepository,
-            markInvalidInput = markInvalidInput
-        )
+    private fun topAppBarDetailsComponent(componentContext: ComponentContext): ScoreComponents {
+        val scoreCoreComponent =
+            DefaultMusicScoreDetailsComponent(
+                componentContext = componentContext,
+                pathDataRepository = pathDataRepository,
+                markInvalidInput = markInvalidInput
+            )
+        val scoreDetailsComponent =
+            DefaultScoreDetailsComponent(
+                componentContext = componentContext,
+                scoreCoreComponent = scoreCoreComponent
+            )
+        return ScoreComponents(scoreCoreComponent, scoreDetailsComponent)
+    }
 
     private fun drawingGraphicMusicNotationComponent(
         componentContext: ComponentContext

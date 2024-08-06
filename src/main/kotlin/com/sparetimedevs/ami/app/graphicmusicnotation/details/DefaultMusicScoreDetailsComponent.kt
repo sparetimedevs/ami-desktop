@@ -113,6 +113,18 @@ internal class DefaultMusicScoreDetailsComponent(
             GraphicMusicNotationMode.READING -> _scoreValue.value.right()
         }
 
+    override fun updateScore(score: Score) {
+        println("In the core, the scoreId is ${score.id.value}")
+        println("In the core, the scoreTitle is ${score.title?.value}")
+        println(
+            "In the core, the partInstrumentNames is ${score.parts.map { it.instrument?.name?.value }.joinToString()}"
+        )
+        // TODO update the Score!
+        // and probably, or maybe, also the pathData in pathDataRepository
+        // Maybe just use onLoadScoreClicked
+        onLoadScoreClicked(score)
+    }
+
     private fun emptyScore(): Score {
         val parts = emptyList<Part>()
 
