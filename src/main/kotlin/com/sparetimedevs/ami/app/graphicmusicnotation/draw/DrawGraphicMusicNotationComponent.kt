@@ -29,7 +29,11 @@ interface DrawGraphicMusicNotationComponent {
 
     fun getLineThickness(): Float
 
+    fun getErrorLineThickness(): Float
+
     fun getPathData(): List<PathNode>
+
+    fun getErrorMarkingPathData(): List<PathNode>
 
     fun addToPathData(pathNode: PathNode): List<PathNode>
 
@@ -45,7 +49,12 @@ class DefaultDrawGraphicMusicNotationComponent(
 
     override fun getLineThickness(): Float = THICKNESS_OF_LINES
 
+    override fun getErrorLineThickness(): Float = THICKNESS_OF_ERROR_LINES
+
     override fun getPathData(): List<PathNode> = pathDataRepository.getPathData()
+
+    override fun getErrorMarkingPathData(): List<PathNode> =
+        pathDataRepository.getErrorMarkingPathData()
 
     override fun addToPathData(pathNode: PathNode): List<PathNode> =
         pathDataRepository.addToPathData(pathNode)
@@ -262,6 +271,7 @@ class DefaultDrawGraphicMusicNotationComponent(
 
     companion object {
         private const val THICKNESS_OF_LINES = 25.0f
+        private const val THICKNESS_OF_ERROR_LINES = 12.5f
     }
 }
 

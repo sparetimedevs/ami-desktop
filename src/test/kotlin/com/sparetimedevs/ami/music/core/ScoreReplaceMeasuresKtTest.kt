@@ -18,10 +18,15 @@ package com.sparetimedevs.ami.core
 
 import com.sparetimedevs.ami.music.core.replaceMeasures
 import com.sparetimedevs.ami.music.data.kotlin.measure.Measure
+import com.sparetimedevs.ami.music.data.kotlin.midi.MidiChannel
+import com.sparetimedevs.ami.music.data.kotlin.midi.MidiProgram
 import com.sparetimedevs.ami.music.data.kotlin.note.NoteName
 import com.sparetimedevs.ami.music.data.kotlin.note.NoteValue
 import com.sparetimedevs.ami.music.data.kotlin.part.Part
 import com.sparetimedevs.ami.music.data.kotlin.part.PartId
+import com.sparetimedevs.ami.music.data.kotlin.part.PartInstrument
+import com.sparetimedevs.ami.music.data.kotlin.part.PartInstrumentName
+import com.sparetimedevs.ami.music.data.kotlin.part.PartName
 import com.sparetimedevs.ami.music.data.kotlin.score.Score
 import com.sparetimedevs.ami.music.example.getExampleScore
 import com.sparetimedevs.ami.music.example.getExampleScoreHeighHoNobodyHome
@@ -41,12 +46,16 @@ class ScoreReplaceMeasuresKtTest :
                 listOf(
                     Measure(
                         null,
-                        listOf(createPitchedNote(noteName = NoteName.C, duration = NoteValue.WHOLE))
+                        listOf(
+                            createPitchedNote(noteName = NoteName.C, duration = NoteValue.WHOLE)
+                        ),
                     ),
                     Measure(
                         null,
-                        listOf(createPitchedNote(noteName = NoteName.F, duration = NoteValue.WHOLE))
-                    )
+                        listOf(
+                            createPitchedNote(noteName = NoteName.F, duration = NoteValue.WHOLE)
+                        ),
+                    ),
                 )
 
             val result = score.replaceMeasures(newMeasures)
@@ -56,9 +65,20 @@ class ScoreReplaceMeasuresKtTest :
                     parts =
                         listOf(
                             Part(
-                                PartId.unsafeCreate("p-1"),
-                                newMeasures +
-                                    getExampleScoreHeighHoNobodyHome().parts[0].measures.drop(2)
+                                id = PartId.unsafeCreate("p-1"),
+                                name = PartName.unsafeCreate("Part one"),
+                                instrument =
+                                    PartInstrument(
+                                        name = PartInstrumentName.unsafeCreate("Grand Piano"),
+                                        midiChannel = MidiChannel.unsafeCreate(0),
+                                        midiProgram = MidiProgram.unsafeCreate(1),
+                                    ),
+                                measures =
+                                    newMeasures +
+                                        getExampleScoreHeighHoNobodyHome()
+                                            .parts[0]
+                                            .measures
+                                            .drop(2),
                             )
                         )
                 )
@@ -76,7 +96,22 @@ class ScoreReplaceMeasuresKtTest :
             val result = score.replaceMeasures(newMeasures)
 
             val expectedScore =
-                score.copy(parts = listOf(Part(PartId.unsafeCreate("p-1"), newMeasures)))
+                score.copy(
+                    parts =
+                        listOf(
+                            Part(
+                                id = PartId.unsafeCreate("p-1"),
+                                name = PartName.unsafeCreate("Part one"),
+                                instrument =
+                                    PartInstrument(
+                                        name = PartInstrumentName.unsafeCreate("Grand Piano"),
+                                        midiChannel = MidiChannel.unsafeCreate(0),
+                                        midiProgram = MidiProgram.unsafeCreate(1),
+                                    ),
+                                measures = newMeasures,
+                            )
+                        )
+                )
 
             result shouldBe expectedScore
         }
@@ -91,20 +126,35 @@ class ScoreReplaceMeasuresKtTest :
                             null,
                             listOf(
                                 createPitchedNote(noteName = NoteName.C, duration = NoteValue.WHOLE)
-                            )
+                            ),
                         ),
                         Measure(
                             null,
                             listOf(
                                 createPitchedNote(noteName = NoteName.F, duration = NoteValue.WHOLE)
-                            )
-                        )
+                            ),
+                        ),
                     )
 
             val result = score.replaceMeasures(newMeasures)
 
             val expectedScore =
-                score.copy(parts = listOf(Part(PartId.unsafeCreate("p-1"), newMeasures)))
+                score.copy(
+                    parts =
+                        listOf(
+                            Part(
+                                id = PartId.unsafeCreate("p-1"),
+                                name = PartName.unsafeCreate("Part one"),
+                                instrument =
+                                    PartInstrument(
+                                        name = PartInstrumentName.unsafeCreate("Grand Piano"),
+                                        midiChannel = MidiChannel.unsafeCreate(0),
+                                        midiProgram = MidiProgram.unsafeCreate(1),
+                                    ),
+                                measures = newMeasures,
+                            )
+                        )
+                )
 
             result shouldBe expectedScore
         }
@@ -134,18 +184,32 @@ class ScoreReplaceMeasuresKtTest :
                 listOf(
                     Measure(
                         null,
-                        listOf(createPitchedNote(noteName = NoteName.C, duration = NoteValue.WHOLE))
+                        listOf(
+                            createPitchedNote(noteName = NoteName.C, duration = NoteValue.WHOLE)
+                        ),
                     ),
                     Measure(
                         null,
-                        listOf(createPitchedNote(noteName = NoteName.F, duration = NoteValue.WHOLE))
-                    )
+                        listOf(
+                            createPitchedNote(noteName = NoteName.F, duration = NoteValue.WHOLE)
+                        ),
+                    ),
                 )
 
             val result: Score = score.replaceMeasures(newMeasures)
 
             val expectedScore =
-                score.copy(parts = listOf(Part(PartId.unsafeCreate("p-1"), newMeasures)))
+                score.copy(
+                    parts =
+                        listOf(
+                            Part(
+                                id = PartId.unsafeCreate("p-1"),
+                                name = null,
+                                instrument = null,
+                                measures = newMeasures,
+                            )
+                        )
+                )
 
             result shouldBe expectedScore
         }

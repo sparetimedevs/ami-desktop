@@ -17,7 +17,10 @@
 package com.sparetimedevs.ami.graphic
 
 import arrow.core.NonEmptyList
+import com.sparetimedevs.ami.core.validation.NoValidationIdentifier
 import com.sparetimedevs.ami.core.validation.ValidationError
+import com.sparetimedevs.ami.core.validation.ValidationErrorForProperty
+import com.sparetimedevs.ami.core.validation.validationErrorForProperty
 import com.sparetimedevs.ami.graphic.vector.NoteVectors
 import com.sparetimedevs.ami.graphic.vector.Vector
 import com.sparetimedevs.ami.music.data.kotlin.measure.Measure
@@ -28,6 +31,8 @@ import com.sparetimedevs.ami.music.data.kotlin.note.NoteName
 import com.sparetimedevs.ami.music.data.kotlin.note.NoteValue
 import com.sparetimedevs.ami.music.data.kotlin.note.Octave
 import com.sparetimedevs.ami.music.data.kotlin.note.Pitch
+import com.sparetimedevs.ami.music.input.validation.ValidationIdentifierForMeasure
+import com.sparetimedevs.ami.music.input.validation.ValidationIdentifierForNote
 import com.sparetimedevs.ami.test.data.createPitchedNote
 import io.kotest.assertions.arrow.core.shouldBeLeft
 import io.kotest.assertions.arrow.core.shouldBeRight
@@ -37,10 +42,7 @@ class NotesVectorsAsAmiMeasuresKtTest :
     StringSpec({
         "asAmiMeasures should return one measure with one note when NoteVectors for one note" {
             val notesVectorsPerMeasure =
-                mapOf(
-                    "measure_1" to
-                        listOf<NoteVectors>(NoteVectors(Vector(0.0, 26.0), Vector(400.0, 26.0)))
-                )
+                mapOf(0 to listOf<NoteVectors>(NoteVectors(Vector(0.0, 26.0), Vector(400.0, 26.0))))
             val expectedResult: List<Measure> =
                 listOf(
                     Measure(
@@ -63,14 +65,14 @@ class NotesVectorsAsAmiMeasuresKtTest :
         "asAmiMeasures should return two measures with one all notes in C ionian mode (C major)" {
             val notesVectorsPerMeasure =
                 mapOf(
-                    "measure_1" to
+                    0 to
                         listOf<NoteVectors>(
                             NoteVectors(Vector(0.0, 26.0), Vector(100.0, 26.0)),
                             NoteVectors(Vector(100.0, 27.0), Vector(200.0, 27.0)),
                             NoteVectors(Vector(200.0, 27.5), Vector(300.0, 27.5)),
                             NoteVectors(Vector(300.0, 28.5), Vector(400.0, 28.5))
                         ),
-                    "measure_2" to
+                    1 to
                         listOf<NoteVectors>(
                             NoteVectors(Vector(0.0, 29.5), Vector(100.0, 29.5)),
                             NoteVectors(Vector(100.0, 30.5), Vector(200.0, 30.5)),
@@ -87,14 +89,14 @@ class NotesVectorsAsAmiMeasuresKtTest :
         "asAmiMeasures should return list of errors when there are errors in the list of NoteVectors" {
             val notesVectorsPerMeasure =
                 mapOf(
-                    "measure_1" to
+                    0 to
                         listOf<NoteVectors>(
                             NoteVectors(Vector(0.0, 26.0), Vector(100.0, 26.0)),
                             NoteVectors(Vector(100.0, 27.0), Vector(200.0, 27.0)),
                             NoteVectors(Vector(200.0, 27.5), Vector(300.0, 27.5)),
                             NoteVectors(Vector(300.0, 28.5), Vector(400.0, 28.5))
                         ),
-                    "measure_2" to
+                    1 to
                         listOf<NoteVectors>(
                             NoteVectors(Vector(0.0, 29.34567), Vector(100.0, 29.34567)),
                             NoteVectors(Vector(100.0, 30.5), Vector(593.827156, 30.5)),
@@ -110,17 +112,61 @@ class NotesVectorsAsAmiMeasuresKtTest :
 
             result shouldBeLeft
                 NonEmptyList(
-                    ValidationError(message = "Unable to map height to NoteName"),
+                    ValidationError(
+                        message = "Unable to map height to NoteName",
+                        validationErrorForProperty = ValidationErrorForProperty("height"),
+                        validationIdentifier =
+                            ValidationIdentifierForNote(
+                                noteIndex = 0,
+                                validationIdentifierParent =
+                                    ValidationIdentifierForMeasure(
+                                        measureIndex = 1,
+                                        validationIdentifierParent = NoValidationIdentifier
+                                    )
+                            )
+                    ),
                     listOf(
                         ValidationError(
                             message =
-                                "Input for note duration is not a valid value, the value is: 1.23456789"
+                                "Input for note duration is not a valid value, the value is: 1.23456789",
+                            validationErrorForProperty = validationErrorForProperty<NoteDuration>(),
+                            validationIdentifier =
+                                ValidationIdentifierForNote(
+                                    noteIndex = 1,
+                                    validationIdentifierParent =
+                                        ValidationIdentifierForMeasure(
+                                            measureIndex = 1,
+                                            validationIdentifierParent = NoValidationIdentifier
+                                        )
+                                )
                         ),
                         ValidationError(
                             message =
-                                "Input for note duration is not a valid value, the value is: 1.23456789"
+                                "Input for note duration is not a valid value, the value is: 1.23456789",
+                            validationErrorForProperty = validationErrorForProperty<NoteDuration>(),
+                            validationIdentifier =
+                                ValidationIdentifierForNote(
+                                    noteIndex = 2,
+                                    validationIdentifierParent =
+                                        ValidationIdentifierForMeasure(
+                                            measureIndex = 1,
+                                            validationIdentifierParent = NoValidationIdentifier
+                                        )
+                                )
                         ),
-                        ValidationError(message = "Unable to map height to NoteName")
+                        ValidationError(
+                            message = "Unable to map height to NoteName",
+                            validationErrorForProperty = ValidationErrorForProperty("height"),
+                            validationIdentifier =
+                                ValidationIdentifierForNote(
+                                    noteIndex = 2,
+                                    validationIdentifierParent =
+                                        ValidationIdentifierForMeasure(
+                                            measureIndex = 1,
+                                            validationIdentifierParent = NoValidationIdentifier
+                                        )
+                                )
+                        )
                     )
                 )
         }
@@ -160,7 +206,11 @@ class NotesVectorsAsAmiMeasuresKtTest :
                     )
                 )
 
-            val result = asAmiMeasure(notesVectorsForOneMeasure)
+            val result =
+                asAmiMeasure(
+                    notesVectorsForOneMeasure,
+                    NoValidationIdentifier
+                ) // TODO add valid validationIndentifier
 
             result shouldBeRight expectedResult
         }
@@ -200,7 +250,11 @@ class NotesVectorsAsAmiMeasuresKtTest :
                     )
                 )
 
-            val result = asAmiMeasure(notesVectorsForOneMeasure)
+            val result =
+                asAmiMeasure(
+                    notesVectorsForOneMeasure,
+                    NoValidationIdentifier
+                ) // TODO add valid validationIndentifier
 
             result shouldBeRight expectedResult
         }
@@ -246,7 +300,11 @@ class NotesVectorsAsAmiMeasuresKtTest :
                     )
                 )
 
-            val result = asAmiMeasure(notesVectorsForOneMeasure)
+            val result =
+                asAmiMeasure(
+                    notesVectorsForOneMeasure,
+                    NoValidationIdentifier
+                ) // TODO add valid validationIndentifier
 
             result shouldBeRight expectedResult
         }

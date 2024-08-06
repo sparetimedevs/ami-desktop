@@ -34,10 +34,10 @@ fun List<PathNode>.asAmiMeasures(
 fun asNotesVectorsPerMeasure(
     pathData: List<PathNode>,
     graphicProperties: GraphicProperties
-): Map<String, List<NoteVectors>> {
-    val pathDataPerMeasure: Map<String, List<PathNode>> =
+): Map<Int, List<NoteVectors>> {
+    val pathDataPerMeasure: Map<Int, List<PathNode>> =
         pathData.fold(mutableMapOf()) { acc, pathNode ->
-            val maybeMeasureKey: String? =
+            val maybeMeasureKey: Int? =
                 when (pathNode) {
                     is PathNode.MoveTo -> {
                         measureKey(pathNode.x, graphicProperties)
@@ -58,19 +58,19 @@ fun asNotesVectorsPerMeasure(
     return pathDataPerMeasure.mapValues { asNotesVectorsForOneMeasure(it.value, graphicProperties) }
 }
 
-private fun measureKey(moveToXValue: Float, graphicProperties: GraphicProperties): String {
+private fun measureKey(moveToXValue: Float, graphicProperties: GraphicProperties): Int {
     val moveToXValueMinusOffset = moveToXValue - graphicProperties.offsetX
 
     val measureKey =
         when {
             moveToXValueMinusOffset < graphicProperties.measureWidth &&
                 moveToXValueMinusOffset >= 0 -> {
-                "measure-1"
+                0
             }
             moveToXValueMinusOffset <
                 ((graphicProperties.measureWidth * 2) + graphicProperties.spaceBetweenMeasures) &&
                 moveToXValueMinusOffset >= graphicProperties.measureWidth -> {
-                "measure-2"
+                1
             }
             moveToXValueMinusOffset <
                 ((graphicProperties.measureWidth * 3) +
@@ -78,18 +78,14 @@ private fun measureKey(moveToXValue: Float, graphicProperties: GraphicProperties
                 moveToXValueMinusOffset >=
                     ((graphicProperties.measureWidth * 2) +
                         graphicProperties.spaceBetweenMeasures) -> {
-                "measure-3"
+                2
             }
-            moveToXValueMinusOffset <
-                ((graphicProperties.measureWidth * 4) +
-                    (graphicProperties.spaceBetweenMeasures * 3)) &&
-                moveToXValueMinusOffset >=
-                    ((graphicProperties.measureWidth * 3) +
-                        graphicProperties.spaceBetweenMeasures) -> {
-                "measure-4"
+            moveToXValueMinusOffset >=
+                ((graphicProperties.measureWidth * 3) + graphicProperties.spaceBetweenMeasures) -> {
+                3
             }
-            else -> {
-                "measure-unknown"
+            else -> { // Should be unreachable statement
+                -1
             }
         }
     return measureKey
