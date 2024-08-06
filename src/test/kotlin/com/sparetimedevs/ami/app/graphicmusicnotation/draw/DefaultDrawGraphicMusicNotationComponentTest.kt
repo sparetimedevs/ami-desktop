@@ -19,7 +19,7 @@ package com.sparetimedevs.ami.app.graphicmusicnotation.draw
 import androidx.compose.ui.graphics.vector.PathBuilder
 import androidx.compose.ui.graphics.vector.PathNode
 import com.arkivanov.decompose.ComponentContext
-import com.sparetimedevs.ami.app.graphicmusicnotation.repository.PathDataRepositoryImpl
+import com.sparetimedevs.ami.app.graphicmusicnotation.store.PathDataStore
 import com.sparetimedevs.ami.getTestComponentContext
 import com.sparetimedevs.ami.graphic.GraphicProperties
 import io.kotest.core.spec.style.StringSpec
@@ -35,11 +35,11 @@ class DefaultDrawGraphicMusicNotationComponentTest :
                 measureWidth = 500.0,
                 spaceBetweenMeasures = 75.0,
                 cutOffXToReflectNoteIsEnding = 0.0,
-                wholeStepExpressedInY = 50.0
+                wholeStepExpressedInY = 50.0,
             )
-        val pathDataRepository = PathDataRepositoryImpl(graphicProperties)
+        val pathDataStore = PathDataStore(graphicProperties)
         val component: DrawGraphicMusicNotationComponent =
-            DefaultDrawGraphicMusicNotationComponent(testComponentContext, pathDataRepository)
+            DefaultDrawGraphicMusicNotationComponent(testComponentContext, pathDataStore)
 
         "getLineThickness" { component.getLineThickness() shouldBe 25f }
 

@@ -25,10 +25,13 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
 import com.arkivanov.decompose.ComponentContext
 import com.sparetimedevs.ami.app.graphicmusicnotation.details.DefaultMusicScoreDetailsComponent
+import com.sparetimedevs.ami.app.graphicmusicnotation.details.DefaultScoreDetailsComponent
 import com.sparetimedevs.ami.app.graphicmusicnotation.details.MarkInvalidInput
 import com.sparetimedevs.ami.app.graphicmusicnotation.details.MusicScoreDetailsComponent
 import com.sparetimedevs.ami.app.graphicmusicnotation.details.MusicScoreDetailsContent
-import com.sparetimedevs.ami.app.graphicmusicnotation.repository.PathDataRepositoryImpl
+import com.sparetimedevs.ami.app.graphicmusicnotation.details.ScoreDetailsComponent
+import com.sparetimedevs.ami.app.graphicmusicnotation.store.PathDataStore
+import com.sparetimedevs.ami.app.graphicmusicnotation.store.ScoreStore
 import com.sparetimedevs.ami.app.graphicmusicnotation.vector.asPathData
 import com.sparetimedevs.ami.getTestComponentContext
 import com.sparetimedevs.ami.graphic.GraphicProperties
@@ -47,6 +50,7 @@ class MusicScoreDetailsContentUiTest :
         "Loading an existing score should set PathData" {
             runComposeUiTest {
                 val testComponentContext: ComponentContext = getTestComponentContext()
+                val scoreStore = ScoreStore()
                 val graphicProperties =
                     GraphicProperties(
                         offsetX = 87.5,
@@ -54,20 +58,29 @@ class MusicScoreDetailsContentUiTest :
                         measureWidth = 500.0,
                         spaceBetweenMeasures = 75.0,
                         cutOffXToReflectNoteIsEnding = 0.0,
-                        wholeStepExpressedInY = 50.0
+                        wholeStepExpressedInY = 50.0,
                     )
-                val pathDataRepository = PathDataRepositoryImpl(graphicProperties)
+                val pathDataStore = PathDataStore(graphicProperties)
                 val markInvalidInput = MarkInvalidInput()
                 val musicScoreDetailsComponent: MusicScoreDetailsComponent =
                     DefaultMusicScoreDetailsComponent(
                         testComponentContext,
-                        pathDataRepository,
-                        markInvalidInput
+                        scoreStore,
+                        pathDataStore,
+                        markInvalidInput,
                     )
+                val scoreDetailsComponent: ScoreDetailsComponent =
+                    DefaultScoreDetailsComponent(testComponentContext, scoreStore)
 
-                setContent { MusicScoreDetailsContent(musicScoreDetailsComponent, player) }
+                setContent {
+                    MusicScoreDetailsContent(
+                        musicScoreDetailsComponent,
+                        scoreDetailsComponent,
+                        player,
+                    )
+                }
 
-                val initialPathData = pathDataRepository.getPathData()
+                val initialPathData = pathDataStore.getPathData()
                 initialPathData.shouldBeEmpty()
 
                 onNodeWithTag("score-dropdown-menu-load").assertDoesNotExist()
@@ -77,19 +90,20 @@ class MusicScoreDetailsContentUiTest :
                 onNodeWithText("Load Frère Jacques").assertExists()
                 onNodeWithText("Load Frère Jacques").performClick()
 
-                val resultPathData = pathDataRepository.getPathData()
+                val resultPathData = pathDataStore.getPathData()
 
                 resultPathData shouldBe
                     getExampleScoreFrereJacques()
                         .parts[0]
                         .measures
-                        .asPathData(pathDataRepository.getGraphicProperties())
+                        .asPathData(pathDataStore.getGraphicProperties())
             }
         }
 
         "Loading an existing score while a score was already in progress should set new PathData" {
             runComposeUiTest {
                 val testComponentContext: ComponentContext = getTestComponentContext()
+                val scoreStore = ScoreStore()
                 val graphicProperties =
                     GraphicProperties(
                         offsetX = 87.5,
@@ -97,23 +111,32 @@ class MusicScoreDetailsContentUiTest :
                         measureWidth = 500.0,
                         spaceBetweenMeasures = 75.0,
                         cutOffXToReflectNoteIsEnding = 0.0,
-                        wholeStepExpressedInY = 50.0
+                        wholeStepExpressedInY = 50.0,
                     )
-                val pathDataRepository = PathDataRepositoryImpl(graphicProperties)
+                val pathDataStore = PathDataStore(graphicProperties)
                 val markInvalidInput = MarkInvalidInput()
                 val pathData: List<PathNode> =
                     PathBuilder().moveTo(x = 87.5f, y = 550.0f).horizontalLineTo(x = 587.5f).nodes
-                pathDataRepository.replacePathData(pathData)
+                pathDataStore.replacePathData(pathData)
                 val musicScoreDetailsComponent: MusicScoreDetailsComponent =
                     DefaultMusicScoreDetailsComponent(
                         testComponentContext,
-                        pathDataRepository,
-                        markInvalidInput
+                        scoreStore,
+                        pathDataStore,
+                        markInvalidInput,
                     )
+                val scoreDetailsComponent: ScoreDetailsComponent =
+                    DefaultScoreDetailsComponent(testComponentContext, scoreStore)
 
-                setContent { MusicScoreDetailsContent(musicScoreDetailsComponent, player) }
+                setContent {
+                    MusicScoreDetailsContent(
+                        musicScoreDetailsComponent,
+                        scoreDetailsComponent,
+                        player,
+                    )
+                }
 
-                val initialPathData = pathDataRepository.getPathData()
+                val initialPathData = pathDataStore.getPathData()
                 initialPathData shouldBe
                     PathBuilder().moveTo(x = 87.5f, y = 550.0f).horizontalLineTo(x = 587.5f).nodes
 
@@ -124,19 +147,20 @@ class MusicScoreDetailsContentUiTest :
                 onNodeWithText("Load Frère Jacques").assertExists()
                 onNodeWithText("Load Frère Jacques").performClick()
 
-                val resultPathData = pathDataRepository.getPathData()
+                val resultPathData = pathDataStore.getPathData()
 
                 resultPathData shouldBe
                     getExampleScoreFrereJacques()
                         .parts[0]
                         .measures
-                        .asPathData(pathDataRepository.getGraphicProperties())
+                        .asPathData(pathDataStore.getGraphicProperties())
             }
         }
 
         "Creating a new score while a score was already in progress should set empty PathData" {
             runComposeUiTest {
                 val testComponentContext: ComponentContext = getTestComponentContext()
+                val scoreStore = ScoreStore()
                 val graphicProperties =
                     GraphicProperties(
                         offsetX = 87.5,
@@ -144,23 +168,32 @@ class MusicScoreDetailsContentUiTest :
                         measureWidth = 500.0,
                         spaceBetweenMeasures = 75.0,
                         cutOffXToReflectNoteIsEnding = 0.0,
-                        wholeStepExpressedInY = 50.0
+                        wholeStepExpressedInY = 50.0,
                     )
-                val pathDataRepository = PathDataRepositoryImpl(graphicProperties)
+                val pathDataStore = PathDataStore(graphicProperties)
                 val markInvalidInput = MarkInvalidInput()
                 val pathData: List<PathNode> =
                     PathBuilder().moveTo(x = 87.5f, y = 550.0f).horizontalLineTo(x = 587.5f).nodes
-                pathDataRepository.replacePathData(pathData)
+                pathDataStore.replacePathData(pathData)
                 val musicScoreDetailsComponent: MusicScoreDetailsComponent =
                     DefaultMusicScoreDetailsComponent(
                         testComponentContext,
-                        pathDataRepository,
-                        markInvalidInput
+                        scoreStore,
+                        pathDataStore,
+                        markInvalidInput,
                     )
+                val scoreDetailsComponent: ScoreDetailsComponent =
+                    DefaultScoreDetailsComponent(testComponentContext, scoreStore)
 
-                setContent { MusicScoreDetailsContent(musicScoreDetailsComponent, player) }
+                setContent {
+                    MusicScoreDetailsContent(
+                        musicScoreDetailsComponent,
+                        scoreDetailsComponent,
+                        player,
+                    )
+                }
 
-                val initialPathData = pathDataRepository.getPathData()
+                val initialPathData = pathDataStore.getPathData()
                 initialPathData shouldBe
                     PathBuilder().moveTo(x = 87.5f, y = 550.0f).horizontalLineTo(x = 587.5f).nodes
 
@@ -169,7 +202,7 @@ class MusicScoreDetailsContentUiTest :
                 onNodeWithTag("score-dropdown-menu-new").performClick()
                 onNodeWithTag("create-new-score").performClick()
 
-                val resultPathData = pathDataRepository.getPathData()
+                val resultPathData = pathDataStore.getPathData()
 
                 resultPathData.shouldBeEmpty()
             }

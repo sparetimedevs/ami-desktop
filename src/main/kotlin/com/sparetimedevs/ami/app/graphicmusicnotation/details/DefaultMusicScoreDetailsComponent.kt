@@ -23,9 +23,9 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.decompose.value.update
-import com.arkivanov.decompose.value.updateAndGet
 import com.badoo.reaktive.disposable.scope.DisposableScope
-import com.sparetimedevs.ami.app.graphicmusicnotation.repository.PathDataRepository
+import com.sparetimedevs.ami.app.graphicmusicnotation.store.PathDataStore
+import com.sparetimedevs.ami.app.graphicmusicnotation.store.ScoreStore
 import com.sparetimedevs.ami.app.graphicmusicnotation.vector.asAmiMeasures
 import com.sparetimedevs.ami.app.graphicmusicnotation.vector.asPathData
 import com.sparetimedevs.ami.app.utils.disposableScope
@@ -38,7 +38,8 @@ import com.sparetimedevs.ami.music.data.kotlin.score.ScoreId
 
 internal class DefaultMusicScoreDetailsComponent(
     componentContext: ComponentContext,
-    private val pathDataRepository: PathDataRepository,
+    private val scoreStore: ScoreStore,
+    private val pathDataStore: PathDataStore,
     private val markInvalidInput: MarkInvalidInput,
 ) :
     MusicScoreDetailsComponent,
@@ -48,8 +49,7 @@ internal class DefaultMusicScoreDetailsComponent(
     private val _modeValue = MutableValue(GraphicMusicNotationMode.DRAWING)
     override val modeValue: Value<GraphicMusicNotationMode> = _modeValue
 
-    private val _scoreValue = MutableValue(emptyScore())
-    override val scoreValue: Value<Score> = _scoreValue
+    override val scoreValue: Value<Score> = scoreStore.scoreValue
 
     override suspend fun changeMode(newValue: GraphicMusicNotationMode): Unit {
         // When changing modes, it makes sense to make sure the score is up-to-date.
@@ -63,20 +63,20 @@ internal class DefaultMusicScoreDetailsComponent(
 
     override fun onNewScoreClicked() {
         println("now show pop up screen to start to create new score")
-        _scoreValue.update { emptyScore() }
-        pathDataRepository.replacePathData(emptyList())
+        scoreStore.saveScore(emptyScore())
+        pathDataStore.replacePathData(emptyList())
     }
 
     override fun onLoadScoreClicked(score: Score) {
         println("now load the score $score")
-        _scoreValue.update { score }
+        scoreStore.saveScore(score)
         val pathData: List<PathNode> =
             if (score.parts.isNotEmpty()) {
-                score.parts[0].measures.asPathData(pathDataRepository.getGraphicProperties())
+                score.parts[0].measures.asPathData(pathDataStore.getGraphicProperties())
             } else {
                 emptyList()
             }
-        pathDataRepository.replacePathData(pathData)
+        pathDataStore.replacePathData(pathData)
     }
 
     override fun onSaveScoreClicked() {
@@ -87,14 +87,14 @@ internal class DefaultMusicScoreDetailsComponent(
         when (_modeValue.value) {
             GraphicMusicNotationMode.DRAWING,
             GraphicMusicNotationMode.PLACING ->
-                pathDataRepository
+                pathDataStore
                     .getPathData()
-                    .asAmiMeasures(pathDataRepository.getGraphicProperties())
+                    .asAmiMeasures(pathDataStore.getGraphicProperties())
                     .map { measures ->
                         if (measures.isEmpty()) {
-                            _scoreValue.value
+                            scoreValue.value
                         } else {
-                            _scoreValue.updateAndGet { it.replaceMeasures(measures) }
+                            scoreStore.saveScore(scoreValue.value.replaceMeasures(measures))
                         }
                     }
                     .mapLeft { validationErrors ->
@@ -102,15 +102,15 @@ internal class DefaultMusicScoreDetailsComponent(
                             val errorMarkingPathData =
                                 markInvalidInput.markInvalidNotesAndMeasuresRed(
                                     validationError.validationIdentifier,
-                                    pathDataRepository.getGraphicProperties(),
-                                    pathDataRepository.getPathData()
+                                    pathDataStore.getGraphicProperties(),
+                                    pathDataStore.getPathData(),
                                 )
-                            pathDataRepository.addToErrorMarkingPathData(errorMarkingPathData)
+                            pathDataStore.addToErrorMarkingPathData(errorMarkingPathData)
                         }
                         validationErrors
                     }
                     .asEitherWithAccumulatedValidationErrors()
-            GraphicMusicNotationMode.READING -> _scoreValue.value.right()
+            GraphicMusicNotationMode.READING -> scoreValue.value.right()
         }
 
     private fun emptyScore(): Score {

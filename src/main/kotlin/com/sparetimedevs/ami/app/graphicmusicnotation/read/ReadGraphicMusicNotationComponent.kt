@@ -18,7 +18,7 @@ package com.sparetimedevs.ami.app.graphicmusicnotation.read
 
 import androidx.compose.ui.graphics.vector.PathNode
 import com.arkivanov.decompose.ComponentContext
-import com.sparetimedevs.ami.app.graphicmusicnotation.repository.PathDataRepository
+import com.sparetimedevs.ami.app.graphicmusicnotation.store.PathDataStore
 
 interface ReadGraphicMusicNotationComponent {
 
@@ -29,12 +29,12 @@ interface ReadGraphicMusicNotationComponent {
 
 class DefaultReadGraphicMusicNotationComponent(
     componentContext: ComponentContext,
-    private val pathDataRepository: PathDataRepository
+    private val pathDataStore: PathDataStore
 ) : ReadGraphicMusicNotationComponent, ComponentContext by componentContext {
 
     override fun getLineThickness(): Float = THICKNESS_OF_LINES
 
-    override fun getPathData(): List<PathNode> = pathDataRepository.getPathData()
+    override fun getPathData(): List<PathNode> = pathDataStore.getPathData()
 
     companion object {
         private const val THICKNESS_OF_LINES = 25.0f

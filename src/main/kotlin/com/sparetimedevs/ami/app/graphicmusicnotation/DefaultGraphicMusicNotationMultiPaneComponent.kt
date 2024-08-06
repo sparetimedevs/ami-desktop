@@ -25,21 +25,21 @@ import com.arkivanov.decompose.router.children.SimpleChildNavState
 import com.arkivanov.decompose.router.children.SimpleNavigation
 import com.arkivanov.decompose.router.children.children
 import com.arkivanov.decompose.value.Value
-import com.arkivanov.essenty.parcelable.Parcelable
-import com.arkivanov.essenty.parcelable.Parcelize
 import com.badoo.reaktive.subject.behavior.BehaviorSubject
 import com.sparetimedevs.ami.app.graphicmusicnotation.GraphicMusicNotationMultiPaneComponent.Children
 import com.sparetimedevs.ami.app.graphicmusicnotation.details.DefaultMusicScoreDetailsComponent
+import com.sparetimedevs.ami.app.graphicmusicnotation.details.DefaultScoreDetailsComponent
 import com.sparetimedevs.ami.app.graphicmusicnotation.details.MarkInvalidInput
-import com.sparetimedevs.ami.app.graphicmusicnotation.details.MusicScoreDetailsComponent
 import com.sparetimedevs.ami.app.graphicmusicnotation.draw.DefaultDrawGraphicMusicNotationComponent
 import com.sparetimedevs.ami.app.graphicmusicnotation.draw.DrawGraphicMusicNotationComponent
 import com.sparetimedevs.ami.app.graphicmusicnotation.place.DefaultPlaceGraphicMusicNotationComponent
 import com.sparetimedevs.ami.app.graphicmusicnotation.place.PlaceGraphicMusicNotationComponent
 import com.sparetimedevs.ami.app.graphicmusicnotation.read.DefaultReadGraphicMusicNotationComponent
 import com.sparetimedevs.ami.app.graphicmusicnotation.read.ReadGraphicMusicNotationComponent
-import com.sparetimedevs.ami.app.graphicmusicnotation.repository.PathDataRepositoryImpl
+import com.sparetimedevs.ami.app.graphicmusicnotation.store.PathDataStore
+import com.sparetimedevs.ami.app.graphicmusicnotation.store.ScoreStore
 import com.sparetimedevs.ami.graphic.GraphicProperties
+import kotlinx.serialization.Serializable
 
 internal class DefaultGraphicMusicNotationMultiPaneComponent(componentContext: ComponentContext) :
     GraphicMusicNotationMultiPaneComponent, ComponentContext by componentContext {
@@ -54,14 +54,16 @@ internal class DefaultGraphicMusicNotationMultiPaneComponent(componentContext: C
             measureWidth = 500.0,
             spaceBetweenMeasures = 75.0,
             cutOffXToReflectNoteIsEnding = 0.0,
-            wholeStepExpressedInY = 50.0
+            wholeStepExpressedInY = 50.0,
         )
-    private val pathDataRepository = PathDataRepositoryImpl(graphicProperties)
+    private val scoreStore = ScoreStore()
+    private val pathDataStore = PathDataStore(graphicProperties)
     private val markInvalidInput = MarkInvalidInput()
 
     override val children: Value<Children> =
         children(
             source = navigation,
+            stateSerializer = NavigationState.serializer(),
             key = "children",
             initialState = DefaultGraphicMusicNotationMultiPaneComponent::NavigationState,
             navTransformer = { navState, event -> event(navState) },
@@ -69,8 +71,8 @@ internal class DefaultGraphicMusicNotationMultiPaneComponent(componentContext: C
                 @Suppress("UNCHECKED_CAST")
                 Children(
                     topAppBarDetailsChild =
-                        children.find { it.instance is MusicScoreDetailsComponent }
-                            as Child.Created<*, MusicScoreDetailsComponent>,
+                        children.find { it.instance is ScoreComponents }
+                            as Child.Created<*, ScoreComponents>,
                     drawAreaChild =
                         children.find { it.instance is DrawGraphicMusicNotationComponent }
                             as Child.Created<*, DrawGraphicMusicNotationComponent>,
@@ -94,21 +96,28 @@ internal class DefaultGraphicMusicNotationMultiPaneComponent(componentContext: C
             is Config.PlacePane -> placeGraphicMusicNotationComponent(componentContext)
         }
 
-    private fun topAppBarDetailsComponent(
-        componentContext: ComponentContext
-    ): MusicScoreDetailsComponent =
-        DefaultMusicScoreDetailsComponent(
-            componentContext = componentContext,
-            pathDataRepository = pathDataRepository,
-            markInvalidInput = markInvalidInput
-        )
+    private fun topAppBarDetailsComponent(componentContext: ComponentContext): ScoreComponents {
+        val scoreCoreComponent =
+            DefaultMusicScoreDetailsComponent(
+                componentContext = componentContext,
+                scoreStore = scoreStore,
+                pathDataStore = pathDataStore,
+                markInvalidInput = markInvalidInput,
+            )
+        val scoreDetailsComponent =
+            DefaultScoreDetailsComponent(
+                componentContext = componentContext,
+                scoreStore = scoreStore,
+            )
+        return ScoreComponents(scoreCoreComponent, scoreDetailsComponent)
+    }
 
     private fun drawingGraphicMusicNotationComponent(
         componentContext: ComponentContext
     ): DrawGraphicMusicNotationComponent =
         DefaultDrawGraphicMusicNotationComponent(
             componentContext = componentContext,
-            pathDataRepository = pathDataRepository
+            pathDataStore = pathDataStore,
         )
 
     private fun readGraphicMusicNotationComponent(
@@ -116,7 +125,7 @@ internal class DefaultGraphicMusicNotationMultiPaneComponent(componentContext: C
     ): ReadGraphicMusicNotationComponent =
         DefaultReadGraphicMusicNotationComponent(
             componentContext = componentContext,
-            pathDataRepository = pathDataRepository
+            pathDataStore = pathDataStore,
         )
 
     private fun placeGraphicMusicNotationComponent(
@@ -124,30 +133,29 @@ internal class DefaultGraphicMusicNotationMultiPaneComponent(componentContext: C
     ): PlaceGraphicMusicNotationComponent =
         DefaultPlaceGraphicMusicNotationComponent(
             componentContext = componentContext,
-            pathDataRepository = pathDataRepository
+            pathDataStore = pathDataStore,
         )
 
-    private sealed interface Config : Parcelable {
+    private sealed interface Config {
 
-        @Parcelize object TopAppBarDetailsPane : Config
+        @Serializable object TopAppBarDetailsPane : Config
 
-        @Parcelize object DrawPane : Config
+        @Serializable object DrawPane : Config
 
-        @Parcelize object ReadPane : Config
+        @Serializable object ReadPane : Config
 
-        @Parcelize object PlacePane : Config
+        @Serializable object PlacePane : Config
     }
 
-    @Parcelize
-    private data class NavigationState(val placeholder: String = "placeholder") :
-        NavState<Config>, Parcelable {
+    @Serializable
+    private data class NavigationState(val placeholder: String = "placeholder") : NavState<Config> {
         override val children: List<ChildNavState<Config>>
             get() =
                 listOfNotNull(
                     SimpleChildNavState(Config.TopAppBarDetailsPane, Status.ACTIVE),
                     SimpleChildNavState(Config.DrawPane, Status.ACTIVE),
                     SimpleChildNavState(Config.ReadPane, Status.ACTIVE),
-                    SimpleChildNavState(Config.PlacePane, Status.ACTIVE)
+                    SimpleChildNavState(Config.PlacePane, Status.ACTIVE),
                 )
     }
 }

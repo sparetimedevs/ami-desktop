@@ -20,7 +20,8 @@ import androidx.compose.ui.graphics.vector.PathBuilder
 import androidx.compose.ui.graphics.vector.PathNode
 import arrow.core.NonEmptyList
 import com.arkivanov.decompose.ComponentContext
-import com.sparetimedevs.ami.app.graphicmusicnotation.repository.PathDataRepositoryImpl
+import com.sparetimedevs.ami.app.graphicmusicnotation.store.PathDataStore
+import com.sparetimedevs.ami.app.graphicmusicnotation.store.ScoreStore
 import com.sparetimedevs.ami.core.AccumulatedValidationErrors
 import com.sparetimedevs.ami.core.DomainError
 import com.sparetimedevs.ami.core.validation.NoValidationIdentifier
@@ -49,6 +50,7 @@ import io.kotest.core.spec.style.StringSpec
 class DefaultMusicScoreDetailsComponentTest :
     StringSpec({
         val testComponentContext: ComponentContext = getTestComponentContext()
+        val scoreStore = ScoreStore()
         val graphicProperties =
             GraphicProperties(
                 offsetX = 87.5,
@@ -56,15 +58,16 @@ class DefaultMusicScoreDetailsComponentTest :
                 measureWidth = 500.0,
                 spaceBetweenMeasures = 75.0,
                 cutOffXToReflectNoteIsEnding = 0.0,
-                wholeStepExpressedInY = 50.0
+                wholeStepExpressedInY = 50.0,
             )
-        val pathDataRepository = PathDataRepositoryImpl(graphicProperties)
+        val pathDataStore = PathDataStore(graphicProperties)
         val markInvalidInput = MarkInvalidInput()
         val component: MusicScoreDetailsComponent =
             DefaultMusicScoreDetailsComponent(
                 testComponentContext,
-                pathDataRepository,
-                markInvalidInput
+                scoreStore,
+                pathDataStore,
+                markInvalidInput,
             )
 
         "updateAndGetScore should return score when there are no changes made to it in reading mode" {
@@ -97,7 +100,7 @@ class DefaultMusicScoreDetailsComponentTest :
 
             val pathData: List<PathNode> =
                 PathBuilder().moveTo(x = 87.5f, y = 700.0f).horizontalLineTo(x = 587.5f).nodes
-            pathDataRepository.replacePathData(pathData)
+            pathDataStore.replacePathData(pathData)
 
             val result = component.updateAndGetScore()
 
@@ -109,9 +112,9 @@ class DefaultMusicScoreDetailsComponentTest :
                             Note.Pitched(
                                 NoteDuration(NoteValue.WHOLE),
                                 NoteAttributes(null, null, null, null),
-                                Pitch(NoteName.C, Octave.unsafeCreate(4))
+                                Pitch(NoteName.C, Octave.unsafeCreate(4)),
                             )
-                        )
+                        ),
                     )
                 )
             val expectedScore = score.replaceMeasures(expectedMeasures)
@@ -127,7 +130,7 @@ class DefaultMusicScoreDetailsComponentTest :
 
             val pathData: List<PathNode> =
                 PathBuilder().moveTo(x = 87.5f, y = 700.0f).horizontalLineTo(x = 587.5f).nodes
-            pathDataRepository.replacePathData(pathData)
+            pathDataStore.replacePathData(pathData)
 
             val result = component.updateAndGetScore()
 
@@ -139,9 +142,9 @@ class DefaultMusicScoreDetailsComponentTest :
                             Note.Pitched(
                                 NoteDuration(NoteValue.WHOLE),
                                 NoteAttributes(null, null, null, null),
-                                Pitch(NoteName.C, Octave.unsafeCreate(4))
+                                Pitch(NoteName.C, Octave.unsafeCreate(4)),
                             )
-                        )
+                        ),
                     )
                 )
             val expectedScore = score.replaceMeasures(expectedMeasures)
@@ -163,7 +166,7 @@ class DefaultMusicScoreDetailsComponentTest :
                     .horizontalLineTo(x = 587.5f)
                     .nodes
 
-            pathDataRepository.replacePathData(pathData)
+            pathDataStore.replacePathData(pathData)
 
             val result = component.updateAndGetScore()
 
@@ -180,9 +183,9 @@ class DefaultMusicScoreDetailsComponentTest :
                                     validationIdentifierParent =
                                         ValidationIdentifierForMeasure(
                                             measureIndex = 0,
-                                            validationIdentifierParent = NoValidationIdentifier
-                                        )
-                                )
+                                            validationIdentifierParent = NoValidationIdentifier,
+                                        ),
+                                ),
                         ),
                         listOf(
                             ValidationError(
@@ -194,9 +197,9 @@ class DefaultMusicScoreDetailsComponentTest :
                                         validationIdentifierParent =
                                             ValidationIdentifierForMeasure(
                                                 measureIndex = 0,
-                                                validationIdentifierParent = NoValidationIdentifier
-                                            )
-                                    )
+                                                validationIdentifierParent = NoValidationIdentifier,
+                                            ),
+                                    ),
                             ),
                             ValidationError(
                                 message =
@@ -209,12 +212,12 @@ class DefaultMusicScoreDetailsComponentTest :
                                         validationIdentifierParent =
                                             ValidationIdentifierForMeasure(
                                                 measureIndex = 0,
-                                                validationIdentifierParent = NoValidationIdentifier
-                                            )
-                                    )
-                            )
-                        )
-                    )
+                                                validationIdentifierParent = NoValidationIdentifier,
+                                            ),
+                                    ),
+                            ),
+                        ),
+                    ),
                 )
 
             result shouldBeLeft expectedDomainError

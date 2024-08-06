@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.compose)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.serialization)
     alias(libs.plugins.spotless)
     alias(libs.plugins.pitest)
 }
@@ -23,6 +24,7 @@ dependencies {
     implementation(compose.desktop.currentOs)
     implementation(libs.ami.music.sdk.kotlin)
     implementation(libs.arrow.core)
+    implementation(libs.kotlinx.serialization.json)
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.decompose.jvm)
     implementation(libs.decompose.compose.jetbrains.jvm)
