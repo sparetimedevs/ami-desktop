@@ -16,8 +16,10 @@
 
 package com.sparetimedevs.ami.app.graphicmusicnotation.details
 
+import androidx.compose.ui.graphics.vector.PathBuilder
 import androidx.compose.ui.graphics.vector.PathNode
 import arrow.core.Either
+import arrow.core.NonEmptyList
 import arrow.core.right
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
@@ -31,6 +33,10 @@ import com.sparetimedevs.ami.app.graphicmusicnotation.vector.asPathData
 import com.sparetimedevs.ami.app.utils.disposableScope
 import com.sparetimedevs.ami.core.DomainError
 import com.sparetimedevs.ami.core.asEitherWithAccumulatedValidationErrors
+import com.sparetimedevs.ami.core.validation.ValidationError
+import com.sparetimedevs.ami.core.validation.ValidationIdentifier
+import com.sparetimedevs.ami.core.validation.ValidationIdentifierForMeasure
+import com.sparetimedevs.ami.core.validation.ValidationIdentifierForNote
 import com.sparetimedevs.ami.music.core.replaceMeasures
 import com.sparetimedevs.ami.music.data.kotlin.part.Part
 import com.sparetimedevs.ami.music.data.kotlin.score.Score
@@ -96,9 +102,46 @@ internal class DefaultMusicScoreDetailsComponent(
                             _scoreValue.updateAndGet { it.replaceMeasures(measures) }
                         }
                     }
+                    .mapLeft { validationErrors: NonEmptyList<ValidationError>
+                        -> /* TODO use this to mark offending things red. */
+                        validationErrors.forEach { validationError: ValidationError ->
+                            doTheThingToMarkItRedFor(validationError.validationIdentifier)
+                        }
+                        validationErrors
+                    }
                     .asEitherWithAccumulatedValidationErrors()
             GraphicMusicNotationMode.READING -> _scoreValue.value.right()
         }
+
+    private fun doTheThingToMarkItRedFor(validationIdentifier: ValidationIdentifier): Unit {
+        when (validationIdentifier) {
+            is ValidationIdentifierForNote -> doTheThingToMarkNoteRed(validationIdentifier)
+            is ValidationIdentifierForMeasure -> doTheThingToMarkMeasureRed(validationIdentifier)
+        }
+    }
+
+    private fun doTheThingToMarkNoteRed(
+        validationIdentifierForNote: ValidationIdentifierForNote
+    ): Unit {
+        doTheThingToMarkItRedFor(validationIdentifierForNote.validationIdentifierParent)
+    }
+
+    private fun doTheThingToMarkMeasureRed(
+        validationIdentifierForMeasure: ValidationIdentifierForMeasure
+    ): Unit {
+        validationIdentifierForMeasure.measureIndex
+
+        val pathData: List<PathNode> =
+            PathBuilder()
+                .moveTo(x = 87.5f, y = 550.0f)
+                .horizontalLineTo(x = 587.5f)
+                .moveTo(x = 662.5f, y = 575.0f)
+                .horizontalLineTo(x = 1162.5f)
+                .nodes
+        pathDataRepository.addToErrorMarkingPathData(
+            pathData
+        ) // TODO just start with a big fat line.
+    }
 
     private fun emptyScore(): Score {
         val parts = emptyList<Part>()

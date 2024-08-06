@@ -23,7 +23,14 @@ import arrow.core.flattenOrAccumulate
 import arrow.core.left
 import arrow.core.right
 import arrow.core.toEitherNel
+import com.sparetimedevs.ami.core.validation.MeasureIndex
+import com.sparetimedevs.ami.core.validation.NoValidationIdentifier
 import com.sparetimedevs.ami.core.validation.ValidationError
+import com.sparetimedevs.ami.core.validation.ValidationErrorFor
+import com.sparetimedevs.ami.core.validation.ValidationErrorForMeasure
+import com.sparetimedevs.ami.core.validation.ValidationErrorForUnknown
+import com.sparetimedevs.ami.core.validation.ValidationIdentifier
+import com.sparetimedevs.ami.core.validation.ValidationIdentifierForMeasure
 import com.sparetimedevs.ami.graphic.vector.NoteVectors
 import com.sparetimedevs.ami.graphic.vector.WHOLE_NOTE_WIDTH
 import com.sparetimedevs.ami.music.data.kotlin.measure.Measure
@@ -36,20 +43,40 @@ import com.sparetimedevs.ami.music.data.kotlin.note.Pitch
 import com.sparetimedevs.ami.music.data.kotlin.note.Semitones
 
 fun asAmiMeasures(
-    notesVectorsPerMeasure: Map<String, List<NoteVectors>>
+    notesVectorsPerMeasure: Map<Int, List<NoteVectors>>
 ): EitherNel<ValidationError, List<Measure>> =
     notesVectorsPerMeasure
-        .map { notesVectorsForMeasure: Map.Entry<String, List<NoteVectors>> ->
-            asAmiMeasure(notesVectorsForMeasure.value)
+        .map { notesVectorsForMeasure: Map.Entry<Int, List<NoteVectors>> ->
+            val validationErrorFor: ValidationErrorFor =
+                ValidationErrorForMeasure(
+                    "todo",
+                    null,
+                    MeasureIndex.getValidOrNull(notesVectorsForMeasure.key)
+                )
+            val validationIdentifier: ValidationIdentifier =
+                ValidationIdentifierForMeasure(
+                    notesVectorsForMeasure.key,
+                    NoValidationIdentifier /* could add part and score context */
+                )
+            asAmiMeasure(notesVectorsForMeasure.value, validationErrorFor, validationIdentifier)
         }
         .flattenOrAccumulate()
 
-fun asAmiMeasure(notesVectors: List<NoteVectors>): EitherNel<ValidationError, Measure> {
-    val measureOrErrors = asAmiNotes(notesVectors).map { notes -> Measure(null, notes) }
+fun asAmiMeasure(
+    notesVectors: List<NoteVectors>,
+    validationErrorFor: ValidationErrorFor,
+    validationIdentifier: ValidationIdentifier
+): EitherNel<ValidationError, Measure> {
+    val measureOrErrors =
+        asAmiNotes(validationErrorFor, validationIdentifier, notesVectors).map { notes ->
+            Measure(null, notes)
+        }
     return measureOrErrors
 }
 
 private tailrec fun asAmiNotes(
+    validationErrorFor: ValidationErrorFor,
+    validationIdentifier: ValidationIdentifier,
     notesVectors: List<NoteVectors>,
     acc: EitherNel<ValidationError, List<Note>> = emptyList<Note>().right()
 ): EitherNel<ValidationError, List<Note>> =
@@ -72,7 +99,7 @@ private tailrec fun asAmiNotes(
 
         val noteOrError: EitherNel<ValidationError, Note> =
             Either.zipOrAccumulate(
-                noteDuration(width).toEitherNel(),
+                noteDuration(width, validationErrorFor, validationIdentifier).toEitherNel(),
                 pitch(startY, operatingFromOctave)
             ) { noteDuration, pitch ->
                 Note.Pitched(noteDuration, NoteAttributes(null, null, null, null), pitch)
@@ -91,14 +118,22 @@ private tailrec fun asAmiNotes(
                 { note: Note -> acc.map { it.plus(note) } }
             )
 
-        asAmiNotes(notesVectorsRemaining, newAcc)
+        asAmiNotes(validationErrorFor, validationIdentifier, notesVectorsRemaining, newAcc)
     }
 
 // Before we reach this method, we actually need to make sure that width is snapped to the nearest
 // valid value. This is currently done in
 // `PathDataRepositoryImpl#addToPathData(nonnormalizedPathNode: PathNode): List<PathNode>`
-private fun noteDuration(width: Double): Either<ValidationError, NoteDuration> =
-    NoteDuration.validate(width / WHOLE_NOTE_WIDTH)
+private fun noteDuration(
+    width: Double,
+    validationErrorFor: ValidationErrorFor,
+    validationIdentifier: ValidationIdentifier
+): Either<ValidationError, NoteDuration> =
+    NoteDuration.validate(
+        input = width / WHOLE_NOTE_WIDTH,
+        validationErrorFor = validationErrorFor,
+        validationIdentifier = validationIdentifier
+    )
 
 private fun pitch(height: Double, operatingFromOctave: Octave): EitherNel<ValidationError, Pitch> {
     val remainderHeight = height % 6
@@ -129,7 +164,13 @@ private fun noteName(height: Double): Either<ValidationError, NoteName> {
             4.5 -> NoteName.F.right()
             5.0 -> NoteName.G_FLAT.right() // or F_SHARP
             5.5 -> NoteName.G.right()
-            else -> ValidationError("Unable to map height to NoteName").left()
+            else ->
+                ValidationError(
+                        "Unable to map height to NoteName",
+                        ValidationErrorForUnknown,
+                        NoValidationIdentifier
+                    )
+                    .left() // TODO check if we can cat more ValidationError Context.
         }
 
     return noteName

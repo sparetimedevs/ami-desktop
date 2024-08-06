@@ -34,12 +34,18 @@ interface PathDataRepository {
     fun undoLastCreatedLine(): List<PathNode>
 
     fun replacePathData(data: List<PathNode>): List<PathNode>
+
+    fun getErrorMarkingPathData(): List<PathNode>
+
+    fun addToErrorMarkingPathData(pathData: List<PathNode>): List<PathNode>
 }
 
 class PathDataRepositoryImpl(private val graphicProperties: GraphicProperties) :
     PathDataRepository {
 
     private val pathData = mutableStateListOf<PathNode>()
+
+    private val errorMarkingPathData = mutableStateListOf<PathNode>()
 
     override fun getPathData(): List<PathNode> = pathData
 
@@ -328,5 +334,12 @@ class PathDataRepositoryImpl(private val graphicProperties: GraphicProperties) :
         pathData.clear()
         pathData.addAll(data)
         return pathData
+    }
+
+    override fun getErrorMarkingPathData(): List<PathNode> = errorMarkingPathData
+
+    override fun addToErrorMarkingPathData(pathData: List<PathNode>): List<PathNode> {
+        errorMarkingPathData.addAll(pathData)
+        return errorMarkingPathData
     }
 }

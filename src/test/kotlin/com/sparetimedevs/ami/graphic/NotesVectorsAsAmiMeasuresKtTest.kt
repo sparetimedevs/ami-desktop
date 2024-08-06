@@ -17,7 +17,12 @@
 package com.sparetimedevs.ami.graphic
 
 import arrow.core.NonEmptyList
+import com.sparetimedevs.ami.core.validation.MeasureIndex
+import com.sparetimedevs.ami.core.validation.NoValidationIdentifier
 import com.sparetimedevs.ami.core.validation.ValidationError
+import com.sparetimedevs.ami.core.validation.ValidationErrorForMeasure
+import com.sparetimedevs.ami.core.validation.ValidationErrorForUnknown
+import com.sparetimedevs.ami.core.validation.ValidationIdentifierForMeasure
 import com.sparetimedevs.ami.graphic.vector.NoteVectors
 import com.sparetimedevs.ami.graphic.vector.Vector
 import com.sparetimedevs.ami.music.data.kotlin.measure.Measure
@@ -37,10 +42,7 @@ class NotesVectorsAsAmiMeasuresKtTest :
     StringSpec({
         "asAmiMeasures should return one measure with one note when NoteVectors for one note" {
             val notesVectorsPerMeasure =
-                mapOf(
-                    "measure_1" to
-                        listOf<NoteVectors>(NoteVectors(Vector(0.0, 26.0), Vector(400.0, 26.0)))
-                )
+                mapOf(0 to listOf<NoteVectors>(NoteVectors(Vector(0.0, 26.0), Vector(400.0, 26.0))))
             val expectedResult: List<Measure> =
                 listOf(
                     Measure(
@@ -63,14 +65,14 @@ class NotesVectorsAsAmiMeasuresKtTest :
         "asAmiMeasures should return two measures with one all notes in C ionian mode (C major)" {
             val notesVectorsPerMeasure =
                 mapOf(
-                    "measure_1" to
+                    0 to
                         listOf<NoteVectors>(
                             NoteVectors(Vector(0.0, 26.0), Vector(100.0, 26.0)),
                             NoteVectors(Vector(100.0, 27.0), Vector(200.0, 27.0)),
                             NoteVectors(Vector(200.0, 27.5), Vector(300.0, 27.5)),
                             NoteVectors(Vector(300.0, 28.5), Vector(400.0, 28.5))
                         ),
-                    "measure_2" to
+                    1 to
                         listOf<NoteVectors>(
                             NoteVectors(Vector(0.0, 29.5), Vector(100.0, 29.5)),
                             NoteVectors(Vector(100.0, 30.5), Vector(200.0, 30.5)),
@@ -87,14 +89,14 @@ class NotesVectorsAsAmiMeasuresKtTest :
         "asAmiMeasures should return list of errors when there are errors in the list of NoteVectors" {
             val notesVectorsPerMeasure =
                 mapOf(
-                    "measure_1" to
+                    0 to
                         listOf<NoteVectors>(
                             NoteVectors(Vector(0.0, 26.0), Vector(100.0, 26.0)),
                             NoteVectors(Vector(100.0, 27.0), Vector(200.0, 27.0)),
                             NoteVectors(Vector(200.0, 27.5), Vector(300.0, 27.5)),
                             NoteVectors(Vector(300.0, 28.5), Vector(400.0, 28.5))
                         ),
-                    "measure_2" to
+                    1 to
                         listOf<NoteVectors>(
                             NoteVectors(Vector(0.0, 29.34567), Vector(100.0, 29.34567)),
                             NoteVectors(Vector(100.0, 30.5), Vector(593.827156, 30.5)),
@@ -107,20 +109,45 @@ class NotesVectorsAsAmiMeasuresKtTest :
                 )
 
             val result = asAmiMeasures(notesVectorsPerMeasure)
-
+            // [ValidationError(message=Unable to map height to NoteName,
+            // validationErrorFor=com.sparetimedevs.ami.core.validation.ValidationErrorForUnknown@376a3eb2, validationIdentifier=com.sparetimedevs.ami.core.validation.NoValidationIdentifier@7129aa98), ValidationError(message=Input for note duration is not a valid value, the value is: 1.23456789, validationErrorFor=com.sparetimedevs.ami.core.validation.ValidationErrorForMeasure@1fd81787, validationIdentifier=ValidationIdentifierForMeasure(measureIndex=1, validationIdentifierParent=com.sparetimedevs.ami.core.validation.NoValidationIdentifier@7129aa98)), ValidationError(message=Input for note duration is not a valid value, the value is: 1.23456789, validationErrorFor=com.sparetimedevs.ami.core.validation.ValidationErrorForMeasure@1fd81787, validationIdentifier=ValidationIdentifierForMeasure(measureIndex=1, validationIdentifierParent=com.sparetimedevs.ami.core.validation.NoValidationIdentifier@7129aa98)), ValidationError(message=Unable to map height to NoteName, validationErrorFor=com.sparetimedevs.ami.core.validation.ValidationErrorForUnknown@376a3eb2, validationIdentifier=com.sparetimedevs.ami.core.validation.NoValidationIdentifier@7129aa98)]
+            // ValidationIdentifierForMeasure(measureIndex=1,
+            // validationIdentifierParent=com.sparetimedevs.ami.core.validation.NoValidationIdentifier@7129aa98))
             result shouldBeLeft
                 NonEmptyList(
-                    ValidationError(message = "Unable to map height to NoteName"),
+                    ValidationError(
+                        message = "Unable to map height to NoteName",
+                        ValidationErrorForUnknown,
+                        NoValidationIdentifier
+                    ), // TODO check if we can get more ValidationError
+                    // Context.
                     listOf(
                         ValidationError(
                             message =
-                                "Input for note duration is not a valid value, the value is: 1.23456789"
+                                "Input for note duration is not a valid value, the value is: 1.23456789",
+                            ValidationErrorForMeasure("todo", null, MeasureIndex.getValidOrNull(1)),
+                            ValidationIdentifierForMeasure(
+                                measureIndex = 1,
+                                validationIdentifierParent = NoValidationIdentifier
+                            )
+                            // TODO check if we can get ValidationIdentifierForNote
                         ),
                         ValidationError(
                             message =
-                                "Input for note duration is not a valid value, the value is: 1.23456789"
+                                "Input for note duration is not a valid value, the value is: 1.23456789",
+                            ValidationErrorForMeasure("todo", null, MeasureIndex.getValidOrNull(1)),
+                            ValidationIdentifierForMeasure(
+                                measureIndex = 1,
+                                validationIdentifierParent = NoValidationIdentifier
+                            )
+                            // TODO check if we can get ValidationIdentifierForNote
                         ),
-                        ValidationError(message = "Unable to map height to NoteName")
+                        ValidationError(
+                            message = "Unable to map height to NoteName",
+                            ValidationErrorForUnknown,
+                            NoValidationIdentifier
+                        ) // TODO check if we can get more ValidationError
+                        // Context.
                     )
                 )
         }
@@ -160,7 +187,12 @@ class NotesVectorsAsAmiMeasuresKtTest :
                     )
                 )
 
-            val result = asAmiMeasure(notesVectorsForOneMeasure)
+            val result =
+                asAmiMeasure(
+                    notesVectorsForOneMeasure,
+                    ValidationErrorForUnknown,
+                    NoValidationIdentifier
+                ) // TODO add valid validationIndentifier
 
             result shouldBeRight expectedResult
         }
@@ -200,7 +232,12 @@ class NotesVectorsAsAmiMeasuresKtTest :
                     )
                 )
 
-            val result = asAmiMeasure(notesVectorsForOneMeasure)
+            val result =
+                asAmiMeasure(
+                    notesVectorsForOneMeasure,
+                    ValidationErrorForUnknown,
+                    NoValidationIdentifier
+                ) // TODO add valid validationIndentifier
 
             result shouldBeRight expectedResult
         }
@@ -246,7 +283,12 @@ class NotesVectorsAsAmiMeasuresKtTest :
                     )
                 )
 
-            val result = asAmiMeasure(notesVectorsForOneMeasure)
+            val result =
+                asAmiMeasure(
+                    notesVectorsForOneMeasure,
+                    ValidationErrorForUnknown,
+                    NoValidationIdentifier
+                ) // TODO add valid validationIndentifier
 
             result shouldBeRight expectedResult
         }

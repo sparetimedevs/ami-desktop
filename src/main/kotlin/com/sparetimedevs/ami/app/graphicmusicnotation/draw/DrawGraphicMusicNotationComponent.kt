@@ -31,6 +31,8 @@ interface DrawGraphicMusicNotationComponent {
 
     fun getPathData(): List<PathNode>
 
+    fun getErrorMarkingPathData(): List<PathNode>
+
     fun addToPathData(pathNode: PathNode): List<PathNode>
 
     fun undoLastCreatedLine(): Unit
@@ -46,6 +48,9 @@ class DefaultDrawGraphicMusicNotationComponent(
     override fun getLineThickness(): Float = THICKNESS_OF_LINES
 
     override fun getPathData(): List<PathNode> = pathDataRepository.getPathData()
+
+    override fun getErrorMarkingPathData(): List<PathNode> =
+        pathDataRepository.getErrorMarkingPathData()
 
     override fun addToPathData(pathNode: PathNode): List<PathNode> =
         pathDataRepository.addToPathData(pathNode)
