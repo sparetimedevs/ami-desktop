@@ -116,7 +116,7 @@ fun DrawGraphicMusicNotationContent(
             drawPath(
                 path = component.getErrorMarkingPathData().asComposePath(),
                 color = Color.Red,
-                style = Stroke(width = component.getLineThickness() * 2)
+                style = Stroke(width = component.getLineThickness() / 2)
             )
         }
     }

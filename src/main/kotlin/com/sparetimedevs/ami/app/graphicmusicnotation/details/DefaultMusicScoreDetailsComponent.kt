@@ -33,7 +33,11 @@ import com.sparetimedevs.ami.app.graphicmusicnotation.vector.asPathData
 import com.sparetimedevs.ami.app.utils.disposableScope
 import com.sparetimedevs.ami.core.DomainError
 import com.sparetimedevs.ami.core.asEitherWithAccumulatedValidationErrors
+import com.sparetimedevs.ami.core.validation.MeasureIndex
 import com.sparetimedevs.ami.core.validation.ValidationError
+import com.sparetimedevs.ami.core.validation.ValidationErrorFor
+import com.sparetimedevs.ami.core.validation.ValidationErrorForMeasure
+import com.sparetimedevs.ami.core.validation.ValidationErrorForNote
 import com.sparetimedevs.ami.core.validation.ValidationIdentifier
 import com.sparetimedevs.ami.core.validation.ValidationIdentifierForMeasure
 import com.sparetimedevs.ami.core.validation.ValidationIdentifierForNote
@@ -41,6 +45,8 @@ import com.sparetimedevs.ami.music.core.replaceMeasures
 import com.sparetimedevs.ami.music.data.kotlin.part.Part
 import com.sparetimedevs.ami.music.data.kotlin.score.Score
 import com.sparetimedevs.ami.music.data.kotlin.score.ScoreId
+
+const val Toggle = false
 
 internal class DefaultMusicScoreDetailsComponent(
     componentContext: ComponentContext,
@@ -105,7 +111,11 @@ internal class DefaultMusicScoreDetailsComponent(
                     .mapLeft { validationErrors: NonEmptyList<ValidationError>
                         -> /* TODO use this to mark offending things red. */
                         validationErrors.forEach { validationError: ValidationError ->
-                            doTheThingToMarkItRedFor(validationError.validationIdentifier)
+                            if (Toggle) {
+                                doTheThingToMarkItRedFor(validationError.validationIdentifier)
+                            } else {
+                                doTheOtherThingToMarkItRedFor(validationError.validationErrorFor)
+                            }
                         }
                         validationErrors
                     }
@@ -123,24 +133,74 @@ internal class DefaultMusicScoreDetailsComponent(
     private fun doTheThingToMarkNoteRed(
         validationIdentifierForNote: ValidationIdentifierForNote
     ): Unit {
+        val validationIdentifierForMeasure =
+            returnFirstScoreValidationIdentifier(
+                validationIdentifierForNote.validationIdentifierParent
+            )
+        val measureIndex = validationIdentifierForMeasure.measureIndex
+        val noteIndex = validationIdentifierForNote.noteIndex
+        pathDataRepository.getPathData()
+        // TODO do some calculations to get the right note from the right measure.
         doTheThingToMarkItRedFor(validationIdentifierForNote.validationIdentifierParent)
     }
+
+    private tailrec fun returnFirstScoreValidationIdentifier(
+        validationIdentifier: ValidationIdentifier
+    ): ValidationIdentifierForMeasure =
+        if (validationIdentifier is ValidationIdentifierForMeasure) validationIdentifier
+        else {
+            returnFirstScoreValidationIdentifier(validationIdentifier.validationIdentifierParent)
+        }
+    // TODO what happens if there is no ValidationIdentifierForMeasure in the hierarchy? Write unit
+    // test for it.
 
     private fun doTheThingToMarkMeasureRed(
         validationIdentifierForMeasure: ValidationIdentifierForMeasure
     ): Unit {
-        validationIdentifierForMeasure.measureIndex
+        val xStart = validationIdentifierForMeasure.measureIndex * 575.0f + 87.5f
 
         val pathData: List<PathNode> =
-            PathBuilder()
-                .moveTo(x = 87.5f, y = 550.0f)
-                .horizontalLineTo(x = 587.5f)
-                .moveTo(x = 662.5f, y = 575.0f)
-                .horizontalLineTo(x = 1162.5f)
-                .nodes
+            PathBuilder().moveTo(x = xStart, y = 400.0f).horizontalLineTo(x = xStart + 500).nodes
         pathDataRepository.addToErrorMarkingPathData(
             pathData
-        ) // TODO just start with a big fat line.
+        ) // TODO just start with a line on top. Later on we can extend it to a complete border
+        // around a measure.
+    }
+
+    private fun doTheOtherThingToMarkItRedFor(validationErrorFor: ValidationErrorFor?): Unit {
+        when (validationErrorFor) {
+            is ValidationErrorForNote -> doTheOtherThingToMarkNoteRed(validationErrorFor)
+            is ValidationErrorForMeasure -> doTheOtherThingToMarkMeasureRed(validationErrorFor)
+        }
+    }
+
+    private fun doTheOtherThingToMarkNoteRed(validationErrorForNote: ValidationErrorForNote): Unit {
+        val measureIndex = validationErrorForNote.measureIndex
+        val noteIndex = validationErrorForNote.noteIndex
+        pathDataRepository.getPathData()
+        // TODO do some calculations to get the right note from the right measure.
+
+        // And also mark the measure red
+
+        if (measureIndex != null) doTheOtherThingToMarkMeasureRed(measureIndex)
+    }
+
+    private fun doTheOtherThingToMarkMeasureRed(
+        validationErrorForMeasure: ValidationErrorForMeasure
+    ): Unit {
+        val maybeMeasureIndex = validationErrorForMeasure.measureIndex
+        if (maybeMeasureIndex != null) doTheOtherThingToMarkMeasureRed(maybeMeasureIndex)
+    }
+
+    private fun doTheOtherThingToMarkMeasureRed(measureIndex: MeasureIndex): Unit {
+        val xStart = measureIndex.value * 575.0f + 87.5f
+
+        val pathData: List<PathNode> =
+            PathBuilder().moveTo(x = xStart, y = 400.0f).horizontalLineTo(x = xStart + 500).nodes
+        pathDataRepository.addToErrorMarkingPathData(
+            pathData
+        ) // TODO just start with a line on top. Later on we can extend it to a complete border
+        // around a measure.
     }
 
     private fun emptyScore(): Score {
