@@ -16,12 +16,21 @@
 
 package com.sparetimedevs.ami.app.graphicmusicnotation.details
 
+import arrow.core.Either
+import arrow.core.EitherNel
+import arrow.core.NonEmptyList
+import arrow.core.toEitherNel
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.decompose.value.update
 import com.badoo.reaktive.disposable.scope.DisposableScope
 import com.sparetimedevs.ami.app.utils.disposableScope
+import com.sparetimedevs.ami.core.validation.NoValidationIdentifier
+import com.sparetimedevs.ami.core.validation.ValidationError
+import com.sparetimedevs.ami.core.validation.ValidationErrorForUnknown
+import com.sparetimedevs.ami.music.data.kotlin.score.ScoreId
+import com.sparetimedevs.ami.music.data.kotlin.score.ScoreTitle
 
 internal class DefaultScoreDetailsComponent(
     componentContext: ComponentContext,
@@ -47,6 +56,35 @@ internal class DefaultScoreDetailsComponent(
 
     override fun saveScoreDetails(): Unit {
         // TODO actually some other method should be invoked.
-        scoreCoreComponent.onSaveScoreClicked()
+        // First do some validations.
+        println("The scoreId is ${_scoreIdValue.value}")
+        println("The scoreTitle is ${_scoreTitleValue.value}")
+        val validatedScoreId: EitherNel<ValidationError, ScoreId> =
+            ScoreId.validate(_scoreIdValue.value, ValidationErrorForUnknown, NoValidationIdentifier)
+                .toEitherNel()
+        // TODO does need to account for nullability and being able to have empty string.
+        val validatedScoreTitle: EitherNel<ValidationError, ScoreTitle> =
+            ScoreTitle.validate(
+                    _scoreTitleValue.value,
+                    ValidationErrorForUnknown,
+                    NoValidationIdentifier
+                )
+                .toEitherNel()
+
+        val accumulatedValidatedFields:
+            Either<NonEmptyList<ValidationError>, Pair<ScoreId, ScoreTitle?>> =
+            Either.zipOrAccumulate(validatedScoreId, validatedScoreTitle) {
+                id: ScoreId,
+                title: ScoreTitle? ->
+                id to title
+            }
+        accumulatedValidatedFields.fold(
+            { validationErrors ->
+                // TODO for each validation error, add behind the input field what is wrong about
+                // it.
+                validationErrors.forEach { e -> println("The validationError is ${e}") }
+            },
+            { (id: ScoreId, title: ScoreTitle?) -> scoreCoreComponent.updateScoreWith(id, title) }
+        )
     }
 }

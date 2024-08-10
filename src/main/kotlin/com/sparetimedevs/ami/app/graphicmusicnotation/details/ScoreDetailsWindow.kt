@@ -19,6 +19,7 @@ package com.sparetimedevs.ami.app.graphicmusicnotation.details
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Button
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -56,6 +57,7 @@ fun ScoreDetailsWindow(
                     onValueChange = { scoreTitle -> component.updateScoreTitle(scoreTitle) }
                 )
             }
+            Button(onClick = { component.saveScoreDetails() }) { Text("Save") }
         }
     }
 }

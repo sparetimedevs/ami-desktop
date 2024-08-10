@@ -45,6 +45,7 @@ import com.sparetimedevs.ami.music.core.replaceMeasures
 import com.sparetimedevs.ami.music.data.kotlin.part.Part
 import com.sparetimedevs.ami.music.data.kotlin.score.Score
 import com.sparetimedevs.ami.music.data.kotlin.score.ScoreId
+import com.sparetimedevs.ami.music.data.kotlin.score.ScoreTitle
 
 const val Toggle = true
 
@@ -122,6 +123,12 @@ internal class DefaultMusicScoreDetailsComponent(
                     .asEitherWithAccumulatedValidationErrors()
             GraphicMusicNotationMode.READING -> _scoreValue.value.right()
         }
+
+    override fun updateScoreWith(id: ScoreId, title: ScoreTitle?) {
+        println("In the core, the scoreId is ${id.value}")
+        println("In the core, the scoreTitle is ${title?.value}")
+        //TODO updateTheScore!
+    }
 
     private fun doTheThingToMarkItRedFor(validationIdentifier: ValidationIdentifier): Unit {
         when (validationIdentifier) {
