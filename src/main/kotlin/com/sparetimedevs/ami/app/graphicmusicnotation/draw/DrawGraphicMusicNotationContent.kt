@@ -113,7 +113,7 @@ fun DrawGraphicMusicNotationContent(
                 color = Color.Black,
                 style = Stroke(width = component.getLineThickness())
             )
-            drawPath(
+            drawPath( // TODO these lines are never cleared when new things happen (load new score).
                 path = component.getErrorMarkingPathData().asComposePath(),
                 color = Color.Red,
                 style = Stroke(width = component.getLineThickness() / 2)

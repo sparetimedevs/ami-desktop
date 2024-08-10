@@ -28,9 +28,11 @@ import com.sparetimedevs.ami.core.validation.NoValidationIdentifier
 import com.sparetimedevs.ami.core.validation.ValidationError
 import com.sparetimedevs.ami.core.validation.ValidationErrorFor
 import com.sparetimedevs.ami.core.validation.ValidationErrorForMeasure
+import com.sparetimedevs.ami.core.validation.ValidationErrorForNote
 import com.sparetimedevs.ami.core.validation.ValidationErrorForUnknown
 import com.sparetimedevs.ami.core.validation.ValidationIdentifier
 import com.sparetimedevs.ami.core.validation.ValidationIdentifierForMeasure
+import com.sparetimedevs.ami.core.validation.ValidationIdentifierForNote
 import com.sparetimedevs.ami.graphic.vector.NoteVectors
 import com.sparetimedevs.ami.graphic.vector.WHOLE_NOTE_WIDTH
 import com.sparetimedevs.ami.music.data.kotlin.measure.Measure
@@ -97,9 +99,24 @@ private tailrec fun asAmiNotes(
         val endX: Double = noteVectors.end.x
         val width = endX - startX
 
+        val sizeOfAcc =
+            if (
+                acc.isRight()
+            ) { // TODO this can be better. Current impl is only capable of returning first error.
+                acc.getOrNull()?.size
+            } else 0
         val noteOrError: EitherNel<ValidationError, Note> =
             Either.zipOrAccumulate(
-                noteDuration(width, validationErrorFor, validationIdentifier).toEitherNel(),
+                noteDuration(
+                        width,
+                        if (sizeOfAcc != null)
+                            ValidationErrorForNote.fromParent(validationErrorFor, sizeOfAcc)
+                        else validationErrorFor,
+                        if (sizeOfAcc != null)
+                            ValidationIdentifierForNote(sizeOfAcc, validationIdentifier)
+                        else validationIdentifier
+                    )
+                    .toEitherNel(),
                 pitch(startY, operatingFromOctave)
             ) { noteDuration, pitch ->
                 Note.Pitched(noteDuration, NoteAttributes(null, null, null, null), pitch)

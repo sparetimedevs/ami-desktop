@@ -19,10 +19,12 @@ package com.sparetimedevs.ami.graphic
 import arrow.core.NonEmptyList
 import com.sparetimedevs.ami.core.validation.MeasureIndex
 import com.sparetimedevs.ami.core.validation.NoValidationIdentifier
+import com.sparetimedevs.ami.core.validation.NoteIndex
 import com.sparetimedevs.ami.core.validation.ValidationError
-import com.sparetimedevs.ami.core.validation.ValidationErrorForMeasure
+import com.sparetimedevs.ami.core.validation.ValidationErrorForNote
 import com.sparetimedevs.ami.core.validation.ValidationErrorForUnknown
 import com.sparetimedevs.ami.core.validation.ValidationIdentifierForMeasure
+import com.sparetimedevs.ami.core.validation.ValidationIdentifierForNote
 import com.sparetimedevs.ami.graphic.vector.NoteVectors
 import com.sparetimedevs.ami.graphic.vector.Vector
 import com.sparetimedevs.ami.music.data.kotlin.measure.Measure
@@ -109,45 +111,56 @@ class NotesVectorsAsAmiMeasuresKtTest :
                 )
 
             val result = asAmiMeasures(notesVectorsPerMeasure)
-            // [ValidationError(message=Unable to map height to NoteName,
-            // validationErrorFor=com.sparetimedevs.ami.core.validation.ValidationErrorForUnknown@376a3eb2, validationIdentifier=com.sparetimedevs.ami.core.validation.NoValidationIdentifier@7129aa98), ValidationError(message=Input for note duration is not a valid value, the value is: 1.23456789, validationErrorFor=com.sparetimedevs.ami.core.validation.ValidationErrorForMeasure@1fd81787, validationIdentifier=ValidationIdentifierForMeasure(measureIndex=1, validationIdentifierParent=com.sparetimedevs.ami.core.validation.NoValidationIdentifier@7129aa98)), ValidationError(message=Input for note duration is not a valid value, the value is: 1.23456789, validationErrorFor=com.sparetimedevs.ami.core.validation.ValidationErrorForMeasure@1fd81787, validationIdentifier=ValidationIdentifierForMeasure(measureIndex=1, validationIdentifierParent=com.sparetimedevs.ami.core.validation.NoValidationIdentifier@7129aa98)), ValidationError(message=Unable to map height to NoteName, validationErrorFor=com.sparetimedevs.ami.core.validation.ValidationErrorForUnknown@376a3eb2, validationIdentifier=com.sparetimedevs.ami.core.validation.NoValidationIdentifier@7129aa98)]
-            // ValidationIdentifierForMeasure(measureIndex=1,
-            // validationIdentifierParent=com.sparetimedevs.ami.core.validation.NoValidationIdentifier@7129aa98))
+
             result shouldBeLeft
                 NonEmptyList(
                     ValidationError(
                         message = "Unable to map height to NoteName",
                         ValidationErrorForUnknown,
                         NoValidationIdentifier
-                    ), // TODO check if we can get more ValidationError
-                    // Context.
+                    ), // TODO check if we can get more ValidationError context.
                     listOf(
                         ValidationError(
                             message =
                                 "Input for note duration is not a valid value, the value is: 1.23456789",
-                            ValidationErrorForMeasure("todo", null, MeasureIndex.getValidOrNull(1)),
-                            ValidationIdentifierForMeasure(
-                                measureIndex = 1,
-                                validationIdentifierParent = NoValidationIdentifier
+                            ValidationErrorForNote(
+                                "todo",
+                                null,
+                                MeasureIndex.getValidOrNull(1),
+                                NoteIndex.getValidOrNull(0)
+                            ),
+                            ValidationIdentifierForNote(
+                                noteIndex = 0,
+                                validationIdentifierParent =
+                                    ValidationIdentifierForMeasure(
+                                        measureIndex = 1,
+                                        NoValidationIdentifier
+                                    )
                             )
-                            // TODO check if we can get ValidationIdentifierForNote
                         ),
                         ValidationError(
                             message =
                                 "Input for note duration is not a valid value, the value is: 1.23456789",
-                            ValidationErrorForMeasure("todo", null, MeasureIndex.getValidOrNull(1)),
-                            ValidationIdentifierForMeasure(
-                                measureIndex = 1,
-                                validationIdentifierParent = NoValidationIdentifier
+                            ValidationErrorForNote(
+                                "todo",
+                                null,
+                                MeasureIndex.getValidOrNull(1),
+                                NoteIndex.getValidOrNull(0)
+                            ),
+                            ValidationIdentifierForNote(
+                                noteIndex = 0,
+                                validationIdentifierParent =
+                                    ValidationIdentifierForMeasure(
+                                        measureIndex = 1,
+                                        NoValidationIdentifier
+                                    )
                             )
-                            // TODO check if we can get ValidationIdentifierForNote
                         ),
                         ValidationError(
                             message = "Unable to map height to NoteName",
                             ValidationErrorForUnknown,
                             NoValidationIdentifier
-                        ) // TODO check if we can get more ValidationError
-                        // Context.
+                        ) // TODO check if we can get more ValidationError context.
                     )
                 )
         }

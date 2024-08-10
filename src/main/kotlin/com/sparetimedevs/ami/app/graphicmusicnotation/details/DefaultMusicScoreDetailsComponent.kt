@@ -46,7 +46,7 @@ import com.sparetimedevs.ami.music.data.kotlin.part.Part
 import com.sparetimedevs.ami.music.data.kotlin.score.Score
 import com.sparetimedevs.ami.music.data.kotlin.score.ScoreId
 
-const val Toggle = false
+const val Toggle = true
 
 internal class DefaultMusicScoreDetailsComponent(
     componentContext: ComponentContext,
