@@ -127,7 +127,7 @@ internal class DefaultMusicScoreDetailsComponent(
     override fun updateScoreWith(id: ScoreId, title: ScoreTitle?) {
         println("In the core, the scoreId is ${id.value}")
         println("In the core, the scoreTitle is ${title?.value}")
-        //TODO updateTheScore!
+        // TODO updateTheScore!
     }
 
     private fun doTheThingToMarkItRedFor(validationIdentifier: ValidationIdentifier): Unit {

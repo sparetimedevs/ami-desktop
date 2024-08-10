@@ -24,6 +24,8 @@ interface ScoreDetailsComponent {
 
     val scoreTitleValue: Value<String>
 
+    val mappedValidationErrorsValue: Value<Map<String, String>>
+
     fun updateScoreId(newValue: String)
 
     fun updateScoreTitle(newValue: String)

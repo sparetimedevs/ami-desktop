@@ -46,6 +46,9 @@ internal class DefaultScoreDetailsComponent(
     private val _scoreTitleValue = MutableValue("")
     override val scoreTitleValue: Value<String> = _scoreTitleValue
 
+    private val _mappedValidationErrors = MutableValue(emptyMap<String, String>())
+    override val mappedValidationErrorsValue: Value<Map<String, String>> = _mappedValidationErrors
+
     override fun updateScoreId(newValue: String) {
         _scoreIdValue.update { newValue }
     }
@@ -82,9 +85,29 @@ internal class DefaultScoreDetailsComponent(
             { validationErrors ->
                 // TODO for each validation error, add behind the input field what is wrong about
                 // it.
-                validationErrors.forEach { e -> println("The validationError is ${e}") }
+                val mappedValidationErrors: Map<String, String> =
+                    validationErrors
+                        .map { validationError ->
+                            val message = validationError.message
+                            if (message.contains("Score ID")) {
+                                "score-id" to message
+                                // TODO propertyKey should be typed. Might be derived from class?
+                            } else if (message.contains("Score title")) {
+                                "score-title" to message
+                            } else {
+                                // TODO maybe instead of collecting nulls, we can collect unmapped
+                                // errors and display them at a global level.
+                                null
+                            }
+                        }
+                        .filterNotNull()
+                        .toMap()
+                _mappedValidationErrors.update { mappedValidationErrors }
             },
-            { (id: ScoreId, title: ScoreTitle?) -> scoreCoreComponent.updateScoreWith(id, title) }
+            { (id: ScoreId, title: ScoreTitle?) ->
+                _mappedValidationErrors.update { emptyMap() }
+                scoreCoreComponent.updateScoreWith(id, title)
+            }
         )
     }
 }

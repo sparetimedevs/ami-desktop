@@ -25,6 +25,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogWindow
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
@@ -37,6 +38,7 @@ fun ScoreDetailsWindow(
 
     val scoreId by component.scoreIdValue.subscribeAsState()
     val scoreTitle by component.scoreTitleValue.subscribeAsState()
+    val mappedValidationErrors by component.mappedValidationErrorsValue.subscribeAsState()
 
     DialogWindow(
         onCloseRequest = { onSelectedIndexValueChange(-1) },
@@ -49,6 +51,9 @@ fun ScoreDetailsWindow(
                     value = scoreId,
                     onValueChange = { scoreId -> component.updateScoreId(scoreId) }
                 )
+                if (mappedValidationErrors.containsKey("score-id")) {
+                    Text(mappedValidationErrors.getOrDefault("score-id", ""), color = Color.Red)
+                }
             }
             Row {
                 Text("Score title")
@@ -56,6 +61,9 @@ fun ScoreDetailsWindow(
                     value = scoreTitle,
                     onValueChange = { scoreTitle -> component.updateScoreTitle(scoreTitle) }
                 )
+                if (mappedValidationErrors.containsKey("score-title")) {
+                    Text(mappedValidationErrors.getOrDefault("score-title", ""), color = Color.Red)
+                }
             }
             Button(onClick = { component.saveScoreDetails() }) { Text("Save") }
         }
