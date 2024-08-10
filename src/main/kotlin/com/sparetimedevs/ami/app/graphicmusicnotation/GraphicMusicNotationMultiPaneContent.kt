@@ -31,7 +31,6 @@ import androidx.compose.ui.Modifier
 import com.arkivanov.decompose.Child
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
 import com.sparetimedevs.ami.app.graphicmusicnotation.details.GraphicMusicNotationMode
-import com.sparetimedevs.ami.app.graphicmusicnotation.details.MusicScoreDetailsComponent
 import com.sparetimedevs.ami.app.graphicmusicnotation.details.MusicScoreDetailsContent
 import com.sparetimedevs.ami.app.graphicmusicnotation.draw.DrawGraphicMusicNotationComponent
 import com.sparetimedevs.ami.app.graphicmusicnotation.draw.DrawGraphicMusicNotationContent
@@ -49,14 +48,16 @@ internal fun GraphicMusicNotationMultiPaneContent(
 
     val saveableStateHolder = rememberSaveableStateHolder()
 
-    val topAppBarDetailsPane: @Composable (Child.Created<*, MusicScoreDetailsComponent>) -> Unit =
-        remember {
-            movableContentOf { (config, component) ->
-                saveableStateHolder.SaveableStateProvider(key = config.javaClass.simpleName) {
-                    MusicScoreDetailsContent(component = component)
-                }
+    val topAppBarDetailsPane: @Composable (Child.Created<*, ScoreComponents>) -> Unit = remember {
+        movableContentOf { (config, components) ->
+            saveableStateHolder.SaveableStateProvider(key = config.javaClass.simpleName) {
+                MusicScoreDetailsContent(
+                    component = components.scoreCoreComponent,
+                    scoreDetailsComponent = components.scoreDetailsComponent
+                )
             }
         }
+    }
 
     val drawPane: @Composable (Child.Created<*, DrawGraphicMusicNotationComponent>) -> Unit =
         remember {
@@ -98,7 +99,8 @@ internal fun GraphicMusicNotationMultiPaneContent(
         selectedDetailsKey = children.topAppBarDetailsChild.configuration.javaClass.simpleName
     )
 
-    val mode by children.topAppBarDetailsChild.instance.modeValue.subscribeAsState()
+    val mode by
+        children.topAppBarDetailsChild.instance.scoreCoreComponent.modeValue.subscribeAsState()
 
     Column(modifier = modifier) {
         topAppBarDetailsPane(children.topAppBarDetailsChild)

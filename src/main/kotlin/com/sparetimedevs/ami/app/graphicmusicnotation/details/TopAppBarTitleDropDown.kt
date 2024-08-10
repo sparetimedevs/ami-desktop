@@ -42,7 +42,8 @@ import com.sparetimedevs.ami.music.example.getExampleScoreHeighHoNobodyHome
 @Composable
 fun TopAppBarTitleDropDown(
     text: String,
-    component: MusicScoreDetailsComponent,
+    scoreCoreComponent: MusicScoreDetailsComponent,
+    scoreDetailsComponent: ScoreDetailsComponent,
     onValueChange: (PlayerState) -> Unit
 ) {
     var expanded: Boolean by remember { mutableStateOf(false) }
@@ -57,7 +58,7 @@ fun TopAppBarTitleDropDown(
                     Button(
                         onClick = {
                             selectedIndex = -1
-                            component.onNewScoreClicked()
+                            scoreCoreComponent.onNewScoreClicked()
                             onValueChange(PlayerState.PAUSE)
                         },
                         modifier = Modifier.testTag("create-new-score")
@@ -65,6 +66,12 @@ fun TopAppBarTitleDropDown(
                         Text("New")
                     }
                 }
+            },
+            TopAppBarTitleDropDownAction("Edit score details") {
+                ScoreDetailsWindow(
+                    scoreDetailsComponent,
+                    { newSelectedIndex -> selectedIndex = newSelectedIndex }
+                )
             },
             TopAppBarTitleDropDownAction("Load") {
                 DialogWindow(
@@ -75,7 +82,7 @@ fun TopAppBarTitleDropDown(
                         Button(
                             onClick = {
                                 selectedIndex = -1
-                                component.onLoadScoreClicked(getExampleScoreFrereJacques())
+                                scoreCoreComponent.onLoadScoreClicked(getExampleScoreFrereJacques())
                                 onValueChange(PlayerState.PAUSE)
                             }
                         ) {
@@ -84,7 +91,7 @@ fun TopAppBarTitleDropDown(
                         Button(
                             onClick = {
                                 selectedIndex = -1
-                                component.onLoadScoreClicked(getExampleScoreAsturias())
+                                scoreCoreComponent.onLoadScoreClicked(getExampleScoreAsturias())
                                 onValueChange(PlayerState.PAUSE)
                             }
                         ) {
@@ -93,7 +100,9 @@ fun TopAppBarTitleDropDown(
                         Button(
                             onClick = {
                                 selectedIndex = -1
-                                component.onLoadScoreClicked(getExampleScoreHeighHoNobodyHome())
+                                scoreCoreComponent.onLoadScoreClicked(
+                                    getExampleScoreHeighHoNobodyHome()
+                                )
                                 onValueChange(PlayerState.PAUSE)
                             }
                         ) {
@@ -110,7 +119,7 @@ fun TopAppBarTitleDropDown(
                     Button(
                         onClick = {
                             selectedIndex = -1
-                            component.onSaveScoreClicked()
+                            scoreCoreComponent.onSaveScoreClicked()
                             onValueChange(PlayerState.PAUSE)
                         }
                     ) {
