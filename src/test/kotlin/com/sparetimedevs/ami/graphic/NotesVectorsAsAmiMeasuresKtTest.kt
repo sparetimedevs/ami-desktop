@@ -22,9 +22,11 @@ import com.sparetimedevs.ami.core.validation.NoValidationIdentifier
 import com.sparetimedevs.ami.core.validation.NoteIndex
 import com.sparetimedevs.ami.core.validation.ValidationError
 import com.sparetimedevs.ami.core.validation.ValidationErrorForNote
+import com.sparetimedevs.ami.core.validation.ValidationErrorForProperty
 import com.sparetimedevs.ami.core.validation.ValidationErrorForUnknown
 import com.sparetimedevs.ami.core.validation.ValidationIdentifierForMeasure
 import com.sparetimedevs.ami.core.validation.ValidationIdentifierForNote
+import com.sparetimedevs.ami.core.validation.validationErrorForProperty
 import com.sparetimedevs.ami.graphic.vector.NoteVectors
 import com.sparetimedevs.ami.graphic.vector.Vector
 import com.sparetimedevs.ami.music.data.kotlin.measure.Measure
@@ -116,6 +118,7 @@ class NotesVectorsAsAmiMeasuresKtTest :
                 NonEmptyList(
                     ValidationError(
                         message = "Unable to map height to NoteName",
+                        ValidationErrorForProperty("height"),
                         ValidationErrorForUnknown,
                         NoValidationIdentifier
                     ), // TODO check if we can get more ValidationError context.
@@ -123,6 +126,7 @@ class NotesVectorsAsAmiMeasuresKtTest :
                         ValidationError(
                             message =
                                 "Input for note duration is not a valid value, the value is: 1.23456789",
+                            validationErrorForProperty<NoteDuration>(),
                             ValidationErrorForNote(
                                 "todo",
                                 null,
@@ -141,6 +145,7 @@ class NotesVectorsAsAmiMeasuresKtTest :
                         ValidationError(
                             message =
                                 "Input for note duration is not a valid value, the value is: 1.23456789",
+                            validationErrorForProperty<NoteDuration>(),
                             ValidationErrorForNote(
                                 "todo",
                                 null,
@@ -158,6 +163,7 @@ class NotesVectorsAsAmiMeasuresKtTest :
                         ),
                         ValidationError(
                             message = "Unable to map height to NoteName",
+                            ValidationErrorForProperty("height"),
                             ValidationErrorForUnknown,
                             NoValidationIdentifier
                         ) // TODO check if we can get more ValidationError context.

@@ -29,6 +29,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogWindow
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
+import com.sparetimedevs.ami.core.validation.validationErrorForProperty
+import com.sparetimedevs.ami.music.data.kotlin.score.ScoreId
+import com.sparetimedevs.ami.music.data.kotlin.score.ScoreTitle
 
 @Composable
 fun ScoreDetailsWindow(
@@ -51,8 +54,14 @@ fun ScoreDetailsWindow(
                     value = scoreId,
                     onValueChange = { scoreId -> component.updateScoreId(scoreId) }
                 )
-                if (mappedValidationErrors.containsKey("score-id")) {
-                    Text(mappedValidationErrors.getOrDefault("score-id", ""), color = Color.Red)
+                if (mappedValidationErrors.containsKey(validationErrorForProperty<ScoreId>())) {
+                    Text(
+                        mappedValidationErrors.getOrDefault(
+                            validationErrorForProperty<ScoreId>(),
+                            ""
+                        ),
+                        color = Color.Red
+                    )
                 }
             }
             Row {
@@ -61,8 +70,14 @@ fun ScoreDetailsWindow(
                     value = scoreTitle,
                     onValueChange = { scoreTitle -> component.updateScoreTitle(scoreTitle) }
                 )
-                if (mappedValidationErrors.containsKey("score-title")) {
-                    Text(mappedValidationErrors.getOrDefault("score-title", ""), color = Color.Red)
+                if (mappedValidationErrors.containsKey(validationErrorForProperty<ScoreTitle>())) {
+                    Text(
+                        mappedValidationErrors.getOrDefault(
+                            validationErrorForProperty<ScoreTitle>(),
+                            ""
+                        ),
+                        color = Color.Red
+                    )
                 }
             }
             Button(onClick = { component.saveScoreDetails() }) { Text("Save") }

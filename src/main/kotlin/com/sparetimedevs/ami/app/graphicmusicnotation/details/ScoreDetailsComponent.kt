@@ -17,6 +17,7 @@
 package com.sparetimedevs.ami.app.graphicmusicnotation.details
 
 import com.arkivanov.decompose.value.Value
+import com.sparetimedevs.ami.core.validation.ValidationErrorForProperty
 
 interface ScoreDetailsComponent {
 
@@ -24,7 +25,9 @@ interface ScoreDetailsComponent {
 
     val scoreTitleValue: Value<String>
 
-    val mappedValidationErrorsValue: Value<Map<String, String>>
+    val partIdsValue: Value<List<String>>
+
+    val mappedValidationErrorsValue: Value<Map<ValidationErrorForProperty, String>>
 
     fun updateScoreId(newValue: String)
 

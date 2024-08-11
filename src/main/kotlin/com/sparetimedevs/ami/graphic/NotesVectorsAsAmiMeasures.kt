@@ -29,6 +29,7 @@ import com.sparetimedevs.ami.core.validation.ValidationError
 import com.sparetimedevs.ami.core.validation.ValidationErrorFor
 import com.sparetimedevs.ami.core.validation.ValidationErrorForMeasure
 import com.sparetimedevs.ami.core.validation.ValidationErrorForNote
+import com.sparetimedevs.ami.core.validation.ValidationErrorForProperty
 import com.sparetimedevs.ami.core.validation.ValidationErrorForUnknown
 import com.sparetimedevs.ami.core.validation.ValidationIdentifier
 import com.sparetimedevs.ami.core.validation.ValidationIdentifierForMeasure
@@ -184,6 +185,7 @@ private fun noteName(height: Double): Either<ValidationError, NoteName> {
             else ->
                 ValidationError(
                         "Unable to map height to NoteName",
+                        ValidationErrorForProperty("height"),
                         ValidationErrorForUnknown,
                         NoValidationIdentifier
                     )

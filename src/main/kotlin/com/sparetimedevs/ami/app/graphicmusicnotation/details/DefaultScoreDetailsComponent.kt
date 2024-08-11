@@ -28,7 +28,9 @@ import com.badoo.reaktive.disposable.scope.DisposableScope
 import com.sparetimedevs.ami.app.utils.disposableScope
 import com.sparetimedevs.ami.core.validation.NoValidationIdentifier
 import com.sparetimedevs.ami.core.validation.ValidationError
+import com.sparetimedevs.ami.core.validation.ValidationErrorForProperty
 import com.sparetimedevs.ami.core.validation.ValidationErrorForUnknown
+import com.sparetimedevs.ami.core.validation.validationErrorForProperty
 import com.sparetimedevs.ami.music.data.kotlin.score.ScoreId
 import com.sparetimedevs.ami.music.data.kotlin.score.ScoreTitle
 
@@ -46,8 +48,14 @@ internal class DefaultScoreDetailsComponent(
     private val _scoreTitleValue = MutableValue("")
     override val scoreTitleValue: Value<String> = _scoreTitleValue
 
-    private val _mappedValidationErrors = MutableValue(emptyMap<String, String>())
-    override val mappedValidationErrorsValue: Value<Map<String, String>> = _mappedValidationErrors
+    // TODO add one more property, but from a nested structure. Like PartId
+    private val _partIdsValue = MutableValue(emptyList<String>())
+    override val partIdsValue: Value<List<String>> = _partIdsValue
+
+    private val _mappedValidationErrors =
+        MutableValue(emptyMap<ValidationErrorForProperty, String>())
+    override val mappedValidationErrorsValue: Value<Map<ValidationErrorForProperty, String>> =
+        _mappedValidationErrors
 
     override fun updateScoreId(newValue: String) {
         _scoreIdValue.update { newValue }
@@ -83,24 +91,11 @@ internal class DefaultScoreDetailsComponent(
             }
         accumulatedValidatedFields.fold(
             { validationErrors ->
-                // TODO for each validation error, add behind the input field what is wrong about
-                // it.
-                val mappedValidationErrors: Map<String, String> =
+                val mappedValidationErrors: Map<ValidationErrorForProperty, String> =
                     validationErrors
                         .map { validationError ->
-                            val message = validationError.message
-                            if (message.contains("Score ID")) {
-                                "score-id" to message
-                                // TODO propertyKey should be typed. Might be derived from class?
-                            } else if (message.contains("Score title")) {
-                                "score-title" to message
-                            } else {
-                                // TODO maybe instead of collecting nulls, we can collect unmapped
-                                // errors and display them at a global level.
-                                null
-                            }
+                            validationError.validationErrorForProperty to validationError.message
                         }
-                        .filterNotNull()
                         .toMap()
                 _mappedValidationErrors.update { mappedValidationErrors }
             },
