@@ -48,7 +48,8 @@ internal class DefaultScoreDetailsComponent(
     private val _scoreTitleValue = MutableValue("")
     override val scoreTitleValue: Value<String> = _scoreTitleValue
 
-    // TODO add one more property, but from a nested structure. Like PartId
+    // TODO add one more property, but from a nested structure. Like PartName, PartInstrument(name,
+    // midi-channel, midi-program)
     private val _partIdsValue = MutableValue(emptyList<String>())
     override val partIdsValue: Value<List<String>> = _partIdsValue
 

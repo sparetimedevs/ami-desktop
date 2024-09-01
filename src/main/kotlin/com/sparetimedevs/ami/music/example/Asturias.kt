@@ -17,6 +17,8 @@
 package com.sparetimedevs.ami.music.example
 
 import com.sparetimedevs.ami.music.data.kotlin.measure.Measure
+import com.sparetimedevs.ami.music.data.kotlin.midi.MidiChannel
+import com.sparetimedevs.ami.music.data.kotlin.midi.MidiProgram
 import com.sparetimedevs.ami.music.data.kotlin.note.Note
 import com.sparetimedevs.ami.music.data.kotlin.note.NoteAttributes
 import com.sparetimedevs.ami.music.data.kotlin.note.NoteDuration
@@ -26,6 +28,9 @@ import com.sparetimedevs.ami.music.data.kotlin.note.Octave
 import com.sparetimedevs.ami.music.data.kotlin.note.Pitch
 import com.sparetimedevs.ami.music.data.kotlin.part.Part
 import com.sparetimedevs.ami.music.data.kotlin.part.PartId
+import com.sparetimedevs.ami.music.data.kotlin.part.PartInstrument
+import com.sparetimedevs.ami.music.data.kotlin.part.PartInstrumentName
+import com.sparetimedevs.ami.music.data.kotlin.part.PartName
 import com.sparetimedevs.ami.music.data.kotlin.score.Score
 import com.sparetimedevs.ami.music.data.kotlin.score.ScoreId
 import com.sparetimedevs.ami.music.data.kotlin.score.ScoreTitle
@@ -36,6 +41,12 @@ fun getExampleScoreAsturias(): Score {
         listOf(
             Part(
                 PartId.unsafeCreate("p-1"),
+                PartName.unsafeCreate("Classical guitar"),
+                PartInstrument(
+                    PartInstrumentName.unsafeCreate("Classical guitar"),
+                    MidiChannel.unsafeCreate(0),
+                    MidiProgram.unsafeCreate(25),
+                ),
                 listOf(
                     Measure(
                         null,
@@ -43,24 +54,24 @@ fun getExampleScoreAsturias(): Score {
                             Note.Pitched(
                                 NoteDuration(NoteValue.QUARTER),
                                 NoteAttributes(null, null, null, null),
-                                Pitch(NoteName.C, Octave.unsafeCreate(4))
+                                Pitch(NoteName.C, Octave.unsafeCreate(4)),
                             ),
                             Note.Pitched(
                                 NoteDuration(NoteValue.QUARTER),
                                 NoteAttributes(null, null, null, null),
-                                Pitch(NoteName.C, Octave.unsafeCreate(4))
+                                Pitch(NoteName.C, Octave.unsafeCreate(4)),
                             ),
                             Note.Pitched(
                                 NoteDuration(NoteValue.QUARTER),
                                 NoteAttributes(null, null, null, null),
-                                Pitch(NoteName.C, Octave.unsafeCreate(4))
+                                Pitch(NoteName.C, Octave.unsafeCreate(4)),
                             ),
                             Note.Pitched(
                                 NoteDuration(NoteValue.QUARTER),
                                 NoteAttributes(null, null, null, null),
-                                Pitch(NoteName.C, Octave.unsafeCreate(4))
+                                Pitch(NoteName.C, Octave.unsafeCreate(4)),
                             ),
-                        )
+                        ),
                     ),
                     Measure(
                         null,
@@ -68,32 +79,32 @@ fun getExampleScoreAsturias(): Score {
                             Note.Pitched(
                                 NoteDuration(NoteValue.QUARTER),
                                 NoteAttributes(null, null, null, null),
-                                Pitch(NoteName.C, Octave.unsafeCreate(4))
+                                Pitch(NoteName.C, Octave.unsafeCreate(4)),
                             ),
                             Note.Pitched(
                                 NoteDuration(NoteValue.QUARTER),
                                 NoteAttributes(null, null, null, null),
-                                Pitch(NoteName.C, Octave.unsafeCreate(4))
+                                Pitch(NoteName.C, Octave.unsafeCreate(4)),
                             ),
                             Note.Pitched(
                                 NoteDuration(NoteValue.QUARTER),
                                 NoteAttributes(null, null, null, null),
-                                Pitch(NoteName.C, Octave.unsafeCreate(4))
+                                Pitch(NoteName.C, Octave.unsafeCreate(4)),
                             ),
                             Note.Pitched(
                                 NoteDuration(NoteValue.QUARTER),
                                 NoteAttributes(null, null, null, null),
-                                Pitch(NoteName.C, Octave.unsafeCreate(4))
-                            )
-                        )
+                                Pitch(NoteName.C, Octave.unsafeCreate(4)),
+                            ),
+                        ),
                     ),
-                )
+                ),
             )
         )
 
     return Score(
         ScoreId.unsafeCreate("34e80abf-519e-4784-9ae1-8be2c9cfdb73"),
         ScoreTitle.unsafeCreate("Asturias"),
-        parts
+        parts,
     )
 }
