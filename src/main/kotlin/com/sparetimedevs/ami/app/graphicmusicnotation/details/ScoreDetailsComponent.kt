@@ -27,6 +27,14 @@ interface ScoreDetailsComponent {
 
     val partIdsValue: Value<List<String>>
 
+    val partNamesValue: Value<List<String>>
+
+    val partInstrumentNamesValue: Value<List<String>>
+
+    val partMidiChannelsValue: Value<List<String>>
+
+    val partMidiProgramsValue: Value<List<String>>
+
     val mappedValidationErrorsValue: Value<Map<ValidationErrorForProperty, String>>
 
     fun updateScoreId(newValue: String)
