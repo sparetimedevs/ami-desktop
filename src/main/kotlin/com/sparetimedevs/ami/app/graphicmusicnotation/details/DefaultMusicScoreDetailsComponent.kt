@@ -38,6 +38,7 @@ import com.sparetimedevs.ami.core.validation.ValidationError
 import com.sparetimedevs.ami.core.validation.ValidationErrorFor
 import com.sparetimedevs.ami.core.validation.ValidationErrorForMeasure
 import com.sparetimedevs.ami.core.validation.ValidationErrorForNote
+import com.sparetimedevs.ami.core.validation.ValidationErrorForProperty
 import com.sparetimedevs.ami.core.validation.ValidationIdentifier
 import com.sparetimedevs.ami.core.validation.ValidationIdentifierForMeasure
 import com.sparetimedevs.ami.core.validation.ValidationIdentifierForNote
@@ -114,7 +115,9 @@ internal class DefaultMusicScoreDetailsComponent(
                             if (Toggle) {
                                 doTheThingToMarkItRedFor(validationError.validationIdentifier)
                             } else {
-                                doTheOtherThingToMarkItRedFor(validationError.validationErrorFor)
+                                doTheOtherThingToMarkItRedForProperty(
+                                    validationError.validationErrorForProperty
+                                )
                             }
                         }
                         validationErrors
@@ -132,6 +135,7 @@ internal class DefaultMusicScoreDetailsComponent(
         // TODO update the Score!
         // and probably, or maybe, also the pathData in pathDataRepository
         // Maybe just use onLoadScoreClicked
+        onLoadScoreClicked(score)
     }
 
     private fun doTheThingToMarkItRedFor(validationIdentifier: ValidationIdentifier): Unit {
@@ -177,6 +181,13 @@ internal class DefaultMusicScoreDetailsComponent(
             pathData
         ) // TODO just start with a line on top. Later on we can extend it to a complete border
         // around a measure.
+    }
+
+    private fun doTheOtherThingToMarkItRedForProperty(
+        validationErrorForProperty: ValidationErrorForProperty
+    ): Unit {
+        // TODO explore if we can mark the thing red based on the validationErrorForProperty
+        // Not sure if we know which measure to mark red.
     }
 
     private fun doTheOtherThingToMarkItRedFor(validationErrorFor: ValidationErrorFor?): Unit {

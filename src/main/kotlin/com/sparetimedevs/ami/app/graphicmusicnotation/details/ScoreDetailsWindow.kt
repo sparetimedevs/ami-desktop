@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogWindow
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
 import com.sparetimedevs.ami.core.validation.validationErrorForProperty
+import com.sparetimedevs.ami.music.data.kotlin.part.Part
 import com.sparetimedevs.ami.music.data.kotlin.part.PartId
 import com.sparetimedevs.ami.music.data.kotlin.part.PartInstrumentName
 import com.sparetimedevs.ami.music.data.kotlin.score.ScoreId
@@ -41,6 +42,7 @@ fun ScoreDetailsWindow(
     onSelectedIndexValueChange: (Int) -> Unit,
 ) {
 
+    val score by component.scoreValue.subscribeAsState()
     val scoreId by component.scoreIdValue.subscribeAsState()
     val scoreTitle by component.scoreTitleValue.subscribeAsState()
     val partInstrumentNames by component.partInstrumentNamesValue.subscribeAsState()
@@ -80,29 +82,67 @@ fun ScoreDetailsWindow(
                     )
                 }
             }
-            Row {
-                Text("part 1 partInstrumentName")
-                OutlinedTextField(
-                    value = partInstrumentNames.getOrDefault(PartId.unsafeCreate("p-1"), ""),
-                    onValueChange = { partInstrumentName ->
-                        component.updatePartInstrumentName(
-                            partId = PartId.unsafeCreate("p-1"),
-                            newValue = partInstrumentName,
+            // TODO here make a list of parts
+            // TODO and then validate if we can get the validation error for a particular
+            // partInstrumentName to the right part.
+            Column {
+                score.parts.forEach { part: Part ->
+                    Row {
+                        Text("part ${part.id.value} partInstrumentName")
+                        OutlinedTextField(
+                            value =
+                                partInstrumentNames.getOrDefault(
+                                    part.id,
+                                    part.instrument?.name?.value ?: ""
+                                ),
+                            onValueChange = { partInstrumentName ->
+                                component.updatePartInstrumentName(
+                                    partId = part.id,
+                                    newValue = partInstrumentName,
+                                )
+                            }
                         )
-                    },
-                )
-                if (
-                    mappedValidationErrors.containsKey(
-                        validationErrorForProperty<PartInstrumentName>()
+                        if (
+                            mappedValidationErrors.containsKey(
+                                validationErrorForProperty<PartInstrumentName>()
+                            )
+                        ) {
+                            Text(
+                                mappedValidationErrors.getOrDefault(
+                                    validationErrorForProperty<PartInstrumentName>(),
+                                    "",
+                                ),
+                                color = Color.Red,
+                            )
+                        }
+                    }
+                }
+                Text("Add new part")
+                Row {
+                    Text("new part partInstrumentName")
+                    OutlinedTextField(
+                        value =
+                            partInstrumentNames.getOrDefault(PartId.unsafeCreate("new part"), ""),
+                        onValueChange = { partInstrumentName ->
+                            component.updatePartInstrumentName(
+                                partId = PartId.unsafeCreate("new part"),
+                                newValue = partInstrumentName,
+                            )
+                        }
                     )
-                ) {
-                    Text(
-                        mappedValidationErrors.getOrDefault(
-                            validationErrorForProperty<PartInstrumentName>(),
-                            "",
-                        ),
-                        color = Color.Red,
-                    )
+                    if (
+                        mappedValidationErrors.containsKey(
+                            validationErrorForProperty<PartInstrumentName>()
+                        )
+                    ) {
+                        Text(
+                            mappedValidationErrors.getOrDefault(
+                                validationErrorForProperty<PartInstrumentName>(),
+                                "",
+                            ),
+                            color = Color.Red,
+                        )
+                    }
                 }
             }
             Button(onClick = { component.saveScoreDetails() }) { Text("Save") }

@@ -19,8 +19,11 @@ package com.sparetimedevs.ami.app.graphicmusicnotation.details
 import com.arkivanov.decompose.value.Value
 import com.sparetimedevs.ami.core.validation.ValidationErrorForProperty
 import com.sparetimedevs.ami.music.data.kotlin.part.PartId
+import com.sparetimedevs.ami.music.data.kotlin.score.Score
 
 interface ScoreDetailsComponent {
+
+    val scoreValue: Value<Score>
 
     val scoreIdValue: Value<String>
 

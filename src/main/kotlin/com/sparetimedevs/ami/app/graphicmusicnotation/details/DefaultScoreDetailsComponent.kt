@@ -46,6 +46,8 @@ internal class DefaultScoreDetailsComponent(
     ComponentContext by componentContext,
     DisposableScope by componentContext.disposableScope() {
 
+    override val scoreValue: Value<Score> = scoreCoreComponent.scoreValue
+
     private val _scoreIdValue = MutableValue("")
     override val scoreIdValue: Value<String> = _scoreIdValue
 
