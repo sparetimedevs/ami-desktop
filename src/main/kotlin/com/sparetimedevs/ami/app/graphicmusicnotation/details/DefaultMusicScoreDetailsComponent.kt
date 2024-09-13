@@ -45,13 +45,12 @@ import com.sparetimedevs.ami.music.core.replaceMeasures
 import com.sparetimedevs.ami.music.data.kotlin.part.Part
 import com.sparetimedevs.ami.music.data.kotlin.score.Score
 import com.sparetimedevs.ami.music.data.kotlin.score.ScoreId
-import com.sparetimedevs.ami.music.data.kotlin.score.ScoreTitle
 
 const val Toggle = true
 
 internal class DefaultMusicScoreDetailsComponent(
     componentContext: ComponentContext,
-    private val pathDataRepository: PathDataRepository
+    private val pathDataRepository: PathDataRepository,
 ) :
     MusicScoreDetailsComponent,
     ComponentContext by componentContext,
@@ -124,10 +123,15 @@ internal class DefaultMusicScoreDetailsComponent(
             GraphicMusicNotationMode.READING -> _scoreValue.value.right()
         }
 
-    override fun updateScoreWith(id: ScoreId, title: ScoreTitle?) {
-        println("In the core, the scoreId is ${id.value}")
-        println("In the core, the scoreTitle is ${title?.value}")
-        // TODO updateTheScore!
+    override fun updateScore(score: Score) {
+        println("In the core, the scoreId is ${score.id.value}")
+        println("In the core, the scoreTitle is ${score.title?.value}")
+        println(
+            "In the core, the partInstrumentNames is ${score.parts.map { it.instrument?.name?.value }.joinToString()}"
+        )
+        // TODO update the Score!
+        // and probably, or maybe, also the pathData in pathDataRepository
+        // Maybe just use onLoadScoreClicked
     }
 
     private fun doTheThingToMarkItRedFor(validationIdentifier: ValidationIdentifier): Unit {
@@ -158,6 +162,7 @@ internal class DefaultMusicScoreDetailsComponent(
         else {
             returnFirstScoreValidationIdentifier(validationIdentifier.validationIdentifierParent)
         }
+
     // TODO what happens if there is no ValidationIdentifierForMeasure in the hierarchy? Write unit
     // test for it.
 

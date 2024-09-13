@@ -18,6 +18,7 @@ package com.sparetimedevs.ami.app.graphicmusicnotation.details
 
 import com.arkivanov.decompose.value.Value
 import com.sparetimedevs.ami.core.validation.ValidationErrorForProperty
+import com.sparetimedevs.ami.music.data.kotlin.part.PartId
 
 interface ScoreDetailsComponent {
 
@@ -27,9 +28,9 @@ interface ScoreDetailsComponent {
 
     val partIdsValue: Value<List<String>>
 
-    val partNamesValue: Value<List<String>>
+    val partNamesValue: Value<Map<PartId, String>>
 
-    val partInstrumentNamesValue: Value<List<String>>
+    val partInstrumentNamesValue: Value<Map<PartId, String>>
 
     val partMidiChannelsValue: Value<List<String>>
 
@@ -40,6 +41,8 @@ interface ScoreDetailsComponent {
     fun updateScoreId(newValue: String)
 
     fun updateScoreTitle(newValue: String)
+
+    fun updatePartInstrumentName(partId: PartId, newValue: String)
 
     fun saveScoreDetails(): Unit
 }

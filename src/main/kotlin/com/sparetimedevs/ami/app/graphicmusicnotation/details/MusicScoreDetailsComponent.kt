@@ -20,8 +20,6 @@ import arrow.core.Either
 import com.arkivanov.decompose.value.Value
 import com.sparetimedevs.ami.core.DomainError
 import com.sparetimedevs.ami.music.data.kotlin.score.Score
-import com.sparetimedevs.ami.music.data.kotlin.score.ScoreId
-import com.sparetimedevs.ami.music.data.kotlin.score.ScoreTitle
 
 interface MusicScoreDetailsComponent {
 
@@ -41,5 +39,5 @@ interface MusicScoreDetailsComponent {
 
     suspend fun updateAndGetScore(): Either<DomainError, Score>
 
-    fun updateScoreWith(id: ScoreId, title: ScoreTitle?)
+    fun updateScore(score: Score)
 }

@@ -20,6 +20,7 @@ import arrow.core.Either
 import arrow.core.EitherNel
 import arrow.core.NonEmptyList
 import arrow.core.toEitherNel
+import arrow.core.traverse
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
@@ -30,13 +31,16 @@ import com.sparetimedevs.ami.core.validation.NoValidationIdentifier
 import com.sparetimedevs.ami.core.validation.ValidationError
 import com.sparetimedevs.ami.core.validation.ValidationErrorForProperty
 import com.sparetimedevs.ami.core.validation.ValidationErrorForUnknown
-import com.sparetimedevs.ami.core.validation.validationErrorForProperty
+import com.sparetimedevs.ami.music.data.kotlin.part.Part
+import com.sparetimedevs.ami.music.data.kotlin.part.PartId
+import com.sparetimedevs.ami.music.data.kotlin.part.PartInstrumentName
+import com.sparetimedevs.ami.music.data.kotlin.score.Score
 import com.sparetimedevs.ami.music.data.kotlin.score.ScoreId
 import com.sparetimedevs.ami.music.data.kotlin.score.ScoreTitle
 
 internal class DefaultScoreDetailsComponent(
     componentContext: ComponentContext,
-    private val scoreCoreComponent: MusicScoreDetailsComponent
+    private val scoreCoreComponent: MusicScoreDetailsComponent,
 ) :
     ScoreDetailsComponent,
     ComponentContext by componentContext,
@@ -51,12 +55,12 @@ internal class DefaultScoreDetailsComponent(
     private val _partIdsValue = MutableValue(emptyList<String>())
     override val partIdsValue: Value<List<String>> = _partIdsValue
     // TODO add one more property. PartName
-    private val _partNamesValue = MutableValue(emptyList<String>())
-    override val partNamesValue: Value<List<String>> = _partNamesValue
+    private val _partNamesValue = MutableValue(emptyMap<PartId, String>())
+    override val partNamesValue: Value<Map<PartId, String>> = _partNamesValue
     // TODO add one more property, but from a nested structure.
     // PartInstrument(name, midi-channel, midi-program)
-    private val _partInstrumentNamesValue = MutableValue(emptyList<String>())
-    override val partInstrumentNamesValue: Value<List<String>> = _partInstrumentNamesValue
+    private val _partInstrumentNamesValue = MutableValue(emptyMap<PartId, String>())
+    override val partInstrumentNamesValue: Value<Map<PartId, String>> = _partInstrumentNamesValue
 
     private val _partMidiChannelsValue = MutableValue(emptyList<String>())
     override val partMidiChannelsValue: Value<List<String>> = _partMidiChannelsValue
@@ -77,11 +81,21 @@ internal class DefaultScoreDetailsComponent(
         _scoreTitleValue.update { newValue }
     }
 
+    override fun updatePartInstrumentName(partId: PartId, newValue: String) {
+        _partInstrumentNamesValue.update { a -> a.plus(partId to newValue) }
+    }
+
     override fun saveScoreDetails(): Unit {
         // TODO actually some other method should be invoked.
         // First do some validations.
         println("The scoreId is ${_scoreIdValue.value}")
         println("The scoreTitle is ${_scoreTitleValue.value}")
+        println("The partIds is ${_partIdsValue.value}")
+        // TODO and everything in between these two new values
+        println("The partInstrumentNames is ${_partInstrumentNamesValue.value}")
+        // TODO and these
+        println("The partInstrumentMidiChannel is ${_partMidiChannelsValue.value}")
+        println("The partInstrumentMidiProgram is ${_partMidiProgramsValue.value}")
         val validatedScoreId: EitherNel<ValidationError, ScoreId> =
             ScoreId.validate(_scoreIdValue.value, ValidationErrorForUnknown, NoValidationIdentifier)
                 .toEitherNel()
@@ -90,16 +104,34 @@ internal class DefaultScoreDetailsComponent(
             ScoreTitle.validate(
                     _scoreTitleValue.value,
                     ValidationErrorForUnknown,
-                    NoValidationIdentifier
+                    NoValidationIdentifier,
                 )
                 .toEitherNel()
 
-        val accumulatedValidatedFields:
-            Either<NonEmptyList<ValidationError>, Pair<ScoreId, ScoreTitle?>> =
-            Either.zipOrAccumulate(validatedScoreId, validatedScoreTitle) {
+        //        val validatedParts: EitherNel<ValidationError, Map<PartId, Part>> =
+        // validateParts(_partInstrumentNamesValue.value)
+        val validatedParts: EitherNel<ValidationError, Map<PartId, PartInstrumentName?>> =
+            validateParts(_partInstrumentNamesValue.value)
+
+        val accumulatedValidatedFields: Either<NonEmptyList<ValidationError>, Score> =
+            Either.zipOrAccumulate(validatedScoreId, validatedScoreTitle, validatedParts) {
                 id: ScoreId,
-                title: ScoreTitle? ->
-                id to title
+                title: ScoreTitle?,
+                partInstrumentNames: Map<PartId, PartInstrumentName?> ->
+                val parts =
+                    scoreCoreComponent.scoreValue.value.parts.map { part: Part ->
+                        if (partInstrumentNames.containsKey(part.id)) {
+                            part.copy(
+                                instrument =
+                                    part.instrument?.copy(
+                                        name = partInstrumentNames.getValue(part.id)
+                                    )
+                            )
+                        } else {
+                            part
+                        }
+                    }
+                scoreCoreComponent.scoreValue.value.copy(id = id, title = title, parts = parts)
             }
         accumulatedValidatedFields.fold(
             { validationErrors ->
@@ -111,10 +143,31 @@ internal class DefaultScoreDetailsComponent(
                         .toMap()
                 _mappedValidationErrors.update { mappedValidationErrors }
             },
-            { (id: ScoreId, title: ScoreTitle?) ->
+            { score: Score ->
                 _mappedValidationErrors.update { emptyMap() }
-                scoreCoreComponent.updateScoreWith(id, title)
-            }
+                scoreCoreComponent.updateScore(score)
+            },
         )
+    }
+
+    private fun validateParts(
+        partInstrumentNamesValue: Map<PartId, String>
+    ): EitherNel<ValidationError, Map<PartId, PartInstrumentName?>> {
+
+        val xxx: Either<NonEmptyList<ValidationError>, Map<PartId, PartInstrumentName?>> =
+            partInstrumentNamesValue
+                .map { (t: PartId, u: String) ->
+                    t to
+                        PartInstrumentName.validate(
+                                u,
+                                ValidationErrorForUnknown,
+                                NoValidationIdentifier,
+                            )
+                            .toEitherNel()
+                }
+                .toMap()
+                .traverse { it }
+
+        return xxx
     }
 }

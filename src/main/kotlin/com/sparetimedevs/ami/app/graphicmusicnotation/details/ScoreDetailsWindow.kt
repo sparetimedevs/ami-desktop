@@ -30,37 +30,37 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogWindow
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
 import com.sparetimedevs.ami.core.validation.validationErrorForProperty
+import com.sparetimedevs.ami.music.data.kotlin.part.PartId
+import com.sparetimedevs.ami.music.data.kotlin.part.PartInstrumentName
 import com.sparetimedevs.ami.music.data.kotlin.score.ScoreId
 import com.sparetimedevs.ami.music.data.kotlin.score.ScoreTitle
 
 @Composable
 fun ScoreDetailsWindow(
     component: ScoreDetailsComponent,
-    onSelectedIndexValueChange: (Int) -> Unit
+    onSelectedIndexValueChange: (Int) -> Unit,
 ) {
 
     val scoreId by component.scoreIdValue.subscribeAsState()
     val scoreTitle by component.scoreTitleValue.subscribeAsState()
+    val partInstrumentNames by component.partInstrumentNamesValue.subscribeAsState()
     val mappedValidationErrors by component.mappedValidationErrorsValue.subscribeAsState()
 
-    DialogWindow(
-        onCloseRequest = { onSelectedIndexValueChange(-1) },
-        title = "Score details",
-    ) {
+    DialogWindow(onCloseRequest = { onSelectedIndexValueChange(-1) }, title = "Score details") {
         Column(modifier = Modifier.padding(10.dp)) {
             Row {
                 Text("Score ID")
                 OutlinedTextField(
                     value = scoreId,
-                    onValueChange = { scoreId -> component.updateScoreId(scoreId) }
+                    onValueChange = { scoreId -> component.updateScoreId(scoreId) },
                 )
                 if (mappedValidationErrors.containsKey(validationErrorForProperty<ScoreId>())) {
                     Text(
                         mappedValidationErrors.getOrDefault(
                             validationErrorForProperty<ScoreId>(),
-                            ""
+                            "",
                         ),
-                        color = Color.Red
+                        color = Color.Red,
                     )
                 }
             }
@@ -68,15 +68,40 @@ fun ScoreDetailsWindow(
                 Text("Score title")
                 OutlinedTextField(
                     value = scoreTitle,
-                    onValueChange = { scoreTitle -> component.updateScoreTitle(scoreTitle) }
+                    onValueChange = { scoreTitle -> component.updateScoreTitle(scoreTitle) },
                 )
                 if (mappedValidationErrors.containsKey(validationErrorForProperty<ScoreTitle>())) {
                     Text(
                         mappedValidationErrors.getOrDefault(
                             validationErrorForProperty<ScoreTitle>(),
-                            ""
+                            "",
                         ),
-                        color = Color.Red
+                        color = Color.Red,
+                    )
+                }
+            }
+            Row {
+                Text("part 1 partInstrumentName")
+                OutlinedTextField(
+                    value = partInstrumentNames.getOrDefault(PartId.unsafeCreate("p-1"), ""),
+                    onValueChange = { partInstrumentName ->
+                        component.updatePartInstrumentName(
+                            partId = PartId.unsafeCreate("p-1"),
+                            newValue = partInstrumentName,
+                        )
+                    },
+                )
+                if (
+                    mappedValidationErrors.containsKey(
+                        validationErrorForProperty<PartInstrumentName>()
+                    )
+                ) {
+                    Text(
+                        mappedValidationErrors.getOrDefault(
+                            validationErrorForProperty<PartInstrumentName>(),
+                            "",
+                        ),
+                        color = Color.Red,
                     )
                 }
             }
