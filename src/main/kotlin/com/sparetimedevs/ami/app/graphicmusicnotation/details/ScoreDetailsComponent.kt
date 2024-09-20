@@ -35,9 +35,9 @@ interface ScoreDetailsComponent {
 
     val partInstrumentNamesValue: Value<Map<PartId, String>>
 
-    val partMidiChannelsValue: Value<List<String>>
+    val partMidiChannelsValue: Value<Map<PartId, String>>
 
-    val partMidiProgramsValue: Value<List<String>>
+    val partMidiProgramsValue: Value<Map<PartId, String>>
 
     val mappedValidationErrorsValue: Value<Map<ValidationErrorForProperty, String>>
 
@@ -46,6 +46,10 @@ interface ScoreDetailsComponent {
     fun updateScoreTitle(newValue: String)
 
     fun updatePartInstrumentName(partId: PartId, newValue: String)
+
+    fun createNewPart()
+
+    fun updatePartMidiChannel(partId: PartId, newValue: String)
 
     fun saveScoreDetails(): Unit
 }

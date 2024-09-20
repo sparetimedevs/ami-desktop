@@ -19,6 +19,8 @@ package com.sparetimedevs.ami.app.graphicmusicnotation.details
 import arrow.core.Either
 import arrow.core.EitherNel
 import arrow.core.NonEmptyList
+import arrow.core.flatMap
+import arrow.core.nel
 import arrow.core.toEitherNel
 import arrow.core.traverse
 import com.arkivanov.decompose.ComponentContext
@@ -31,6 +33,8 @@ import com.sparetimedevs.ami.core.validation.NoValidationIdentifier
 import com.sparetimedevs.ami.core.validation.ValidationError
 import com.sparetimedevs.ami.core.validation.ValidationErrorForProperty
 import com.sparetimedevs.ami.core.validation.ValidationErrorForUnknown
+import com.sparetimedevs.ami.core.validation.validationErrorForProperty
+import com.sparetimedevs.ami.music.data.kotlin.midi.MidiChannel
 import com.sparetimedevs.ami.music.data.kotlin.part.Part
 import com.sparetimedevs.ami.music.data.kotlin.part.PartId
 import com.sparetimedevs.ami.music.data.kotlin.part.PartInstrumentName
@@ -64,11 +68,11 @@ internal class DefaultScoreDetailsComponent(
     private val _partInstrumentNamesValue = MutableValue(emptyMap<PartId, String>())
     override val partInstrumentNamesValue: Value<Map<PartId, String>> = _partInstrumentNamesValue
 
-    private val _partMidiChannelsValue = MutableValue(emptyList<String>())
-    override val partMidiChannelsValue: Value<List<String>> = _partMidiChannelsValue
+    private val _partMidiChannelsValue = MutableValue(emptyMap<PartId, String>())
+    override val partMidiChannelsValue: Value<Map<PartId, String>> = _partMidiChannelsValue
 
-    private val _partMidiProgramsValue = MutableValue(emptyList<String>())
-    override val partMidiProgramsValue: Value<List<String>> = _partMidiProgramsValue
+    private val _partMidiProgramsValue = MutableValue(emptyMap<PartId, String>())
+    override val partMidiProgramsValue: Value<Map<PartId, String>> = _partMidiProgramsValue
 
     private val _mappedValidationErrors =
         MutableValue(emptyMap<ValidationErrorForProperty, String>())
@@ -85,6 +89,21 @@ internal class DefaultScoreDetailsComponent(
 
     override fun updatePartInstrumentName(partId: PartId, newValue: String) {
         _partInstrumentNamesValue.update { a -> a.plus(partId to newValue) }
+    }
+
+    override fun createNewPart() {
+        scoreCoreComponent.updateScore(
+            scoreValue.value.copy(
+                parts =
+                    scoreValue.value.parts.plus(
+                        Part(id = PartId(), name = null, instrument = null, measures = emptyList())
+                    )
+            )
+        )
+    }
+
+    override fun updatePartMidiChannel(partId: PartId, newValue: String) {
+        _partMidiChannelsValue.update { a -> a.plus(partId to newValue) }
     }
 
     override fun saveScoreDetails(): Unit {
@@ -110,29 +129,18 @@ internal class DefaultScoreDetailsComponent(
                 )
                 .toEitherNel()
 
-        //        val validatedParts: EitherNel<ValidationError, Map<PartId, Part>> =
-        // validateParts(_partInstrumentNamesValue.value)
-        val validatedParts: EitherNel<ValidationError, Map<PartId, PartInstrumentName?>> =
-            validateParts(_partInstrumentNamesValue.value)
+        val validatedParts: EitherNel<ValidationError, List<Part>> =
+            validateParts(
+                scoreCoreComponent.scoreValue.value.parts,
+                _partInstrumentNamesValue.value,
+                _partMidiChannelsValue.value,
+            )
 
         val accumulatedValidatedFields: Either<NonEmptyList<ValidationError>, Score> =
             Either.zipOrAccumulate(validatedScoreId, validatedScoreTitle, validatedParts) {
                 id: ScoreId,
                 title: ScoreTitle?,
-                partInstrumentNames: Map<PartId, PartInstrumentName?> ->
-                val parts =
-                    scoreCoreComponent.scoreValue.value.parts.map { part: Part ->
-                        if (partInstrumentNames.containsKey(part.id)) {
-                            part.copy(
-                                instrument =
-                                    part.instrument?.copy(
-                                        name = partInstrumentNames.getValue(part.id)
-                                    )
-                            )
-                        } else {
-                            part
-                        }
-                    }
+                parts: List<Part> ->
                 scoreCoreComponent.scoreValue.value.copy(id = id, title = title, parts = parts)
             }
         accumulatedValidatedFields.fold(
@@ -153,15 +161,18 @@ internal class DefaultScoreDetailsComponent(
     }
 
     private fun validateParts(
-        partInstrumentNamesValue: Map<PartId, String>
-    ): EitherNel<ValidationError, Map<PartId, PartInstrumentName?>> {
+        existingParts: List<Part>,
+        partInstrumentNamesValue: Map<PartId, String>,
+        partMidiChannelsValue: Map<PartId, String>,
+    ): EitherNel<ValidationError, List<Part>> {
 
-        val xxx: Either<NonEmptyList<ValidationError>, Map<PartId, PartInstrumentName?>> =
+        val validatedPartInstrumentNames:
+            Either<NonEmptyList<ValidationError>, Map<PartId, PartInstrumentName?>> =
             partInstrumentNamesValue
-                .map { (t: PartId, u: String) ->
-                    t to
+                .map { (partId: PartId, s: String) ->
+                    partId to
                         PartInstrumentName.validate(
-                                u,
+                                s,
                                 ValidationErrorForUnknown,
                                 NoValidationIdentifier,
                             )
@@ -170,6 +181,59 @@ internal class DefaultScoreDetailsComponent(
                 .toMap()
                 .traverse { it }
 
-        return xxx
+        val validatedPartMidiChannels =
+            partMidiChannelsValue
+                .map { (partId: PartId, s: String) ->
+                    Either.catch { s.toByte() }
+                        .mapLeft {
+                            ValidationError(
+                                    message = "MIDI channel should be a number but was $s",
+                                    validationErrorForProperty =
+                                        validationErrorForProperty<MidiChannel>(),
+                                    validationIdentifier = NoValidationIdentifier,
+                                    validationErrorFor = ValidationErrorForUnknown,
+                                )
+                                .nel()
+                        }
+                        .flatMap { byte ->
+                            MidiChannel.validate(
+                                    byte,
+                                    ValidationErrorForUnknown,
+                                    NoValidationIdentifier,
+                                )
+                                .map { midiChannel -> partId to midiChannel }
+                                .mapLeft { it.nel() }
+                        }
+                }
+                .traverse { it }
+                .map { it.toMap() }
+
+        return Either.zipOrAccumulate(validatedPartInstrumentNames, validatedPartMidiChannels) {
+            partInstrumentNames,
+            partMidiChannels ->
+            existingParts
+                .map { part: Part ->
+                    if (partInstrumentNames.containsKey(part.id)) {
+                        part.copy(
+                            instrument =
+                                part.instrument?.copy(name = partInstrumentNames.getValue(part.id))
+                        )
+                    } else {
+                        part
+                    }
+                }
+                .map { part: Part ->
+                    if (partMidiChannels.containsKey(part.id)) {
+                        part.copy(
+                            instrument =
+                                part.instrument?.copy(
+                                    midiChannel = partMidiChannels.getValue(part.id)
+                                )
+                        )
+                    } else {
+                        part
+                    }
+                }
+        }
     }
 }

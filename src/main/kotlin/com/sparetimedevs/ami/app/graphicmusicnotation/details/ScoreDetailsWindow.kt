@@ -30,8 +30,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogWindow
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
 import com.sparetimedevs.ami.core.validation.validationErrorForProperty
+import com.sparetimedevs.ami.music.data.kotlin.midi.MidiChannel
 import com.sparetimedevs.ami.music.data.kotlin.part.Part
-import com.sparetimedevs.ami.music.data.kotlin.part.PartId
 import com.sparetimedevs.ami.music.data.kotlin.part.PartInstrumentName
 import com.sparetimedevs.ami.music.data.kotlin.score.ScoreId
 import com.sparetimedevs.ami.music.data.kotlin.score.ScoreTitle
@@ -46,8 +46,10 @@ fun ScoreDetailsWindow(
     val scoreId by component.scoreIdValue.subscribeAsState()
     val scoreTitle by component.scoreTitleValue.subscribeAsState()
     val partInstrumentNames by component.partInstrumentNamesValue.subscribeAsState()
+    val partMidiChannels by component.partMidiChannelsValue.subscribeAsState()
     val mappedValidationErrors by component.mappedValidationErrorsValue.subscribeAsState()
 
+    // TODO style this a lot better.
     DialogWindow(onCloseRequest = { onSelectedIndexValueChange(-1) }, title = "Score details") {
         Column(modifier = Modifier.padding(10.dp)) {
             Row {
@@ -93,14 +95,14 @@ fun ScoreDetailsWindow(
                             value =
                                 partInstrumentNames.getOrDefault(
                                     part.id,
-                                    part.instrument?.name?.value ?: ""
+                                    part.instrument?.name?.value ?: "",
                                 ),
                             onValueChange = { partInstrumentName ->
                                 component.updatePartInstrumentName(
                                     partId = part.id,
                                     newValue = partInstrumentName,
                                 )
-                            }
+                            },
                         )
                         if (
                             mappedValidationErrors.containsKey(
@@ -116,34 +118,38 @@ fun ScoreDetailsWindow(
                             )
                         }
                     }
-                }
-                Text("Add new part")
-                Row {
-                    Text("new part partInstrumentName")
-                    OutlinedTextField(
-                        value =
-                            partInstrumentNames.getOrDefault(PartId.unsafeCreate("new part"), ""),
-                        onValueChange = { partInstrumentName ->
-                            component.updatePartInstrumentName(
-                                partId = PartId.unsafeCreate("new part"),
-                                newValue = partInstrumentName,
+                    Row {
+                        Text("part ${part.id.value} partMidiChannel")
+                        OutlinedTextField(
+                            value =
+                                partMidiChannels.getOrDefault(
+                                    part.id,
+                                    part.instrument?.midiChannel?.value?.toString() ?: "",
+                                ),
+                            onValueChange = { partMidiChannel ->
+                                component.updatePartMidiChannel(
+                                    partId = part.id,
+                                    newValue = partMidiChannel,
+                                )
+                            },
+                        )
+                        if (
+                            mappedValidationErrors.containsKey(
+                                validationErrorForProperty<MidiChannel>()
+                            )
+                        ) {
+                            Text(
+                                mappedValidationErrors.getOrDefault(
+                                    validationErrorForProperty<MidiChannel>(),
+                                    "",
+                                ),
+                                color = Color.Red,
                             )
                         }
-                    )
-                    if (
-                        mappedValidationErrors.containsKey(
-                            validationErrorForProperty<PartInstrumentName>()
-                        )
-                    ) {
-                        Text(
-                            mappedValidationErrors.getOrDefault(
-                                validationErrorForProperty<PartInstrumentName>(),
-                                "",
-                            ),
-                            color = Color.Red,
-                        )
                     }
                 }
+                Text("Add new part")
+                Button(onClick = { component.createNewPart() }) { Text("Add new part") }
             }
             Button(onClick = { component.saveScoreDetails() }) { Text("Save") }
         }
