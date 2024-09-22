@@ -21,8 +21,9 @@ import arrow.core.EitherNel
 import arrow.core.NonEmptyList
 import arrow.core.flatMap
 import arrow.core.nel
+import arrow.core.raise.either
+import arrow.core.raise.mapOrAccumulate
 import arrow.core.toEitherNel
-import arrow.core.traverse
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
@@ -31,8 +32,11 @@ import com.badoo.reaktive.disposable.scope.DisposableScope
 import com.sparetimedevs.ami.app.utils.disposableScope
 import com.sparetimedevs.ami.core.validation.NoValidationIdentifier
 import com.sparetimedevs.ami.core.validation.ValidationError
-import com.sparetimedevs.ami.core.validation.ValidationErrorForProperty
+import com.sparetimedevs.ami.core.validation.ValidationErrorFor
+import com.sparetimedevs.ami.core.validation.ValidationErrorForPart
 import com.sparetimedevs.ami.core.validation.ValidationErrorForUnknown
+import com.sparetimedevs.ami.core.validation.ValidationIdentifier
+import com.sparetimedevs.ami.core.validation.ValidationIdentifierForPart
 import com.sparetimedevs.ami.core.validation.validationErrorForProperty
 import com.sparetimedevs.ami.music.data.kotlin.midi.MidiChannel
 import com.sparetimedevs.ami.music.data.kotlin.part.Part
@@ -74,10 +78,8 @@ internal class DefaultScoreDetailsComponent(
     private val _partMidiProgramsValue = MutableValue(emptyMap<PartId, String>())
     override val partMidiProgramsValue: Value<Map<PartId, String>> = _partMidiProgramsValue
 
-    private val _mappedValidationErrors =
-        MutableValue(emptyMap<ValidationErrorForProperty, String>())
-    override val mappedValidationErrorsValue: Value<Map<ValidationErrorForProperty, String>> =
-        _mappedValidationErrors
+    private val _mappedValidationErrors = MutableValue(emptyList<ValidationError>())
+    override val mappedValidationErrorsValue: Value<List<ValidationError>> = _mappedValidationErrors
 
     override fun updateScoreId(newValue: String) {
         _scoreIdValue.update { newValue }
@@ -117,6 +119,9 @@ internal class DefaultScoreDetailsComponent(
         // TODO and these
         println("The partInstrumentMidiChannel is ${_partMidiChannelsValue.value}")
         println("The partInstrumentMidiProgram is ${_partMidiProgramsValue.value}")
+
+        val validationErrorForScore = ValidationErrorForUnknown // TODO
+        val validationIdentifierForScore = NoValidationIdentifier // TODO
         val validatedScoreId: EitherNel<ValidationError, ScoreId> =
             ScoreId.validate(_scoreIdValue.value, ValidationErrorForUnknown, NoValidationIdentifier)
                 .toEitherNel()
@@ -134,6 +139,8 @@ internal class DefaultScoreDetailsComponent(
                 scoreCoreComponent.scoreValue.value.parts,
                 _partInstrumentNamesValue.value,
                 _partMidiChannelsValue.value,
+                validationErrorForScore,
+                validationIdentifierForScore,
             )
 
         val accumulatedValidatedFields: Either<NonEmptyList<ValidationError>, Score> =
@@ -144,17 +151,9 @@ internal class DefaultScoreDetailsComponent(
                 scoreCoreComponent.scoreValue.value.copy(id = id, title = title, parts = parts)
             }
         accumulatedValidatedFields.fold(
-            { validationErrors ->
-                val mappedValidationErrors: Map<ValidationErrorForProperty, String> =
-                    validationErrors
-                        .map { validationError ->
-                            validationError.validationErrorForProperty to validationError.message
-                        }
-                        .toMap()
-                _mappedValidationErrors.update { mappedValidationErrors }
-            },
+            { validationErrors -> _mappedValidationErrors.update { validationErrors } },
             { score: Score ->
-                _mappedValidationErrors.update { emptyMap() }
+                _mappedValidationErrors.update { emptyList() }
                 scoreCoreComponent.updateScore(score)
             },
         )
@@ -164,8 +163,9 @@ internal class DefaultScoreDetailsComponent(
         existingParts: List<Part>,
         partInstrumentNamesValue: Map<PartId, String>,
         partMidiChannelsValue: Map<PartId, String>,
+        validationErrorFor: ValidationErrorFor,
+        validationIdentifier: ValidationIdentifier,
     ): EitherNel<ValidationError, List<Part>> {
-
         val validatedPartInstrumentNames:
             Either<NonEmptyList<ValidationError>, Map<PartId, PartInstrumentName?>> =
             partInstrumentNamesValue
@@ -173,13 +173,13 @@ internal class DefaultScoreDetailsComponent(
                     partId to
                         PartInstrumentName.validate(
                                 s,
-                                ValidationErrorForUnknown,
-                                NoValidationIdentifier,
+                                ValidationErrorForPart.fromParent(validationErrorFor, partId.value),
+                                ValidationIdentifierForPart(partId.value, validationIdentifier),
                             )
                             .toEitherNel()
                 }
                 .toMap()
-                .traverse { it }
+                .let { m -> either { mapOrAccumulate(m) { it.value.bindNel() } } }
 
         val validatedPartMidiChannels =
             partMidiChannelsValue
@@ -190,8 +190,16 @@ internal class DefaultScoreDetailsComponent(
                                     message = "MIDI channel should be a number but was $s",
                                     validationErrorForProperty =
                                         validationErrorForProperty<MidiChannel>(),
-                                    validationIdentifier = NoValidationIdentifier,
-                                    validationErrorFor = ValidationErrorForUnknown,
+                                    validationIdentifier =
+                                        ValidationIdentifierForPart(
+                                            partId.value,
+                                            validationIdentifier,
+                                        ),
+                                    validationErrorFor =
+                                        ValidationErrorForPart.fromParent(
+                                            validationErrorFor,
+                                            partId.value,
+                                        ),
                                 )
                                 .nel()
                         }
@@ -205,8 +213,7 @@ internal class DefaultScoreDetailsComponent(
                                 .mapLeft { it.nel() }
                         }
                 }
-                .traverse { it }
-                .map { it.toMap() }
+                .let { l -> either { mapOrAccumulate(l) { it.bindNel() }.toMap() } }
 
         return Either.zipOrAccumulate(validatedPartInstrumentNames, validatedPartMidiChannels) {
             partInstrumentNames,

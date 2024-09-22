@@ -29,9 +29,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogWindow
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
+import com.sparetimedevs.ami.core.validation.NoValidationIdentifier
+import com.sparetimedevs.ami.core.validation.ValidationError
+import com.sparetimedevs.ami.core.validation.ValidationErrorForProperty
+import com.sparetimedevs.ami.core.validation.ValidationIdentifier
+import com.sparetimedevs.ami.core.validation.ValidationIdentifierForPart
 import com.sparetimedevs.ami.core.validation.validationErrorForProperty
 import com.sparetimedevs.ami.music.data.kotlin.midi.MidiChannel
 import com.sparetimedevs.ami.music.data.kotlin.part.Part
+import com.sparetimedevs.ami.music.data.kotlin.part.PartId
 import com.sparetimedevs.ami.music.data.kotlin.part.PartInstrumentName
 import com.sparetimedevs.ami.music.data.kotlin.score.ScoreId
 import com.sparetimedevs.ami.music.data.kotlin.score.ScoreTitle
@@ -58,15 +64,7 @@ fun ScoreDetailsWindow(
                     value = scoreId,
                     onValueChange = { scoreId -> component.updateScoreId(scoreId) },
                 )
-                if (mappedValidationErrors.containsKey(validationErrorForProperty<ScoreId>())) {
-                    Text(
-                        mappedValidationErrors.getOrDefault(
-                            validationErrorForProperty<ScoreId>(),
-                            "",
-                        ),
-                        color = Color.Red,
-                    )
-                }
+                DisplayValidationError<ScoreId>(mappedValidationErrors)
             }
             Row {
                 Text("Score title")
@@ -74,21 +72,12 @@ fun ScoreDetailsWindow(
                     value = scoreTitle,
                     onValueChange = { scoreTitle -> component.updateScoreTitle(scoreTitle) },
                 )
-                if (mappedValidationErrors.containsKey(validationErrorForProperty<ScoreTitle>())) {
-                    Text(
-                        mappedValidationErrors.getOrDefault(
-                            validationErrorForProperty<ScoreTitle>(),
-                            "",
-                        ),
-                        color = Color.Red,
-                    )
-                }
+                DisplayValidationError<ScoreTitle>(mappedValidationErrors)
             }
-            // TODO here make a list of parts
-            // TODO and then validate if we can get the validation error for a particular
-            // partInstrumentName to the right part.
             Column {
                 score.parts.forEach { part: Part ->
+                    val filteredValidationErrors: List<ValidationError> =
+                        mappedValidationErrors.filter { thingy(it.validationIdentifier, part.id) }
                     Row {
                         Text("part ${part.id.value} partInstrumentName")
                         OutlinedTextField(
@@ -104,19 +93,7 @@ fun ScoreDetailsWindow(
                                 )
                             },
                         )
-                        if (
-                            mappedValidationErrors.containsKey(
-                                validationErrorForProperty<PartInstrumentName>()
-                            )
-                        ) {
-                            Text(
-                                mappedValidationErrors.getOrDefault(
-                                    validationErrorForProperty<PartInstrumentName>(),
-                                    "",
-                                ),
-                                color = Color.Red,
-                            )
-                        }
+                        DisplayValidationError<PartInstrumentName>(filteredValidationErrors)
                     }
                     Row {
                         Text("part ${part.id.value} partMidiChannel")
@@ -133,19 +110,7 @@ fun ScoreDetailsWindow(
                                 )
                             },
                         )
-                        if (
-                            mappedValidationErrors.containsKey(
-                                validationErrorForProperty<MidiChannel>()
-                            )
-                        ) {
-                            Text(
-                                mappedValidationErrors.getOrDefault(
-                                    validationErrorForProperty<MidiChannel>(),
-                                    "",
-                                ),
-                                color = Color.Red,
-                            )
-                        }
+                        DisplayValidationError<MidiChannel>(filteredValidationErrors)
                     }
                 }
                 Text("Add new part")
@@ -155,3 +120,36 @@ fun ScoreDetailsWindow(
         }
     }
 }
+
+private fun thingy(validationIdentifier: ValidationIdentifier, partId: PartId): Boolean {
+    val xxx = returnFirstValidationIdentifierForPart(validationIdentifier)
+    return xxx?.partId == partId.value
+}
+
+// TODO what happens if there is no ValidationIdentifierForPart and NoValidationIdentifier in the
+// hierarchy? Write unit test for it.
+private tailrec fun returnFirstValidationIdentifierForPart(
+    validationIdentifier: ValidationIdentifier
+): ValidationIdentifierForPart? =
+    when (validationIdentifier) {
+        is ValidationIdentifierForPart -> validationIdentifier
+        is NoValidationIdentifier -> null
+        else ->
+            returnFirstValidationIdentifierForPart(validationIdentifier.validationIdentifierParent)
+    }
+
+@Composable
+inline fun <reified T : Any> DisplayValidationError(validationErrors: List<ValidationError>) {
+    if (validationErrors.contains(validationErrorForProperty<T>())) {
+        Text(
+            validationErrors
+                .find { it.validationErrorForProperty == validationErrorForProperty<T>() }
+                ?.message ?: "",
+            color = Color.Red,
+        )
+    }
+}
+
+fun List<ValidationError>.contains(
+    validationErrorForProperty: ValidationErrorForProperty
+): Boolean = this.map { it.validationErrorForProperty }.contains(validationErrorForProperty)
