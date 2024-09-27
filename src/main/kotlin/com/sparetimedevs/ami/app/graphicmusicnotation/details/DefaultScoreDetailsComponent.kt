@@ -32,7 +32,6 @@ import com.sparetimedevs.ami.app.utils.disposableScope
 import com.sparetimedevs.ami.core.validation.NoValidationIdentifier
 import com.sparetimedevs.ami.core.validation.ValidationError
 import com.sparetimedevs.ami.core.validation.ValidationIdentifier
-import com.sparetimedevs.ami.core.validation.ValidationIdentifierForPart
 import com.sparetimedevs.ami.core.validation.validationErrorForProperty
 import com.sparetimedevs.ami.music.data.kotlin.midi.MidiChannel
 import com.sparetimedevs.ami.music.data.kotlin.part.Part
@@ -41,6 +40,7 @@ import com.sparetimedevs.ami.music.data.kotlin.part.PartInstrumentName
 import com.sparetimedevs.ami.music.data.kotlin.score.Score
 import com.sparetimedevs.ami.music.data.kotlin.score.ScoreId
 import com.sparetimedevs.ami.music.data.kotlin.score.ScoreTitle
+import com.sparetimedevs.ami.music.input.validation.ValidationIdentifierForPart
 
 internal class DefaultScoreDetailsComponent(
     componentContext: ComponentContext,
@@ -160,7 +160,7 @@ internal class DefaultScoreDetailsComponent(
                     partId to
                         PartInstrumentName.validate(
                             s,
-                            ValidationIdentifierForPart(partId.value, validationIdentifier),
+                            ValidationIdentifierForPart(partId, validationIdentifier),
                         )
                 }
                 .toMap()
@@ -177,7 +177,7 @@ internal class DefaultScoreDetailsComponent(
                                         validationErrorForProperty<MidiChannel>(),
                                     validationIdentifier =
                                         ValidationIdentifierForPart(
-                                            partId.value,
+                                            partId,
                                             validationIdentifier,
                                         )
                                 )

@@ -20,8 +20,6 @@ import arrow.core.NonEmptyList
 import com.sparetimedevs.ami.core.validation.NoValidationIdentifier
 import com.sparetimedevs.ami.core.validation.ValidationError
 import com.sparetimedevs.ami.core.validation.ValidationErrorForProperty
-import com.sparetimedevs.ami.core.validation.ValidationIdentifierForMeasure
-import com.sparetimedevs.ami.core.validation.ValidationIdentifierForNote
 import com.sparetimedevs.ami.core.validation.validationErrorForProperty
 import com.sparetimedevs.ami.graphic.vector.NoteVectors
 import com.sparetimedevs.ami.graphic.vector.Vector
@@ -33,6 +31,8 @@ import com.sparetimedevs.ami.music.data.kotlin.note.NoteName
 import com.sparetimedevs.ami.music.data.kotlin.note.NoteValue
 import com.sparetimedevs.ami.music.data.kotlin.note.Octave
 import com.sparetimedevs.ami.music.data.kotlin.note.Pitch
+import com.sparetimedevs.ami.music.input.validation.ValidationIdentifierForMeasure
+import com.sparetimedevs.ami.music.input.validation.ValidationIdentifierForNote
 import com.sparetimedevs.ami.test.data.createPitchedNote
 import io.kotest.assertions.arrow.core.shouldBeLeft
 import io.kotest.assertions.arrow.core.shouldBeRight

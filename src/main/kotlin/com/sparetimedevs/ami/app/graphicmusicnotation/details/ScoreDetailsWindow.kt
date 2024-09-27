@@ -33,7 +33,6 @@ import com.sparetimedevs.ami.core.validation.NoValidationIdentifier
 import com.sparetimedevs.ami.core.validation.ValidationError
 import com.sparetimedevs.ami.core.validation.ValidationErrorForProperty
 import com.sparetimedevs.ami.core.validation.ValidationIdentifier
-import com.sparetimedevs.ami.core.validation.ValidationIdentifierForPart
 import com.sparetimedevs.ami.core.validation.validationErrorForProperty
 import com.sparetimedevs.ami.music.data.kotlin.midi.MidiChannel
 import com.sparetimedevs.ami.music.data.kotlin.part.Part
@@ -41,6 +40,7 @@ import com.sparetimedevs.ami.music.data.kotlin.part.PartId
 import com.sparetimedevs.ami.music.data.kotlin.part.PartInstrumentName
 import com.sparetimedevs.ami.music.data.kotlin.score.ScoreId
 import com.sparetimedevs.ami.music.data.kotlin.score.ScoreTitle
+import com.sparetimedevs.ami.music.input.validation.ValidationIdentifierForPart
 
 @Composable
 fun ScoreDetailsWindow(
@@ -123,7 +123,7 @@ fun ScoreDetailsWindow(
 
 private fun thingy(validationIdentifier: ValidationIdentifier, partId: PartId): Boolean {
     val xxx = returnFirstValidationIdentifierForPart(validationIdentifier)
-    return xxx?.partId == partId.value
+    return xxx?.identifier == partId
 }
 
 // TODO what happens if there is no ValidationIdentifierForPart and NoValidationIdentifier in the

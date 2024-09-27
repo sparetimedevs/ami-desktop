@@ -36,12 +36,12 @@ import com.sparetimedevs.ami.core.asEitherWithAccumulatedValidationErrors
 import com.sparetimedevs.ami.core.validation.ValidationError
 import com.sparetimedevs.ami.core.validation.ValidationErrorForProperty
 import com.sparetimedevs.ami.core.validation.ValidationIdentifier
-import com.sparetimedevs.ami.core.validation.ValidationIdentifierForMeasure
-import com.sparetimedevs.ami.core.validation.ValidationIdentifierForNote
 import com.sparetimedevs.ami.music.core.replaceMeasures
 import com.sparetimedevs.ami.music.data.kotlin.part.Part
 import com.sparetimedevs.ami.music.data.kotlin.score.Score
 import com.sparetimedevs.ami.music.data.kotlin.score.ScoreId
+import com.sparetimedevs.ami.music.input.validation.ValidationIdentifierForMeasure
+import com.sparetimedevs.ami.music.input.validation.ValidationIdentifierForNote
 
 const val Toggle = true
 
