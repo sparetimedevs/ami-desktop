@@ -23,7 +23,6 @@ import arrow.core.flatMap
 import arrow.core.nel
 import arrow.core.raise.either
 import arrow.core.raise.mapOrAccumulate
-import arrow.core.toEitherNel
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
@@ -32,9 +31,6 @@ import com.badoo.reaktive.disposable.scope.DisposableScope
 import com.sparetimedevs.ami.app.utils.disposableScope
 import com.sparetimedevs.ami.core.validation.NoValidationIdentifier
 import com.sparetimedevs.ami.core.validation.ValidationError
-import com.sparetimedevs.ami.core.validation.ValidationErrorFor
-import com.sparetimedevs.ami.core.validation.ValidationErrorForPart
-import com.sparetimedevs.ami.core.validation.ValidationErrorForUnknown
 import com.sparetimedevs.ami.core.validation.ValidationIdentifier
 import com.sparetimedevs.ami.core.validation.ValidationIdentifierForPart
 import com.sparetimedevs.ami.core.validation.validationErrorForProperty
@@ -120,27 +116,19 @@ internal class DefaultScoreDetailsComponent(
         println("The partInstrumentMidiChannel is ${_partMidiChannelsValue.value}")
         println("The partInstrumentMidiProgram is ${_partMidiProgramsValue.value}")
 
-        val validationErrorForScore = ValidationErrorForUnknown // TODO
         val validationIdentifierForScore = NoValidationIdentifier // TODO
         val validatedScoreId: EitherNel<ValidationError, ScoreId> =
-            ScoreId.validate(_scoreIdValue.value, ValidationErrorForUnknown, NoValidationIdentifier)
-                .toEitherNel()
+            ScoreId.validate(_scoreIdValue.value, NoValidationIdentifier)
         // TODO does need to account for nullability and being able to have empty string.
         val validatedScoreTitle: EitherNel<ValidationError, ScoreTitle> =
-            ScoreTitle.validate(
-                    _scoreTitleValue.value,
-                    ValidationErrorForUnknown,
-                    NoValidationIdentifier,
-                )
-                .toEitherNel()
+            ScoreTitle.validate(_scoreTitleValue.value, NoValidationIdentifier)
 
         val validatedParts: EitherNel<ValidationError, List<Part>> =
             validateParts(
                 scoreCoreComponent.scoreValue.value.parts,
                 _partInstrumentNamesValue.value,
                 _partMidiChannelsValue.value,
-                validationErrorForScore,
-                validationIdentifierForScore,
+                validationIdentifierForScore
             )
 
         val accumulatedValidatedFields: Either<NonEmptyList<ValidationError>, Score> =
@@ -163,20 +151,17 @@ internal class DefaultScoreDetailsComponent(
         existingParts: List<Part>,
         partInstrumentNamesValue: Map<PartId, String>,
         partMidiChannelsValue: Map<PartId, String>,
-        validationErrorFor: ValidationErrorFor,
-        validationIdentifier: ValidationIdentifier,
+        validationIdentifier: ValidationIdentifier
     ): EitherNel<ValidationError, List<Part>> {
         val validatedPartInstrumentNames:
-            Either<NonEmptyList<ValidationError>, Map<PartId, PartInstrumentName?>> =
+            EitherNel<ValidationError, Map<PartId, PartInstrumentName?>> =
             partInstrumentNamesValue
                 .map { (partId: PartId, s: String) ->
                     partId to
                         PartInstrumentName.validate(
-                                s,
-                                ValidationErrorForPart.fromParent(validationErrorFor, partId.value),
-                                ValidationIdentifierForPart(partId.value, validationIdentifier),
-                            )
-                            .toEitherNel()
+                            s,
+                            ValidationIdentifierForPart(partId.value, validationIdentifier),
+                        )
                 }
                 .toMap()
                 .let { m -> either { mapOrAccumulate(m) { it.value.bindNel() } } }
@@ -194,23 +179,14 @@ internal class DefaultScoreDetailsComponent(
                                         ValidationIdentifierForPart(
                                             partId.value,
                                             validationIdentifier,
-                                        ),
-                                    validationErrorFor =
-                                        ValidationErrorForPart.fromParent(
-                                            validationErrorFor,
-                                            partId.value,
-                                        ),
+                                        )
                                 )
                                 .nel()
                         }
                         .flatMap { byte ->
-                            MidiChannel.validate(
-                                    byte,
-                                    ValidationErrorForUnknown,
-                                    NoValidationIdentifier,
-                                )
-                                .map { midiChannel -> partId to midiChannel }
-                                .mapLeft { it.nel() }
+                            MidiChannel.validate(byte, NoValidationIdentifier).map { midiChannel ->
+                                partId to midiChannel
+                            }
                         }
                 }
                 .let { l -> either { mapOrAccumulate(l) { it.bindNel() }.toMap() } }

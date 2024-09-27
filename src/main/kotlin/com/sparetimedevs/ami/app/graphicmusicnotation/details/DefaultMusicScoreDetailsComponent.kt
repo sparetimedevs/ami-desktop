@@ -33,11 +33,7 @@ import com.sparetimedevs.ami.app.graphicmusicnotation.vector.asPathData
 import com.sparetimedevs.ami.app.utils.disposableScope
 import com.sparetimedevs.ami.core.DomainError
 import com.sparetimedevs.ami.core.asEitherWithAccumulatedValidationErrors
-import com.sparetimedevs.ami.core.validation.MeasureIndex
 import com.sparetimedevs.ami.core.validation.ValidationError
-import com.sparetimedevs.ami.core.validation.ValidationErrorFor
-import com.sparetimedevs.ami.core.validation.ValidationErrorForMeasure
-import com.sparetimedevs.ami.core.validation.ValidationErrorForNote
 import com.sparetimedevs.ami.core.validation.ValidationErrorForProperty
 import com.sparetimedevs.ami.core.validation.ValidationIdentifier
 import com.sparetimedevs.ami.core.validation.ValidationIdentifierForMeasure
@@ -188,42 +184,6 @@ internal class DefaultMusicScoreDetailsComponent(
     ): Unit {
         // TODO explore if we can mark the thing red based on the validationErrorForProperty
         // Not sure if we know which measure to mark red.
-    }
-
-    private fun doTheOtherThingToMarkItRedFor(validationErrorFor: ValidationErrorFor?): Unit {
-        when (validationErrorFor) {
-            is ValidationErrorForNote -> doTheOtherThingToMarkNoteRed(validationErrorFor)
-            is ValidationErrorForMeasure -> doTheOtherThingToMarkMeasureRed(validationErrorFor)
-        }
-    }
-
-    private fun doTheOtherThingToMarkNoteRed(validationErrorForNote: ValidationErrorForNote): Unit {
-        val measureIndex = validationErrorForNote.measureIndex
-        val noteIndex = validationErrorForNote.noteIndex
-        pathDataRepository.getPathData()
-        // TODO do some calculations to get the right note from the right measure.
-
-        // And also mark the measure red
-
-        if (measureIndex != null) doTheOtherThingToMarkMeasureRed(measureIndex)
-    }
-
-    private fun doTheOtherThingToMarkMeasureRed(
-        validationErrorForMeasure: ValidationErrorForMeasure
-    ): Unit {
-        val maybeMeasureIndex = validationErrorForMeasure.measureIndex
-        if (maybeMeasureIndex != null) doTheOtherThingToMarkMeasureRed(maybeMeasureIndex)
-    }
-
-    private fun doTheOtherThingToMarkMeasureRed(measureIndex: MeasureIndex): Unit {
-        val xStart = measureIndex.value * 575.0f + 87.5f
-
-        val pathData: List<PathNode> =
-            PathBuilder().moveTo(x = xStart, y = 400.0f).horizontalLineTo(x = xStart + 500).nodes
-        pathDataRepository.addToErrorMarkingPathData(
-            pathData
-        ) // TODO just start with a line on top. Later on we can extend it to a complete border
-        // around a measure.
     }
 
     private fun emptyScore(): Score {

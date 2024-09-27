@@ -17,13 +17,9 @@
 package com.sparetimedevs.ami.graphic
 
 import arrow.core.NonEmptyList
-import com.sparetimedevs.ami.core.validation.MeasureIndex
 import com.sparetimedevs.ami.core.validation.NoValidationIdentifier
-import com.sparetimedevs.ami.core.validation.NoteIndex
 import com.sparetimedevs.ami.core.validation.ValidationError
-import com.sparetimedevs.ami.core.validation.ValidationErrorForNote
 import com.sparetimedevs.ami.core.validation.ValidationErrorForProperty
-import com.sparetimedevs.ami.core.validation.ValidationErrorForUnknown
 import com.sparetimedevs.ami.core.validation.ValidationIdentifierForMeasure
 import com.sparetimedevs.ami.core.validation.ValidationIdentifierForNote
 import com.sparetimedevs.ami.core.validation.validationErrorForProperty
@@ -119,7 +115,6 @@ class NotesVectorsAsAmiMeasuresKtTest :
                     ValidationError(
                         message = "Unable to map height to NoteName",
                         ValidationErrorForProperty("height"),
-                        ValidationErrorForUnknown,
                         NoValidationIdentifier
                     ), // TODO check if we can get more ValidationError context.
                     listOf(
@@ -127,12 +122,6 @@ class NotesVectorsAsAmiMeasuresKtTest :
                             message =
                                 "Input for note duration is not a valid value, the value is: 1.23456789",
                             validationErrorForProperty<NoteDuration>(),
-                            ValidationErrorForNote(
-                                "todo",
-                                null,
-                                MeasureIndex.getValidOrNull(1),
-                                NoteIndex.getValidOrNull(0)
-                            ),
                             ValidationIdentifierForNote(
                                 noteIndex = 0,
                                 validationIdentifierParent =
@@ -146,12 +135,6 @@ class NotesVectorsAsAmiMeasuresKtTest :
                             message =
                                 "Input for note duration is not a valid value, the value is: 1.23456789",
                             validationErrorForProperty<NoteDuration>(),
-                            ValidationErrorForNote(
-                                "todo",
-                                null,
-                                MeasureIndex.getValidOrNull(1),
-                                NoteIndex.getValidOrNull(0)
-                            ),
                             ValidationIdentifierForNote(
                                 noteIndex = 0,
                                 validationIdentifierParent =
@@ -164,7 +147,6 @@ class NotesVectorsAsAmiMeasuresKtTest :
                         ValidationError(
                             message = "Unable to map height to NoteName",
                             ValidationErrorForProperty("height"),
-                            ValidationErrorForUnknown,
                             NoValidationIdentifier
                         ) // TODO check if we can get more ValidationError context.
                     )
@@ -209,7 +191,6 @@ class NotesVectorsAsAmiMeasuresKtTest :
             val result =
                 asAmiMeasure(
                     notesVectorsForOneMeasure,
-                    ValidationErrorForUnknown,
                     NoValidationIdentifier
                 ) // TODO add valid validationIndentifier
 
@@ -254,7 +235,6 @@ class NotesVectorsAsAmiMeasuresKtTest :
             val result =
                 asAmiMeasure(
                     notesVectorsForOneMeasure,
-                    ValidationErrorForUnknown,
                     NoValidationIdentifier
                 ) // TODO add valid validationIndentifier
 
@@ -305,7 +285,6 @@ class NotesVectorsAsAmiMeasuresKtTest :
             val result =
                 asAmiMeasure(
                     notesVectorsForOneMeasure,
-                    ValidationErrorForUnknown,
                     NoValidationIdentifier
                 ) // TODO add valid validationIndentifier
 
