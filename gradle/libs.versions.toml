@@ -1,6 +1,6 @@
 [versions]
 kotlin-version = "2.0.20"
-compose-version = "1.6.11"
+compose-version = "1.7.0"
 spotless-version = "6.25.0"
 pitest-version = "1.15.0"
 ami-music-sdk-kotlin-version = "0.0.1-SNAPSHOT"
