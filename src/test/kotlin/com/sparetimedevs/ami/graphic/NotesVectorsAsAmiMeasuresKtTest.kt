@@ -34,6 +34,7 @@ import com.sparetimedevs.ami.music.data.kotlin.note.Pitch
 import com.sparetimedevs.ami.music.input.validation.ValidationIdentifierForMeasure
 import com.sparetimedevs.ami.music.input.validation.ValidationIdentifierForNote
 import com.sparetimedevs.ami.test.data.createPitchedNote
+import com.sparetimedevs.ami.test.impl.ValidationIdentifierForTest
 import io.kotest.assertions.arrow.core.shouldBeLeft
 import io.kotest.assertions.arrow.core.shouldBeRight
 import io.kotest.core.spec.style.StringSpec
@@ -42,7 +43,7 @@ class NotesVectorsAsAmiMeasuresKtTest :
     StringSpec({
         "asAmiMeasures should return one measure with one note when NoteVectors for one note" {
             val notesVectorsPerMeasure =
-                mapOf(0 to listOf<NoteVectors>(NoteVectors(Vector(0.0, 26.0), Vector(400.0, 26.0))))
+                mapOf(0 to listOf(NoteVectors(Vector(0.0, 26.0), Vector(400.0, 26.0))))
             val expectedResult: List<Measure> =
                 listOf(
                     Measure(
@@ -66,7 +67,7 @@ class NotesVectorsAsAmiMeasuresKtTest :
             val notesVectorsPerMeasure =
                 mapOf(
                     0 to
-                        listOf<NoteVectors>(
+                        listOf(
                             NoteVectors(Vector(0.0, 26.0), Vector(100.0, 26.0)),
                             NoteVectors(Vector(100.0, 27.0), Vector(200.0, 27.0)),
                             NoteVectors(Vector(200.0, 27.5), Vector(300.0, 27.5)),
@@ -90,14 +91,14 @@ class NotesVectorsAsAmiMeasuresKtTest :
             val notesVectorsPerMeasure =
                 mapOf(
                     0 to
-                        listOf<NoteVectors>(
+                        listOf(
                             NoteVectors(Vector(0.0, 26.0), Vector(100.0, 26.0)),
                             NoteVectors(Vector(100.0, 27.0), Vector(200.0, 27.0)),
                             NoteVectors(Vector(200.0, 27.5), Vector(300.0, 27.5)),
                             NoteVectors(Vector(300.0, 28.5), Vector(400.0, 28.5))
                         ),
                     1 to
-                        listOf<NoteVectors>(
+                        listOf(
                             NoteVectors(Vector(0.0, 29.34567), Vector(100.0, 29.34567)),
                             NoteVectors(Vector(100.0, 30.5), Vector(593.827156, 30.5)),
                             NoteVectors(
@@ -173,7 +174,7 @@ class NotesVectorsAsAmiMeasuresKtTest :
 
         "asAmiMeasure should return measure with 4 notes when NoteVectors for 4 notes" {
             val notesVectorsForOneMeasure =
-                listOf<NoteVectors>(
+                listOf(
                     NoteVectors(Vector(0.0, 26.0), Vector(100.0, 26.0)),
                     NoteVectors(Vector(100.0, 28.0), Vector(200.0, 28.0)),
                     NoteVectors(Vector(200.0, 26.0), Vector(300.0, 26.0)),
@@ -206,18 +207,14 @@ class NotesVectorsAsAmiMeasuresKtTest :
                     )
                 )
 
-            val result =
-                asAmiMeasure(
-                    notesVectorsForOneMeasure,
-                    NoValidationIdentifier
-                ) // TODO add valid validationIndentifier
+            val result = asAmiMeasure(notesVectorsForOneMeasure, ValidationIdentifierForTest(this))
 
             result shouldBeRight expectedResult
         }
 
         "asAmiMeasure should return measure with 4 notes in order when NoteVectors for 4 notes out of order" {
             val notesVectorsForOneMeasure =
-                listOf<NoteVectors>(
+                listOf(
                     NoteVectors(Vector(0.0, 26.0), Vector(100.0, 26.0)),
                     NoteVectors(Vector(300.0, 30.0), Vector(400.0, 30.0)),
                     NoteVectors(Vector(200.0, 26.0), Vector(300.0, 26.0)),
@@ -250,18 +247,14 @@ class NotesVectorsAsAmiMeasuresKtTest :
                     )
                 )
 
-            val result =
-                asAmiMeasure(
-                    notesVectorsForOneMeasure,
-                    NoValidationIdentifier
-                ) // TODO add valid validationIndentifier
+            val result = asAmiMeasure(notesVectorsForOneMeasure, ValidationIdentifierForTest(this))
 
             result shouldBeRight expectedResult
         }
 
         "asAmiMeasure should return measure with notes for all possible note names except sharp variants" {
             val notesVectorsForOneMeasure =
-                listOf<NoteVectors>(
+                listOf(
                     NoteVectors(Vector(0.0, 24.0), Vector(25.0, 24.0)),
                     NoteVectors(Vector(25.0, 24.5), Vector(50.0, 24.5)),
                     NoteVectors(Vector(50.0, 25.0), Vector(75.0, 25.0)),
@@ -300,11 +293,7 @@ class NotesVectorsAsAmiMeasuresKtTest :
                     )
                 )
 
-            val result =
-                asAmiMeasure(
-                    notesVectorsForOneMeasure,
-                    NoValidationIdentifier
-                ) // TODO add valid validationIndentifier
+            val result = asAmiMeasure(notesVectorsForOneMeasure, ValidationIdentifierForTest(this))
 
             result shouldBeRight expectedResult
         }

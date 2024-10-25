@@ -48,7 +48,7 @@ fun asAmiMeasures(
             val validationIdentifier: ValidationIdentifier =
                 ValidationIdentifierForMeasure(
                     notesVectorsForMeasure.key,
-                    NoValidationIdentifier /* could add part and score context */
+                    NoValidationIdentifier /* Currently, there is no easy way to get part and score context. But they are implied. */
                 )
             asAmiMeasure(notesVectorsForMeasure.value, validationIdentifier)
         }
