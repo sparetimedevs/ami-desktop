@@ -18,8 +18,15 @@ package com.sparetimedevs.ami.app.graphicmusicnotation.details
 
 import androidx.compose.ui.graphics.vector.PathBuilder
 import androidx.compose.ui.graphics.vector.PathNode
+import arrow.core.NonEmptyList
 import com.arkivanov.decompose.ComponentContext
 import com.sparetimedevs.ami.app.graphicmusicnotation.repository.PathDataRepositoryImpl
+import com.sparetimedevs.ami.core.AccumulatedValidationErrors
+import com.sparetimedevs.ami.core.DomainError
+import com.sparetimedevs.ami.core.validation.NoValidationIdentifier
+import com.sparetimedevs.ami.core.validation.ValidationError
+import com.sparetimedevs.ami.core.validation.ValidationErrorForProperty
+import com.sparetimedevs.ami.core.validation.validationErrorForProperty
 import com.sparetimedevs.ami.getTestComponentContext
 import com.sparetimedevs.ami.graphic.GraphicProperties
 import com.sparetimedevs.ami.music.core.replaceMeasures
@@ -32,7 +39,10 @@ import com.sparetimedevs.ami.music.data.kotlin.note.NoteValue
 import com.sparetimedevs.ami.music.data.kotlin.note.Octave
 import com.sparetimedevs.ami.music.data.kotlin.note.Pitch
 import com.sparetimedevs.ami.music.example.getExampleScoreHeighHoNobodyHome
+import com.sparetimedevs.ami.music.input.validation.ValidationIdentifierForMeasure
+import com.sparetimedevs.ami.music.input.validation.ValidationIdentifierForNote
 import com.sparetimedevs.ami.test.data.createEmptyScore
+import io.kotest.assertions.arrow.core.shouldBeLeft
 import io.kotest.assertions.arrow.core.shouldBeRight
 import io.kotest.core.spec.style.StringSpec
 
@@ -132,5 +142,76 @@ class DefaultMusicScoreDetailsComponentTest :
             val expectedScore = score.replaceMeasures(expectedMeasures)
 
             result shouldBeRight expectedScore
+        }
+
+        "updateAndGetScore should return validationErrors for score when there are validation errors in drawing mode" {
+            val score = getExampleScoreHeighHoNobodyHome()
+
+            component.changeMode(GraphicMusicNotationMode.DRAWING)
+            component.onLoadScoreClicked(score)
+
+            val pathData: List<PathNode> =
+                PathBuilder()
+                    .moveTo(x = 555.5f, y = 700.0f)
+                    .horizontalLineTo(x = 55.5f)
+                    .moveTo(x = 87.5f, y = 9999.0f)
+                    .horizontalLineTo(x = 587.5f)
+                    .nodes
+
+            pathDataRepository.replacePathData(pathData)
+
+            val result = component.updateAndGetScore()
+
+            val expectedDomainError: DomainError =
+                AccumulatedValidationErrors(
+                    "There were one or more errors while validating the input: Unable to map height to NoteName, Octave can't be lesser than -12, the input was -26, Input for note duration is not a valid value, the value is: -1.0",
+                    NonEmptyList(
+                        ValidationError(
+                            message = "Unable to map height to NoteName",
+                            validationErrorForProperty = ValidationErrorForProperty("height"),
+                            validationIdentifier =
+                                ValidationIdentifierForNote(
+                                    noteIndex = 0,
+                                    validationIdentifierParent =
+                                        ValidationIdentifierForMeasure(
+                                            measureIndex = 0,
+                                            validationIdentifierParent = NoValidationIdentifier
+                                        )
+                                )
+                        ),
+                        listOf(
+                            ValidationError(
+                                message = "Octave can't be lesser than -12, the input was -26",
+                                validationErrorForProperty = validationErrorForProperty<Octave>(),
+                                validationIdentifier =
+                                    ValidationIdentifierForNote(
+                                        noteIndex = 0,
+                                        validationIdentifierParent =
+                                            ValidationIdentifierForMeasure(
+                                                measureIndex = 0,
+                                                validationIdentifierParent = NoValidationIdentifier
+                                            )
+                                    )
+                            ),
+                            ValidationError(
+                                message =
+                                    "Input for note duration is not a valid value, the value is: -1.0",
+                                validationErrorForProperty =
+                                    validationErrorForProperty<NoteDuration>(),
+                                validationIdentifier =
+                                    ValidationIdentifierForNote(
+                                        noteIndex = 1,
+                                        validationIdentifierParent =
+                                            ValidationIdentifierForMeasure(
+                                                measureIndex = 0,
+                                                validationIdentifierParent = NoValidationIdentifier
+                                            )
+                                    )
+                            )
+                        )
+                    )
+                )
+
+            result shouldBeLeft expectedDomainError
         }
     })
