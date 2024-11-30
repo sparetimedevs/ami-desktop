@@ -25,6 +25,7 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
 import com.arkivanov.decompose.ComponentContext
 import com.sparetimedevs.ami.app.graphicmusicnotation.details.DefaultMusicScoreDetailsComponent
+import com.sparetimedevs.ami.app.graphicmusicnotation.details.MarkInvalidThings
 import com.sparetimedevs.ami.app.graphicmusicnotation.details.MusicScoreDetailsComponent
 import com.sparetimedevs.ami.app.graphicmusicnotation.details.MusicScoreDetailsContent
 import com.sparetimedevs.ami.app.graphicmusicnotation.repository.PathDataRepositoryImpl
@@ -56,8 +57,13 @@ class MusicScoreDetailsContentUiTest :
                         wholeStepExpressedInY = 50.0
                     )
                 val pathDataRepository = PathDataRepositoryImpl(graphicProperties)
+                val markInvalidThings = MarkInvalidThings(pathDataRepository)
                 val musicScoreDetailsComponent: MusicScoreDetailsComponent =
-                    DefaultMusicScoreDetailsComponent(testComponentContext, pathDataRepository)
+                    DefaultMusicScoreDetailsComponent(
+                        testComponentContext,
+                        pathDataRepository,
+                        markInvalidThings
+                    )
 
                 setContent { MusicScoreDetailsContent(musicScoreDetailsComponent, player) }
 
@@ -94,11 +100,16 @@ class MusicScoreDetailsContentUiTest :
                         wholeStepExpressedInY = 50.0
                     )
                 val pathDataRepository = PathDataRepositoryImpl(graphicProperties)
+                val markInvalidThings = MarkInvalidThings(pathDataRepository)
                 val pathData: List<PathNode> =
                     PathBuilder().moveTo(x = 87.5f, y = 550.0f).horizontalLineTo(x = 587.5f).nodes
                 pathDataRepository.replacePathData(pathData)
                 val musicScoreDetailsComponent: MusicScoreDetailsComponent =
-                    DefaultMusicScoreDetailsComponent(testComponentContext, pathDataRepository)
+                    DefaultMusicScoreDetailsComponent(
+                        testComponentContext,
+                        pathDataRepository,
+                        markInvalidThings
+                    )
 
                 setContent { MusicScoreDetailsContent(musicScoreDetailsComponent, player) }
 
@@ -136,11 +147,16 @@ class MusicScoreDetailsContentUiTest :
                         wholeStepExpressedInY = 50.0
                     )
                 val pathDataRepository = PathDataRepositoryImpl(graphicProperties)
+                val markInvalidThings = MarkInvalidThings(pathDataRepository)
                 val pathData: List<PathNode> =
                     PathBuilder().moveTo(x = 87.5f, y = 550.0f).horizontalLineTo(x = 587.5f).nodes
                 pathDataRepository.replacePathData(pathData)
                 val musicScoreDetailsComponent: MusicScoreDetailsComponent =
-                    DefaultMusicScoreDetailsComponent(testComponentContext, pathDataRepository)
+                    DefaultMusicScoreDetailsComponent(
+                        testComponentContext,
+                        pathDataRepository,
+                        markInvalidThings
+                    )
 
                 setContent { MusicScoreDetailsContent(musicScoreDetailsComponent, player) }
 

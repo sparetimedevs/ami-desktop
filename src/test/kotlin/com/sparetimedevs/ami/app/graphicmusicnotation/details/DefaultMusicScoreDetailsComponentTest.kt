@@ -59,8 +59,13 @@ class DefaultMusicScoreDetailsComponentTest :
                 wholeStepExpressedInY = 50.0
             )
         val pathDataRepository = PathDataRepositoryImpl(graphicProperties)
+        val markInvalidThings = MarkInvalidThings(pathDataRepository)
         val component: MusicScoreDetailsComponent =
-            DefaultMusicScoreDetailsComponent(testComponentContext, pathDataRepository)
+            DefaultMusicScoreDetailsComponent(
+                testComponentContext,
+                pathDataRepository,
+                markInvalidThings
+            )
 
         "updateAndGetScore should return score when there are no changes made to it in reading mode" {
             val score = getExampleScoreHeighHoNobodyHome()
