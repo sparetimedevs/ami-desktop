@@ -89,10 +89,17 @@ class MarkInvalidThings {
         graphicProperties: GraphicProperties,
         accumulatedErrorMarkingPathData: List<PathNode>,
     ): List<PathNode> {
-        val xStart = validationIdentifierForMeasure.measureIndex * 575.0f + 87.5f
+        val xStart: Float =
+            (validationIdentifierForMeasure.measureIndex *
+                    (graphicProperties.measureWidth + graphicProperties.spaceBetweenMeasures) +
+                    graphicProperties.offsetX)
+                .toFloat()
 
         val errorMarkingPathData: List<PathNode> =
-            PathBuilder().moveTo(x = xStart, y = 400.0f).horizontalLineTo(x = xStart + 500).nodes
+            PathBuilder()
+                .moveTo(x = xStart, y = graphicProperties.offsetY.toFloat())
+                .horizontalLineTo(x = xStart + graphicProperties.measureWidth.toFloat())
+                .nodes
 
         return accumulatedErrorMarkingPathData + errorMarkingPathData
     }
