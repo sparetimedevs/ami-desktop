@@ -18,6 +18,7 @@ package com.sparetimedevs.ami.app.graphicmusicnotation.details
 
 import androidx.compose.ui.graphics.vector.PathBuilder
 import androidx.compose.ui.graphics.vector.PathNode
+import com.sparetimedevs.ami.core.validation.NoValidationIdentifier
 import com.sparetimedevs.ami.core.validation.ValidationIdentifier
 import com.sparetimedevs.ami.graphic.GraphicProperties
 import com.sparetimedevs.ami.music.input.validation.ValidationIdentifierForMeasure
@@ -56,10 +57,10 @@ class MarkInvalidThings {
         accumulatedErrorMarkingPathData: List<PathNode>,
     ): List<PathNode> {
         val validationIdentifierForMeasure =
-            returnFirstScoreValidationIdentifier(
+            returnFirstMeasureValidationIdentifier(
                 validationIdentifierForNote.validationIdentifierParent
             )
-        val measureIndex = validationIdentifierForMeasure.measureIndex
+        val measureIndex = validationIdentifierForMeasure?.measureIndex
         val noteIndex = validationIdentifierForNote.noteIndex
 
         pathData
@@ -74,12 +75,13 @@ class MarkInvalidThings {
         )
     }
 
-    private tailrec fun returnFirstScoreValidationIdentifier(
+    private tailrec fun returnFirstMeasureValidationIdentifier(
         validationIdentifier: ValidationIdentifier
-    ): ValidationIdentifierForMeasure =
+    ): ValidationIdentifierForMeasure? =
         if (validationIdentifier is ValidationIdentifierForMeasure) validationIdentifier
+        else if (validationIdentifier is NoValidationIdentifier) null
         else {
-            returnFirstScoreValidationIdentifier(validationIdentifier.validationIdentifierParent)
+            returnFirstMeasureValidationIdentifier(validationIdentifier.validationIdentifierParent)
         }
 
     private fun markMeasureRed(
@@ -91,9 +93,6 @@ class MarkInvalidThings {
 
         val errorMarkingPathData: List<PathNode> =
             PathBuilder().moveTo(x = xStart, y = 400.0f).horizontalLineTo(x = xStart + 500).nodes
-
-        // TODO just start with a line on top. Later on we can extend it to a complete border
-        // around a measure.
 
         return accumulatedErrorMarkingPathData + errorMarkingPathData
     }

@@ -18,7 +18,6 @@ package com.sparetimedevs.ami.app.graphicmusicnotation.details
 
 import androidx.compose.ui.graphics.vector.PathBuilder
 import androidx.compose.ui.graphics.vector.PathNode
-import com.sparetimedevs.ami.app.graphicmusicnotation.repository.PathDataRepositoryImpl
 import com.sparetimedevs.ami.graphic.GraphicProperties
 import com.sparetimedevs.ami.music.input.validation.ValidationIdentifierForMeasure
 import com.sparetimedevs.ami.music.input.validation.ValidationIdentifierForNote
@@ -38,7 +37,6 @@ class MarkInvalidThingsTest :
                 cutOffXToReflectNoteIsEnding = 0.0,
                 wholeStepExpressedInY = 50.0,
             )
-        val pathDataRepository = PathDataRepositoryImpl(graphicProperties)
         val markInvalidThings = MarkInvalidThings()
 
         "markInvalidNotesAndMeasuresRed should return error marking path data" {
@@ -76,20 +74,16 @@ class MarkInvalidThingsTest :
                     .lineTo(x = 2312.5f, y = 600.0f)
                     .nodes
 
-            pathDataRepository.replacePathData(pathData)
-
             val validationIdentifierForMeasure =
                 ValidationIdentifierForMeasure(2, ValidationIdentifierForTest(this))
             val validationIdentifierForNote =
                 ValidationIdentifierForNote(3, validationIdentifierForMeasure)
 
-            pathDataRepository.getErrorMarkingPathData().shouldBeEmpty()
-
             val result =
                 markInvalidThings.markInvalidNotesAndMeasuresRed(
                     validationIdentifierForNote,
                     graphicProperties,
-                    pathData
+                    pathData,
                 )
 
             val expectedErrorMarkingPathData: List<PathNode> =
@@ -98,35 +92,51 @@ class MarkInvalidThingsTest :
             result shouldBe expectedErrorMarkingPathData
         }
 
-        //        "markInvalidNotesAndMeasuresRed should return something when no
-        // ValidationIdentifierForMeasure in the hierarchy" {
-        //            val pathData: List<PathNode> =
-        //                PathBuilder()
-        //                    .moveTo(x = 555.5f, y = 700.0f)
-        //                    .horizontalLineTo(x = 55.5f)
-        //                    .moveTo(x = 87.5f, y = 9999.0f)
-        //                    .horizontalLineTo(x = 587.5f)
-        //                    .nodes
-        //
-        //            pathDataRepository.replacePathData(pathData)
-        //
-        //            val validationIdentifierForNote =
-        //                ValidationIdentifierForNote(3, ValidationIdentifierForTest(this))
-        //
-        //            pathDataRepository.getErrorMarkingPathData().shouldBeEmpty()
-        //
-        //            val result =
-        //
-        // markInvalidThings.markInvalidNotesAndMeasuresRed(validationIdentifierForNote)
-        //
-        //            result.shouldNotBeEmpty()
-        //
-        //            //            result shouldBeLeft expectedDomainError
-        //
-        //            // TODO here we need to check repository
-        //            // Or better, return something from the function and at the usage site add
-        // stuff to
-        //            // repo.
-        //            //            pathDataRepository.getErrorMarkingPathData().shouldNotBeEmpty()
-        //        }
+        "markInvalidNotesAndMeasuresRed should return something when no ValidationIdentifierForMeasure in the hierarchy" {
+            val pathData: List<PathNode> =
+                PathBuilder()
+                    .moveTo(x = 87.5f, y = 650.0f)
+                    .lineTo(x = 337.5f, y = 650.0f)
+                    .moveTo(x = 337.5f, y = 700.0f)
+                    .lineTo(x = 587.5f, y = 700.0f)
+                    .moveTo(x = 662.5f, y = 650.0f)
+                    .lineTo(x = 787.5f, y = 650.0f)
+                    .moveTo(x = 787.5f, y = 650.0f)
+                    .lineTo(x = 850.0f, y = 650.0f)
+                    .moveTo(x = 850.0f, y = 650.0f)
+                    .lineTo(x = 912.5f, y = 650.0f)
+                    .moveTo(x = 912.5f, y = 775.0f)
+                    .lineTo(x = 1162.5f, y = 775.0f)
+                    .moveTo(x = 1237.5f, y = 650.0f)
+                    .lineTo(x = 1362.5f, y = 650.0f)
+                    .moveTo(x = 1362.5f, y = 650.0f)
+                    .lineTo(x = 1487.5f, y = 650.0f)
+                    .moveTo(x = 1487.5f, y = 600.0f)
+                    .lineTo(x = 1612.5f, y = 600.0f)
+                    .moveTo(x = 1612.5f, y = 600.0f)
+                    .lineTo(x = 2312.5f, y = 600.0f) // This note duration is too long.
+                    .moveTo(x = 1812.5f, y = 575.0f)
+                    .lineTo(x = 1875.0f, y = 575.0f)
+                    .moveTo(x = 1875.0f, y = 575.0f)
+                    .lineTo(x = 1937.5f, y = 575.0f)
+                    .moveTo(x = 1937.5f, y = 575.0f)
+                    .lineTo(x = 2000.0f, y = 575.0f)
+                    .moveTo(x = 2000.0f, y = 575.0f)
+                    .lineTo(x = 2062.5f, y = 575.0f)
+                    .moveTo(x = 2062.5f, y = 600.0f)
+                    .lineTo(x = 2312.5f, y = 600.0f)
+                    .nodes
+
+            val validationIdentifierForNote =
+                ValidationIdentifierForNote(3, ValidationIdentifierForTest(this))
+
+            val result =
+                markInvalidThings.markInvalidNotesAndMeasuresRed(
+                    validationIdentifierForNote,
+                    graphicProperties,
+                    pathData,
+                )
+
+            result.shouldBeEmpty()
+        }
     })
