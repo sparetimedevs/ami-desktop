@@ -99,9 +99,13 @@ internal class DefaultMusicScoreDetailsComponent(
                     }
                     .mapLeft { validationErrors ->
                         validationErrors.forEach { validationError ->
-                            markInvalidThings.markInvalidNotesAndMeasuresRed(
-                                validationError.validationIdentifier
-                            )
+                            val errorMarkingPathData =
+                                markInvalidThings.markInvalidNotesAndMeasuresRed(
+                                    validationError.validationIdentifier,
+                                    pathDataRepository.getGraphicProperties(),
+                                    pathDataRepository.getPathData()
+                                )
+                            pathDataRepository.addToErrorMarkingPathData(errorMarkingPathData)
                         }
                         validationErrors
                     }

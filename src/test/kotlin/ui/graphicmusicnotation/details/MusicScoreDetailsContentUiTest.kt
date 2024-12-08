@@ -57,7 +57,7 @@ class MusicScoreDetailsContentUiTest :
                         wholeStepExpressedInY = 50.0
                     )
                 val pathDataRepository = PathDataRepositoryImpl(graphicProperties)
-                val markInvalidThings = MarkInvalidThings(pathDataRepository)
+                val markInvalidThings = MarkInvalidThings()
                 val musicScoreDetailsComponent: MusicScoreDetailsComponent =
                     DefaultMusicScoreDetailsComponent(
                         testComponentContext,
@@ -100,7 +100,7 @@ class MusicScoreDetailsContentUiTest :
                         wholeStepExpressedInY = 50.0
                     )
                 val pathDataRepository = PathDataRepositoryImpl(graphicProperties)
-                val markInvalidThings = MarkInvalidThings(pathDataRepository)
+                val markInvalidThings = MarkInvalidThings()
                 val pathData: List<PathNode> =
                     PathBuilder().moveTo(x = 87.5f, y = 550.0f).horizontalLineTo(x = 587.5f).nodes
                 pathDataRepository.replacePathData(pathData)
@@ -147,7 +147,7 @@ class MusicScoreDetailsContentUiTest :
                         wholeStepExpressedInY = 50.0
                     )
                 val pathDataRepository = PathDataRepositoryImpl(graphicProperties)
-                val markInvalidThings = MarkInvalidThings(pathDataRepository)
+                val markInvalidThings = MarkInvalidThings()
                 val pathData: List<PathNode> =
                     PathBuilder().moveTo(x = 87.5f, y = 550.0f).horizontalLineTo(x = 587.5f).nodes
                 pathDataRepository.replacePathData(pathData)

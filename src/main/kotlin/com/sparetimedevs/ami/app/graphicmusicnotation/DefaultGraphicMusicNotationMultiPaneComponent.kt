@@ -57,7 +57,7 @@ internal class DefaultGraphicMusicNotationMultiPaneComponent(componentContext: C
             wholeStepExpressedInY = 50.0
         )
     private val pathDataRepository = PathDataRepositoryImpl(graphicProperties)
-    private val markInvalidThings = MarkInvalidThings(pathDataRepository)
+    private val markInvalidThings = MarkInvalidThings()
 
     override val children: Value<Children> =
         children(

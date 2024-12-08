@@ -59,7 +59,7 @@ class DefaultMusicScoreDetailsComponentTest :
                 wholeStepExpressedInY = 50.0
             )
         val pathDataRepository = PathDataRepositoryImpl(graphicProperties)
-        val markInvalidThings = MarkInvalidThings(pathDataRepository)
+        val markInvalidThings = MarkInvalidThings()
         val component: MusicScoreDetailsComponent =
             DefaultMusicScoreDetailsComponent(
                 testComponentContext,
