@@ -39,7 +39,7 @@ import com.sparetimedevs.ami.music.data.kotlin.score.ScoreId
 internal class DefaultMusicScoreDetailsComponent(
     componentContext: ComponentContext,
     private val pathDataRepository: PathDataRepository,
-    private val markInvalidThings: MarkInvalidThings,
+    private val markInvalidInput: MarkInvalidInput,
 ) :
     MusicScoreDetailsComponent,
     ComponentContext by componentContext,
@@ -100,7 +100,7 @@ internal class DefaultMusicScoreDetailsComponent(
                     .mapLeft { validationErrors ->
                         validationErrors.forEach { validationError ->
                             val errorMarkingPathData =
-                                markInvalidThings.markInvalidNotesAndMeasuresRed(
+                                markInvalidInput.markInvalidNotesAndMeasuresRed(
                                     validationError.validationIdentifier,
                                     pathDataRepository.getGraphicProperties(),
                                     pathDataRepository.getPathData()

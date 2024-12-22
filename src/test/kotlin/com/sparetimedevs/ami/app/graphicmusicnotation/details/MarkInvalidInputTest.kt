@@ -26,7 +26,7 @@ import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.shouldBe
 
-class MarkInvalidThingsTest :
+class MarkInvalidInputTest :
     StringSpec({
         val graphicProperties =
             GraphicProperties(
@@ -37,7 +37,7 @@ class MarkInvalidThingsTest :
                 cutOffXToReflectNoteIsEnding = 0.0,
                 wholeStepExpressedInY = 50.0,
             )
-        val markInvalidThings = MarkInvalidThings()
+        val markInvalidInput = MarkInvalidInput()
 
         "markInvalidNotesAndMeasuresRed should return error marking path data" {
             val pathData: List<PathNode> =
@@ -80,7 +80,7 @@ class MarkInvalidThingsTest :
                 ValidationIdentifierForNote(3, validationIdentifierForMeasure)
 
             val result =
-                markInvalidThings.markInvalidNotesAndMeasuresRed(
+                markInvalidInput.markInvalidNotesAndMeasuresRed(
                     validationIdentifierForNote,
                     graphicProperties,
                     pathData,
@@ -131,7 +131,7 @@ class MarkInvalidThingsTest :
                 ValidationIdentifierForNote(3, ValidationIdentifierForTest(this))
 
             val result =
-                markInvalidThings.markInvalidNotesAndMeasuresRed(
+                markInvalidInput.markInvalidNotesAndMeasuresRed(
                     validationIdentifierForNote,
                     graphicProperties,
                     pathData,

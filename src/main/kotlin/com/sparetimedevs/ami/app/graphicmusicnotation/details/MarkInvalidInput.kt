@@ -24,7 +24,7 @@ import com.sparetimedevs.ami.graphic.GraphicProperties
 import com.sparetimedevs.ami.music.input.validation.ValidationIdentifierForMeasure
 import com.sparetimedevs.ami.music.input.validation.ValidationIdentifierForNote
 
-class MarkInvalidThings {
+class MarkInvalidInput {
 
     fun markInvalidNotesAndMeasuresRed(
         validationIdentifier: ValidationIdentifier,
