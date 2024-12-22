@@ -31,7 +31,7 @@ fun Score.replaceMeasures(measures: List<Measure>): Score {
             val updatedPart = parts[0].copy(measures = updatedMeasures)
             parts.replace(listOf(updatedPart))
         } else {
-            listOf(Part(PartId.unsafeCreate("p-1"), measures))
+            listOf(Part(id = PartId.unsafeCreate("p-1"), measures = measures))
         }
     return this.copy(parts = updatedParts)
 }

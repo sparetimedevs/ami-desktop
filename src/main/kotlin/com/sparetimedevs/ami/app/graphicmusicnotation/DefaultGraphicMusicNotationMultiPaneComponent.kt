@@ -30,6 +30,7 @@ import com.arkivanov.essenty.parcelable.Parcelize
 import com.badoo.reaktive.subject.behavior.BehaviorSubject
 import com.sparetimedevs.ami.app.graphicmusicnotation.GraphicMusicNotationMultiPaneComponent.Children
 import com.sparetimedevs.ami.app.graphicmusicnotation.details.DefaultMusicScoreDetailsComponent
+import com.sparetimedevs.ami.app.graphicmusicnotation.details.MarkInvalidInput
 import com.sparetimedevs.ami.app.graphicmusicnotation.details.MusicScoreDetailsComponent
 import com.sparetimedevs.ami.app.graphicmusicnotation.draw.DefaultDrawGraphicMusicNotationComponent
 import com.sparetimedevs.ami.app.graphicmusicnotation.draw.DrawGraphicMusicNotationComponent
@@ -56,6 +57,7 @@ internal class DefaultGraphicMusicNotationMultiPaneComponent(componentContext: C
             wholeStepExpressedInY = 50.0
         )
     private val pathDataRepository = PathDataRepositoryImpl(graphicProperties)
+    private val markInvalidInput = MarkInvalidInput()
 
     override val children: Value<Children> =
         children(
@@ -97,7 +99,8 @@ internal class DefaultGraphicMusicNotationMultiPaneComponent(componentContext: C
     ): MusicScoreDetailsComponent =
         DefaultMusicScoreDetailsComponent(
             componentContext = componentContext,
-            pathDataRepository = pathDataRepository
+            pathDataRepository = pathDataRepository,
+            markInvalidInput = markInvalidInput
         )
 
     private fun drawingGraphicMusicNotationComponent(

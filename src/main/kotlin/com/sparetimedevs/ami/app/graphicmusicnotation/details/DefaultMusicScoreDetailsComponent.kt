@@ -38,7 +38,8 @@ import com.sparetimedevs.ami.music.data.kotlin.score.ScoreId
 
 internal class DefaultMusicScoreDetailsComponent(
     componentContext: ComponentContext,
-    private val pathDataRepository: PathDataRepository
+    private val pathDataRepository: PathDataRepository,
+    private val markInvalidInput: MarkInvalidInput,
 ) :
     MusicScoreDetailsComponent,
     ComponentContext by componentContext,
@@ -95,6 +96,18 @@ internal class DefaultMusicScoreDetailsComponent(
                         } else {
                             _scoreValue.updateAndGet { it.replaceMeasures(measures) }
                         }
+                    }
+                    .mapLeft { validationErrors ->
+                        validationErrors.forEach { validationError ->
+                            val errorMarkingPathData =
+                                markInvalidInput.markInvalidNotesAndMeasuresRed(
+                                    validationError.validationIdentifier,
+                                    pathDataRepository.getGraphicProperties(),
+                                    pathDataRepository.getPathData()
+                                )
+                            pathDataRepository.addToErrorMarkingPathData(errorMarkingPathData)
+                        }
+                        validationErrors
                     }
                     .asEitherWithAccumulatedValidationErrors()
             GraphicMusicNotationMode.READING -> _scoreValue.value.right()
