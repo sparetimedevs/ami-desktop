@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.sparetimedevs.ami.app.graphicmusicnotation.repository
+package com.sparetimedevs.ami.app.graphicmusicnotation.store
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -23,35 +23,17 @@ import com.sparetimedevs.ami.graphic.GraphicProperties
 import com.sparetimedevs.ami.music.data.kotlin.note.NoteDuration
 import com.sparetimedevs.ami.music.data.kotlin.note.NoteValue
 
-interface PathDataRepository {
-
-    fun getPathData(): List<PathNode>
-
-    fun getGraphicProperties(): GraphicProperties
-
-    fun addToPathData(nonnormalizedPathNode: PathNode): List<PathNode>
-
-    fun undoLastCreatedLine(): List<PathNode>
-
-    fun replacePathData(data: List<PathNode>): List<PathNode>
-
-    fun getErrorMarkingPathData(): List<PathNode>
-
-    fun addToErrorMarkingPathData(pathData: List<PathNode>): List<PathNode>
-}
-
-class PathDataRepositoryImpl(private val graphicProperties: GraphicProperties) :
-    PathDataRepository {
+class PathDataStore(private val graphicProperties: GraphicProperties) {
 
     private val pathData = mutableStateListOf<PathNode>()
 
     private val errorMarkingPathData = mutableStateListOf<PathNode>()
 
-    override fun getPathData(): List<PathNode> = pathData
+    fun getPathData(): List<PathNode> = pathData
 
-    override fun getGraphicProperties(): GraphicProperties = graphicProperties
+    fun getGraphicProperties(): GraphicProperties = graphicProperties
 
-    override fun addToPathData(nonnormalizedPathNode: PathNode): List<PathNode> {
+    fun addToPathData(nonnormalizedPathNode: PathNode): List<PathNode> {
         // Normalize the data before adding.
         // Might need to add more normalization to this function.
         // For instance making sure it is a straight line from start to end, from left to right.
@@ -296,7 +278,7 @@ class PathDataRepositoryImpl(private val graphicProperties: GraphicProperties) :
     private fun calculatePointOnXAxes(
         graphicProperties: GraphicProperties,
         noteDurationMultiplier: Int,
-        spaceBetweenMeasuresMultiplier: Int
+        spaceBetweenMeasuresMultiplier: Int,
     ): Float {
         return ((graphicProperties.offsetX +
                 graphicProperties.measureWidth *
@@ -323,23 +305,23 @@ class PathDataRepositoryImpl(private val graphicProperties: GraphicProperties) :
         }
     }
 
-    override fun undoLastCreatedLine(): List<PathNode> {
+    fun undoLastCreatedLine(): List<PathNode> {
         // TODO is this correct? Or should it be something else?
         pathData.removeLastIfExists()
         pathData.removeLastIfExists()
         return pathData
     }
 
-    override fun replacePathData(data: List<PathNode>): List<PathNode> {
+    fun replacePathData(data: List<PathNode>): List<PathNode> {
         pathData.clear()
         errorMarkingPathData.clear()
         pathData.addAll(data)
         return pathData
     }
 
-    override fun getErrorMarkingPathData(): List<PathNode> = errorMarkingPathData
+    fun getErrorMarkingPathData(): List<PathNode> = errorMarkingPathData
 
-    override fun addToErrorMarkingPathData(pathData: List<PathNode>): List<PathNode> {
+    fun addToErrorMarkingPathData(pathData: List<PathNode>): List<PathNode> {
         errorMarkingPathData.addAll(pathData)
         return errorMarkingPathData
     }

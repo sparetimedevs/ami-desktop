@@ -25,10 +25,10 @@ import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.webhistory.WebHistoryController
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.parcelable.Parcelable
-import com.arkivanov.essenty.parcelable.Parcelize
 import com.sparetimedevs.ami.app.graphicmusicnotation.DefaultGraphicMusicNotationMultiPaneComponent
 import com.sparetimedevs.ami.app.piano.DefaultPianoComponent
 import com.sparetimedevs.ami.app.root.RootComponent.Child
+import kotlinx.serialization.Serializable
 
 // https://github.com/arkivanov/Decompose/blob/9afbe647a7345e458a7e39c5c198a6e9e19fb9ca/sample/shared/shared/src/commonMain/kotlin/com/arkivanov/sample/shared/root/DefaultRootComponent.kt#L25
 @OptIn(ExperimentalDecomposeApi::class)
@@ -101,7 +101,7 @@ class DefaultRootComponent(
 
     private sealed interface Config : Parcelable {
 
-        @Parcelize
+        @Serializable
         object Piano : Config {
             /**
              * Only required for state preservation on JVM/desktop via StateKeeper, as it uses
@@ -110,7 +110,7 @@ class DefaultRootComponent(
             @Suppress("unused") private fun readResolve(): Any = Piano
         }
 
-        @Parcelize
+        @Serializable
         object GraphicMusicNotationMultiPane : Config {
             /**
              * Only required for state preservation on JVM/desktop via StateKeeper, as it uses

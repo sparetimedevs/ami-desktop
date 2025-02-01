@@ -103,7 +103,7 @@ private tailrec fun asAmiNotes(
 
 // Before we reach this method, we actually need to make sure that width is snapped to the nearest
 // valid value. This is currently done in
-// `PathDataRepositoryImpl#addToPathData(nonnormalizedPathNode: PathNode): List<PathNode>`
+// `PathDataStore#addToPathData(nonnormalizedPathNode: PathNode): List<PathNode>`
 private fun noteDuration(
     width: Double,
     validationIdentifier: ValidationIdentifier

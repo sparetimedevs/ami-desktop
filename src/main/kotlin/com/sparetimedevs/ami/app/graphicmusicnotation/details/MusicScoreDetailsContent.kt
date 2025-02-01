@@ -34,6 +34,7 @@ import com.sparetimedevs.ami.player.PlayerContext
 @Composable
 internal fun MusicScoreDetailsContent(
     component: MusicScoreDetailsComponent,
+    scoreDetailsComponent: ScoreDetailsComponent,
     player: Player = dependencyModule.player
 ) {
 
@@ -52,7 +53,11 @@ internal fun MusicScoreDetailsContent(
 
     TopAppBar(
         title = {
-            TopAppBarTitleDropDown(text = scoreDisplayTitle, component = component) { state ->
+            TopAppBarTitleDropDown(
+                text = scoreDisplayTitle,
+                scoreCoreComponent = component,
+                scoreDetailsComponent = scoreDetailsComponent
+            ) { state ->
                 playerContext = playerContext.copy(playerState = state)
             }
         },

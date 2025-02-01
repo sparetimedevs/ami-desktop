@@ -20,7 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.PathBuilder
 import androidx.compose.ui.graphics.vector.PathNode
 import com.arkivanov.decompose.ComponentContext
-import com.sparetimedevs.ami.app.graphicmusicnotation.repository.PathDataRepository
+import com.sparetimedevs.ami.app.graphicmusicnotation.store.PathDataStore
 import com.sparetimedevs.ami.music.data.kotlin.note.NoteName
 import com.sparetimedevs.ami.music.data.kotlin.note.Octave
 import com.sparetimedevs.ami.music.data.kotlin.note.Pitch
@@ -44,23 +44,22 @@ interface DrawGraphicMusicNotationComponent {
 
 class DefaultDrawGraphicMusicNotationComponent(
     componentContext: ComponentContext,
-    private val pathDataRepository: PathDataRepository
+    private val pathDataStore: PathDataStore
 ) : DrawGraphicMusicNotationComponent, ComponentContext by componentContext {
 
     override fun getLineThickness(): Float = THICKNESS_OF_LINES
 
     override fun getErrorLineThickness(): Float = THICKNESS_OF_ERROR_LINES
 
-    override fun getPathData(): List<PathNode> = pathDataRepository.getPathData()
+    override fun getPathData(): List<PathNode> = pathDataStore.getPathData()
 
-    override fun getErrorMarkingPathData(): List<PathNode> =
-        pathDataRepository.getErrorMarkingPathData()
+    override fun getErrorMarkingPathData(): List<PathNode> = pathDataStore.getErrorMarkingPathData()
 
     override fun addToPathData(pathNode: PathNode): List<PathNode> =
-        pathDataRepository.addToPathData(pathNode)
+        pathDataStore.addToPathData(pathNode)
 
     override fun undoLastCreatedLine(): Unit {
-        pathDataRepository.undoLastCreatedLine()
+        pathDataStore.undoLastCreatedLine()
     }
 
     override fun getBackdrop(): List<TheLineThatRepresentsAPitch> {

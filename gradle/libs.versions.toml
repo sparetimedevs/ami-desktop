@@ -5,6 +5,7 @@ spotless-version = "6.25.0"
 pitest-version = "1.15.0"
 ami-music-sdk-kotlin-version = "0.0.1-SNAPSHOT"
 arrow-version = "1.2.4"
+serialization-json-version = "1.7.3"
 coroutines-version = "1.9.0"
 decompose-version = "2.2.3"
 reaktive-version = "2.3.0"
@@ -17,6 +18,7 @@ arcmutate-pitest-kotlin-plugin-version = "1.2.6"
 [libraries]
 ami-music-sdk-kotlin = { module = "com.sparetimedevs.ami:ami-music-sdk-kotlin", version.ref = "ami-music-sdk-kotlin-version" }
 arrow-core = { module = "io.arrow-kt:arrow-core", version.ref = "arrow-version" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization-json-version" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines-version" }
 decompose-jvm = { module = "com.arkivanov.decompose:decompose-jvm", version.ref = "decompose-version" }
 decompose-compose-jetbrains-jvm = { module = "com.arkivanov.decompose:extensions-compose-jetbrains-jvm", version.ref = "decompose-version" }
@@ -33,5 +35,6 @@ arcmutate-pitest-kotlin-plugin = { module = "com.arcmutate:pitest-kotlin-plugin"
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin-version" }
 compose = { id = "org.jetbrains.compose", version.ref = "compose-version" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin-version" }
+serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin-version" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless-version" }
 pitest = { id = "info.solidsoft.pitest", version.ref = "pitest-version" }

@@ -100,6 +100,7 @@ fun RootContent(component: RootComponent, modifier: Modifier = Modifier) {
     }
 }
 
+@OptIn(com.arkivanov.decompose.FaultyDecomposeApi::class)
 @Composable
 private fun tabAnimation(): StackAnimation<Any, Child> =
     stackAnimation { child, otherChild, direction ->

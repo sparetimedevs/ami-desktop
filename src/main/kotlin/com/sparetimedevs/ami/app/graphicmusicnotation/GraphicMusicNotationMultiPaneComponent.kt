@@ -19,6 +19,7 @@ package com.sparetimedevs.ami.app.graphicmusicnotation
 import com.arkivanov.decompose.Child
 import com.arkivanov.decompose.value.Value
 import com.sparetimedevs.ami.app.graphicmusicnotation.details.MusicScoreDetailsComponent
+import com.sparetimedevs.ami.app.graphicmusicnotation.details.ScoreDetailsComponent
 import com.sparetimedevs.ami.app.graphicmusicnotation.draw.DrawGraphicMusicNotationComponent
 import com.sparetimedevs.ami.app.graphicmusicnotation.place.PlaceGraphicMusicNotationComponent
 import com.sparetimedevs.ami.app.graphicmusicnotation.read.ReadGraphicMusicNotationComponent
@@ -28,9 +29,14 @@ interface GraphicMusicNotationMultiPaneComponent {
     val children: Value<Children>
 
     data class Children(
-        val topAppBarDetailsChild: Child.Created<*, MusicScoreDetailsComponent>,
+        val topAppBarDetailsChild: Child.Created<*, ScoreComponents>,
         val drawAreaChild: Child.Created<*, DrawGraphicMusicNotationComponent>,
         val readAreaChild: Child.Created<*, ReadGraphicMusicNotationComponent>,
         val placeAreaChild: Child.Created<*, PlaceGraphicMusicNotationComponent>,
     )
 }
+
+data class ScoreComponents(
+    val scoreCoreComponent: MusicScoreDetailsComponent,
+    val scoreDetailsComponent: ScoreDetailsComponent
+)

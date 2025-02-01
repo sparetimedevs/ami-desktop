@@ -54,6 +54,8 @@ import com.arkivanov.essenty.parcelable.ParcelableContainer
 import com.arkivanov.essenty.statekeeper.StateKeeperDispatcher
 import com.badoo.reaktive.coroutinesinterop.asScheduler
 import com.badoo.reaktive.scheduler.overrideSchedulers
+import com.sparetimedevs.ami.app.design.AppLightColors
+import com.sparetimedevs.ami.app.design.AppTypography
 import com.sparetimedevs.ami.app.root.DefaultRootComponent
 import com.sparetimedevs.ami.app.root.RootContent
 import com.sparetimedevs.ami.app.utils.runOnUiThread
@@ -93,7 +95,7 @@ fun main() {
             onKeyEvent = ::handleKeyEvent
         ) {
             Surface(modifier = Modifier.fillMaxSize()) {
-                MaterialTheme {
+                MaterialTheme(colors = AppLightColors, typography = AppTypography) {
                     CompositionLocalProvider(LocalScrollbarStyle provides defaultScrollbarStyle()) {
                         RootContent(root)
                     }

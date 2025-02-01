@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.sparetimedevs.ami.app.graphicmusicnotation.repository
+package com.sparetimedevs.ami.app.graphicmusicnotation.store
 
 import androidx.compose.ui.graphics.vector.PathBuilder
 import androidx.compose.ui.graphics.vector.PathNode
@@ -22,7 +22,7 @@ import com.sparetimedevs.ami.graphic.GraphicProperties
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 
-class PathDataRepositoryImplTest :
+class PathDataStoreTest :
     StringSpec({
         val graphicProperties =
             GraphicProperties(
@@ -31,9 +31,9 @@ class PathDataRepositoryImplTest :
                 measureWidth = 500.0,
                 spaceBetweenMeasures = 75.0,
                 cutOffXToReflectNoteIsEnding = 0.0,
-                wholeStepExpressedInY = 50.0
+                wholeStepExpressedInY = 50.0,
             )
-        val pathDataRepository = PathDataRepositoryImpl(graphicProperties)
+        val pathDataStore = PathDataStore(graphicProperties)
 
         "addToPathData should use the closest suitable point on the X axes" {
             // A suitable point on the X axes means to have a correct note duration.
@@ -44,11 +44,11 @@ class PathDataRepositoryImplTest :
                     .moveTo(x = 662.5f, y = 575.0f)
                     .nodes
 
-            pathDataRepository.replacePathData(pathData)
+            pathDataStore.replacePathData(pathData)
 
             val pathNode: PathNode = PathBuilder().horizontalLineTo(x = 1157.9323f).nodes.first()
 
-            val result: List<PathNode> = pathDataRepository.addToPathData(pathNode)
+            val result: List<PathNode> = pathDataStore.addToPathData(pathNode)
 
             result shouldBe
                 PathBuilder()
@@ -68,11 +68,11 @@ class PathDataRepositoryImplTest :
                     .horizontalLineTo(x = 912.5f)
                     .nodes
 
-            pathDataRepository.replacePathData(pathData)
+            pathDataStore.replacePathData(pathData)
 
             val pathNode: PathNode = PathBuilder().horizontalLineTo(x = 1162.5f).nodes.first()
 
-            val result: List<PathNode> = pathDataRepository.addToPathData(pathNode)
+            val result: List<PathNode> = pathDataStore.addToPathData(pathNode)
 
             result shouldBe
                 PathBuilder()
