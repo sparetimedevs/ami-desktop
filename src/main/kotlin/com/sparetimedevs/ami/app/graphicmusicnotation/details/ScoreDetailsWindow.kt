@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 sparetimedevs and respective authors and developers.
+ * Copyright (c) 2023-2025 sparetimedevs and respective authors and developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -69,7 +69,6 @@ fun ScoreDetailsWindow(
     screenId: String,
     onSelectedIndexValueChange: (Int) -> Unit,
 ) {
-
     val score by component.scoreValue.subscribeAsState()
 
     // Set initial values
@@ -102,8 +101,13 @@ fun ScoreDetailsWindow(
         remember(screenId) {
             val m: SnapshotStateMap<PartId, String?> = mutableStateMapOf<PartId, String?>()
             score.parts.forEach { part: Part ->
-                if (part.instrument?.midiChannel?.value != null)
-                    m[part.id] = part.instrument?.midiChannel?.value?.toString()
+                if (part.instrument?.midiChannel?.value != null) {
+                    m[part.id] =
+                        part.instrument
+                            ?.midiChannel
+                            ?.value
+                            ?.toString()
+                }
             }
             m
         }
@@ -111,8 +115,13 @@ fun ScoreDetailsWindow(
         remember(screenId) {
             val m: SnapshotStateMap<PartId, String?> = mutableStateMapOf<PartId, String?>()
             score.parts.forEach { part: Part ->
-                if (part.instrument?.midiProgram?.value != null)
-                    m[part.id] = part.instrument?.midiProgram?.value?.toString()
+                if (part.instrument?.midiProgram?.value != null) {
+                    m[part.id] =
+                        part.instrument
+                            ?.midiProgram
+                            ?.value
+                            ?.toString()
+                }
             }
             m
         }
@@ -128,10 +137,11 @@ fun ScoreDetailsWindow(
     ) {
         Box(
             modifier =
-                Modifier.background(color = Color.DarkGray)
+                Modifier
+                    .background(color = Color.DarkGray)
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState())
-                    .horizontalScroll(rememberScrollState())
+                    .horizontalScroll(rememberScrollState()),
         ) {
             Column(modifier = Modifier.padding(10.dp)) {
                 ScoreDetailRow<ScoreId>(
@@ -208,15 +218,14 @@ fun ScoreDetailsWindow(
                                 partInstrumentNames = partInstrumentNames,
                                 partInstrumentMidiChannels = partInstrumentMidiChannels,
                                 partInstrumentMidiPrograms = partInstrumentMidiPrograms,
-                            )
-                            .fold(
+                            ).fold(
                                 { e -> validationErrors.addAll(e) },
                                 {
                                     validationErrors.clear()
                                     onSelectedIndexValueChange(-1)
                                 },
                             )
-                    }
+                    },
                 ) {
                     Text("Save", style = AppTypography.body2)
                 }
@@ -262,12 +271,16 @@ inline fun <reified T : Any> ScoreDetailRow(
 }
 
 @Composable
-fun CustomBasicTextField(value: String, onValueChange: (String) -> Unit) {
+fun CustomBasicTextField(
+    value: String,
+    onValueChange: (String) -> Unit,
+) {
     BasicTextField(
         value = value,
         onValueChange = onValueChange,
         modifier =
-            Modifier.height(24.dp) // Custom height
+            Modifier
+                .height(24.dp) // Custom height
                 .width(400.dp) // Set a width
                 .border(1.dp, Color.Gray, RoundedCornerShape(4.dp)) // Add a border
                 .padding(horizontal = 8.dp), // Inner padding
@@ -286,6 +299,5 @@ fun CustomBasicTextField(value: String, onValueChange: (String) -> Unit) {
     )
 }
 
-fun List<ValidationError>.contains(
-    validationErrorForProperty: ValidationErrorForProperty
-): Boolean = this.map { it.validationErrorForProperty }.contains(validationErrorForProperty)
+fun List<ValidationError>.contains(validationErrorForProperty: ValidationErrorForProperty): Boolean =
+    this.map { it.validationErrorForProperty }.contains(validationErrorForProperty)

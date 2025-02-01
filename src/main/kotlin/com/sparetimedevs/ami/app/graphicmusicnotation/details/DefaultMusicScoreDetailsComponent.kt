@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 sparetimedevs and respective authors and developers.
+ * Copyright (c) 2023-2025 sparetimedevs and respective authors and developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,17 +41,15 @@ internal class DefaultMusicScoreDetailsComponent(
     private val scoreStore: ScoreStore,
     private val pathDataStore: PathDataStore,
     private val markInvalidInput: MarkInvalidInput,
-) :
-    MusicScoreDetailsComponent,
+) : MusicScoreDetailsComponent,
     ComponentContext by componentContext,
     DisposableScope by componentContext.disposableScope() {
-
     private val _modeValue = MutableValue(GraphicMusicNotationMode.DRAWING)
     override val modeValue: Value<GraphicMusicNotationMode> = _modeValue
 
     override val scoreValue: Value<Score> = scoreStore.scoreValue
 
-    override suspend fun changeMode(newValue: GraphicMusicNotationMode): Unit {
+    override suspend fun changeMode(newValue: GraphicMusicNotationMode) {
         // When changing modes, it makes sense to make sure the score is up-to-date.
         updateAndGetScore()
         _modeValue.update { newValue }
@@ -86,7 +84,8 @@ internal class DefaultMusicScoreDetailsComponent(
     override suspend fun updateAndGetScore(): Either<DomainError, Score> =
         when (_modeValue.value) {
             GraphicMusicNotationMode.DRAWING,
-            GraphicMusicNotationMode.PLACING ->
+            GraphicMusicNotationMode.PLACING,
+            ->
                 pathDataStore
                     .getPathData()
                     .asAmiMeasures(pathDataStore.getGraphicProperties())
@@ -96,8 +95,7 @@ internal class DefaultMusicScoreDetailsComponent(
                         } else {
                             scoreStore.saveScore(scoreValue.value.replaceMeasures(measures))
                         }
-                    }
-                    .mapLeft { validationErrors ->
+                    }.mapLeft { validationErrors ->
                         validationErrors.forEach { validationError ->
                             val errorMarkingPathData =
                                 markInvalidInput.markInvalidNotesAndMeasuresRed(
@@ -108,8 +106,7 @@ internal class DefaultMusicScoreDetailsComponent(
                             pathDataStore.addToErrorMarkingPathData(errorMarkingPathData)
                         }
                         validationErrors
-                    }
-                    .asEitherWithAccumulatedValidationErrors()
+                    }.asEitherWithAccumulatedValidationErrors()
             GraphicMusicNotationMode.READING -> scoreValue.value.right()
         }
 

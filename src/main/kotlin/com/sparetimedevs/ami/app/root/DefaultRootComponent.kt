@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 sparetimedevs and respective authors and developers.
+ * Copyright (c) 2023-2025 sparetimedevs and respective authors and developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,8 +36,8 @@ class DefaultRootComponent(
     componentContext: ComponentContext,
     deepLink: DeepLink = DeepLink.None,
     webHistoryController: WebHistoryController? = null,
-) : RootComponent, ComponentContext by componentContext {
-
+) : RootComponent,
+    ComponentContext by componentContext {
     private val navigation = StackNavigation<Config>()
 
     private val stack =
@@ -58,12 +58,15 @@ class DefaultRootComponent(
         )
     }
 
-    private fun child(config: Config, componentContext: ComponentContext): Child =
+    private fun child(
+        config: Config,
+        componentContext: ComponentContext,
+    ): Child =
         when (config) {
             is Config.Piano -> Child.PianoChild(DefaultPianoComponent(componentContext))
             is Config.GraphicMusicNotationMultiPane ->
                 Child.GraphicMusicNotationMultiPaneChild(
-                    DefaultGraphicMusicNotationMultiPaneComponent(componentContext)
+                    DefaultGraphicMusicNotationMultiPaneComponent(componentContext),
                 )
         }
 
@@ -100,14 +103,14 @@ class DefaultRootComponent(
     }
 
     private sealed interface Config : Parcelable {
-
         @Serializable
         object Piano : Config {
             /**
              * Only required for state preservation on JVM/desktop via StateKeeper, as it uses
              * Serializable. Temporary workaround for https://youtrack.jetbrains.com/issue/KT-40218.
              */
-            @Suppress("unused") private fun readResolve(): Any = Piano
+            @Suppress("unused")
+            private fun readResolve(): Any = Piano
         }
 
         @Serializable
@@ -116,13 +119,16 @@ class DefaultRootComponent(
              * Only required for state preservation on JVM/desktop via StateKeeper, as it uses
              * Serializable. Temporary workaround for https://youtrack.jetbrains.com/issue/KT-40218.
              */
-            @Suppress("unused") private fun readResolve(): Any = GraphicMusicNotationMultiPane
+            @Suppress("unused")
+            private fun readResolve(): Any = GraphicMusicNotationMultiPane
         }
     }
 
     sealed interface DeepLink {
         object None : DeepLink
 
-        class Web(val path: String) : DeepLink
+        class Web(
+            val path: String,
+        ) : DeepLink
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 sparetimedevs and respective authors and developers.
+ * Copyright (c) 2023-2025 sparetimedevs and respective authors and developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,10 +59,10 @@ import com.sparetimedevs.ami.app.design.AppTypography
 import com.sparetimedevs.ami.app.root.DefaultRootComponent
 import com.sparetimedevs.ami.app.root.RootContent
 import com.sparetimedevs.ami.app.utils.runOnUiThread
+import kotlinx.coroutines.Dispatchers
 import java.io.File
 import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
-import kotlinx.coroutines.Dispatchers
 
 @OptIn(ExperimentalDecomposeApi::class)
 fun main() {
@@ -71,15 +71,16 @@ fun main() {
     val lifecycle = LifecycleRegistry()
     val stateKeeper = StateKeeperDispatcher(tryRestoreStateFromFile())
 
-    val root = runOnUiThread {
-        DefaultRootComponent(
-            componentContext =
-                DefaultComponentContext(
-                    lifecycle = lifecycle,
-                    stateKeeper = stateKeeper,
-                ),
-        )
-    }
+    val root =
+        runOnUiThread {
+            DefaultRootComponent(
+                componentContext =
+                    DefaultComponentContext(
+                        lifecycle = lifecycle,
+                        stateKeeper = stateKeeper,
+                    ),
+            )
+        }
 
     application {
         val windowState = rememberWindowState(width = 1200.dp, height = 800.dp)
@@ -92,7 +93,7 @@ fun main() {
             onCloseRequest = { isCloseRequested = true },
             state = windowState,
             title = "Ami",
-            onKeyEvent = ::handleKeyEvent
+            onKeyEvent = ::handleKeyEvent,
         ) {
             Surface(modifier = Modifier.fillMaxSize()) {
                 MaterialTheme(colors = AppLightColors, typography = AppTypography) {
@@ -134,7 +135,7 @@ private fun SaveStateDialog(
                     onClick = {
                         onSaveState()
                         onExitApplication()
-                    }
+                    },
                 ) {
                     Text(text = "Yes")
                 }

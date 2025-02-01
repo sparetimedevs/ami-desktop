@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 sparetimedevs and respective authors and developers.
+ * Copyright (c) 2023-2025 sparetimedevs and respective authors and developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -84,7 +84,7 @@ fun TopAppBarTitleDropDown(
                                 selectedIndex = -1
                                 scoreCoreComponent.onLoadScoreClicked(getExampleScoreFrereJacques())
                                 onValueChange(PlayerState.PAUSE)
-                            }
+                            },
                         ) {
                             Text("Load Frère Jacques")
                         }
@@ -93,7 +93,7 @@ fun TopAppBarTitleDropDown(
                                 selectedIndex = -1
                                 scoreCoreComponent.onLoadScoreClicked(getExampleScoreAsturias())
                                 onValueChange(PlayerState.PAUSE)
-                            }
+                            },
                         ) {
                             Text("Load Asturias")
                         }
@@ -101,10 +101,10 @@ fun TopAppBarTitleDropDown(
                             onClick = {
                                 selectedIndex = -1
                                 scoreCoreComponent.onLoadScoreClicked(
-                                    getExampleScoreHeighHoNobodyHome()
+                                    getExampleScoreHeighHoNobodyHome(),
                                 )
                                 onValueChange(PlayerState.PAUSE)
-                            }
+                            },
                         ) {
                             Text("Load Heigh Ho Nobody Home")
                         }
@@ -121,7 +121,7 @@ fun TopAppBarTitleDropDown(
                             selectedIndex = -1
                             scoreCoreComponent.onSaveScoreClicked()
                             onValueChange(PlayerState.PAUSE)
-                        }
+                        },
                     ) {
                         Text("Save")
                     }
@@ -154,4 +154,7 @@ fun TopAppBarTitleDropDown(
     }
 }
 
-data class TopAppBarTitleDropDownAction(val text: String, val onClick: @Composable () -> Unit)
+data class TopAppBarTitleDropDownAction(
+    val text: String,
+    val onClick: @Composable () -> Unit,
+)

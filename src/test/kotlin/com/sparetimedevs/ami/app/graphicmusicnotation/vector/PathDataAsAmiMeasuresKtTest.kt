@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 sparetimedevs and respective authors and developers.
+ * Copyright (c) 2023-2025 sparetimedevs and respective authors and developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,7 +42,7 @@ class PathDataAsAmiMeasuresKtTest :
                 measureWidth = 500.0,
                 spaceBetweenMeasures = 75.0,
                 cutOffXToReflectNoteIsEnding = 0.0,
-                wholeStepExpressedInY = 50.0
+                wholeStepExpressedInY = 50.0,
             )
 
         "asAmiMeasure should work for 1 measure" {
@@ -57,10 +57,10 @@ class PathDataAsAmiMeasuresKtTest :
                             Note.Pitched(
                                 NoteDuration(NoteValue.WHOLE),
                                 NoteAttributes(null, null, null, null),
-                                Pitch(NoteName.C, Octave.unsafeCreate(4))
-                            )
-                        )
-                    )
+                                Pitch(NoteName.C, Octave.unsafeCreate(4)),
+                            ),
+                        ),
+                    ),
                 )
 
             val result: EitherNel<ValidationError, List<Measure>> =
@@ -86,9 +86,9 @@ class PathDataAsAmiMeasuresKtTest :
                             Note.Pitched(
                                 NoteDuration(NoteValue.WHOLE),
                                 NoteAttributes(null, null, null, null),
-                                Pitch(NoteName.C, Octave.unsafeCreate(4))
-                            )
-                        )
+                                Pitch(NoteName.C, Octave.unsafeCreate(4)),
+                            ),
+                        ),
                     ),
                     Measure(
                         null,
@@ -96,10 +96,10 @@ class PathDataAsAmiMeasuresKtTest :
                             Note.Pitched(
                                 NoteDuration(NoteValue.WHOLE),
                                 NoteAttributes(null, null, null, null),
-                                Pitch(NoteName.B_FLAT, Octave.unsafeCreate(4))
-                            )
-                        )
-                    )
+                                Pitch(NoteName.B_FLAT, Octave.unsafeCreate(4)),
+                            ),
+                        ),
+                    ),
                 )
 
             val result: EitherNel<ValidationError, List<Measure>> =

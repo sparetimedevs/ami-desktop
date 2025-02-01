@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 sparetimedevs and respective authors and developers.
+ * Copyright (c) 2023-2025 sparetimedevs and respective authors and developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,9 +51,8 @@ fun PlayPauseMidiPlayerButton(
     getScore: suspend () -> Either<DomainError, Score>,
     playerContext: PlayerContext,
     player: Player,
-    onValueChange: (PlayerContext) -> Unit
+    onValueChange: (PlayerContext) -> Unit,
 ) {
-
     var domainError: DomainError? by remember { mutableStateOf(null) }
 
     TextButton(
@@ -61,23 +60,27 @@ fun PlayPauseMidiPlayerButton(
         onClick = {
             when (playerContext.playerState) {
                 PlayerState.PAUSED,
-                PlayerState.PAUSE ->
+                PlayerState.PAUSE,
+                ->
                     onValueChange(playerContext.copy(playerState = PlayerState.PLAY))
                 PlayerState.PLAYING,
-                PlayerState.PLAY ->
+                PlayerState.PLAY,
+                ->
                     onValueChange(playerContext.copy(playerState = PlayerState.PAUSE))
             }
         },
         content = {
             when (playerContext.playerState) {
                 PlayerState.PAUSED,
-                PlayerState.PAUSE -> Text(text = "Play")
+                PlayerState.PAUSE,
+                -> Text(text = "Play")
                 PlayerState.PLAYING,
-                PlayerState.PLAY -> Text(text = "Pause")
+                PlayerState.PLAY,
+                -> Text(text = "Pause")
             }
         },
         colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colors.secondary),
-        elevation = ButtonDefaults.elevation()
+        elevation = ButtonDefaults.elevation(),
     )
 
     when (playerContext.playerState) {
@@ -91,7 +94,7 @@ fun PlayPauseMidiPlayerButton(
                                 println("Error: $error")
                                 domainError = error
                             },
-                            { score -> play(score, player) }
+                            { score -> play(score, player) },
                         )
                 }
             onValueChange(playerContext.copy(playerJob = job, playerState = PlayerState.PLAYING))
@@ -102,7 +105,8 @@ fun PlayPauseMidiPlayerButton(
             onValueChange(playerContext.copy(playerState = PlayerState.PAUSED))
         }
         PlayerState.PLAYING,
-        PlayerState.PAUSED -> Unit // Do nothing new when playing or paused.
+        PlayerState.PAUSED,
+        -> Unit // Do nothing new when playing or paused.
     }
 
     if (domainError != null) {
@@ -120,7 +124,7 @@ fun PlayPauseMidiPlayerButton(
                         onClick = {
                             domainError = null
                             onValueChange(playerContext.copy(playerState = PlayerState.PAUSE))
-                        }
+                        },
                     ) {
                         Text("Ok")
                     }
@@ -130,10 +134,10 @@ fun PlayPauseMidiPlayerButton(
             text = {
                 Text(
                     text =
-                        "You need to resolve the error before you can play the score. The error is: $domainError"
+                        "You need to resolve the error before you can play the score. The error is: $domainError",
                 )
             },
-            modifier = Modifier.width(400.dp)
+            modifier = Modifier.width(400.dp),
         )
     }
 }
@@ -142,5 +146,5 @@ enum class PlayerState {
     PLAY,
     PLAYING,
     PAUSE,
-    PAUSED
+    PAUSED,
 }

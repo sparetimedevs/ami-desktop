@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 sparetimedevs and respective authors and developers.
+ * Copyright (c) 2023-2025 sparetimedevs and respective authors and developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,30 +29,33 @@ import com.sparetimedevs.ami.core.validation.validationErrorForProperty
 import io.kotest.core.test.TestScope
 
 @JvmInline
-value class TestId private constructor(val value: String) : Id {
+value class TestId private constructor(
+    val value: String,
+) : Id {
     companion object {
-
         fun validate(
             input: String,
             validationIdentifier: ValidationIdentifier = NoValidationIdentifier,
-        ): EitherNel<ValidationError, TestId> = either {
-            ensure(input.isNotEmpty()) {
-                ValidationError(
+        ): EitherNel<ValidationError, TestId> =
+            either {
+                ensure(input.isNotEmpty()) {
+                    ValidationError(
                         "Test ID can't be empty, the input was $input",
                         validationErrorForProperty<TestId>(),
                         validationIdentifier,
-                    )
-                    .nel()
+                    ).nel()
+                }
+                TestId(input)
             }
-            TestId(input)
-        }
 
         fun unsafeCreate(input: String): TestId =
             validate(input, NoValidationIdentifier).getOrThrowFirstValidationError()
     }
 }
 
-data class ValidationIdentifierForTest(val testScope: TestScope) : ValidationIdentifier {
+data class ValidationIdentifierForTest(
+    val testScope: TestScope,
+) : ValidationIdentifier {
     override val identifier: Id = TestId.unsafeCreate(testScope.testCase.name.originalName)
     override val validationIdentifierParent: ValidationIdentifier = NoValidationIdentifier
 }

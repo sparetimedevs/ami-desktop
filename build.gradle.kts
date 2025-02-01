@@ -34,7 +34,8 @@ dependencies {
     testImplementation(libs.kotest.assertions.core)
     testImplementation(libs.kotest.assertions.arrow)
 
-    @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class) implementation(compose.uiTest)
+    @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
+    implementation(compose.uiTest)
 
     // Required for pitest. A future version of the pitest gradle plugin may make this unnecessary.
     testRuntimeOnly(libs.junit.platform.launcher)
@@ -79,12 +80,12 @@ tasks.withType<KotlinCompile> {
 configure<SpotlessExtension> {
     kotlin {
         target("**/kotlin/**/*.kt")
-        ktfmt().kotlinlangStyle()
+        ktlint("1.5.0")
         licenseHeaderFile("$rootDir/LICENSE.header.template")
     }
     kotlinGradle {
         target("*.gradle.kts")
-        ktfmt().kotlinlangStyle()
+        ktlint("1.5.0")
     }
 }
 

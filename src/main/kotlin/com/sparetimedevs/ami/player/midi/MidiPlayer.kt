@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 sparetimedevs and respective authors and developers.
+ * Copyright (c) 2023-2025 sparetimedevs and respective authors and developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,11 +43,16 @@ import javax.sound.midi.MidiDevice
 import javax.sound.midi.Receiver
 import javax.sound.midi.ShortMessage
 
-class MidiPlayer(midiDevice: MidiDevice, playerSettings: PlayerSettings) : Player(playerSettings) {
-
+class MidiPlayer(
+    midiDevice: MidiDevice,
+    playerSettings: PlayerSettings,
+) : Player(playerSettings) {
     private val receiver: Receiver = midiDevice.receiver
 
-    override fun playNote(note: Note, onChannelNumber: Int) {
+    override fun playNote(
+        note: Note,
+        onChannelNumber: Int,
+    ) {
         println("Playing $note on thread ${Thread.currentThread().name}")
         val midinote = helperFunForPitchOfNoteToMidiNoteValue(note)
         //        val midiVel = (127f * note.amp).toInt() // TODO we don't have a volume attribute
@@ -57,7 +62,10 @@ class MidiPlayer(midiDevice: MidiDevice, playerSettings: PlayerSettings) : Playe
         receiver.send(noteOnMsg, -1)
     }
 
-    override fun stopNote(note: Note, onChannelNumber: Int) {
+    override fun stopNote(
+        note: Note,
+        onChannelNumber: Int,
+    ) {
         val midinote = helperFunForPitchOfNoteToMidiNoteValue(note)
         //        val midiVel = (127f * note.amp).toInt() // TODO we don't have a volume attribute
         // yet (or any indication of how loud a note should be played).
@@ -141,7 +149,10 @@ fun helperFunForPitchToMidiNoteValue(noteName: NoteName): Int =
         NoteName.G_SHARP -> 68
     }
 
-fun helperFunForDurationOfNoteToJavaTimeDuration(note: Note, metronome: Metronome): Duration {
+fun helperFunForDurationOfNoteToJavaTimeDuration(
+    note: Note,
+    metronome: Metronome,
+): Duration {
     // For 4/4 time signature
     val millis = (note.duration.value * 4 * metronome.millisPerBeat).toLong()
 

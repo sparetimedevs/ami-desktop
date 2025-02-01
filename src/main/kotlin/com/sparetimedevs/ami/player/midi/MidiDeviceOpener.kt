@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 sparetimedevs and respective authors and developers.
+ * Copyright (c) 2023-2025 sparetimedevs and respective authors and developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,8 @@ fun openMidiDevice(midiDeviceDescription: String? = null): MidiDevice =
     midiDeviceDescription?.let { findMidiDevice(it) } ?: getDefaultSynthesizer()
 
 private fun findMidiDevice(desc: String): MidiDevice? =
-    MidiSystem.getMidiDeviceInfo()
+    MidiSystem
+        .getMidiDeviceInfo()
         .toList()
         .map { MidiSystem.getMidiDevice(it) }
         .first { it.deviceInfo.description.startsWith(desc) }
@@ -47,12 +48,12 @@ private fun getDefaultSynthesizer(): Synthesizer {
     // Metronome channel
     defaultSynthesizer.channels[0].programChange(
         metronomeInstrument.patch.bank,
-        metronomeInstrument.patch.program
+        metronomeInstrument.patch.program,
     )
     // Score channel
     defaultSynthesizer.channels[1].programChange(
         currentInstrument.patch.bank,
-        currentInstrument.patch.program
+        currentInstrument.patch.program,
     )
 
     return defaultSynthesizer

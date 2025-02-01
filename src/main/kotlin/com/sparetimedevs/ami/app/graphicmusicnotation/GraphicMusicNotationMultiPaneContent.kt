@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 sparetimedevs and respective authors and developers.
+ * Copyright (c) 2023-2025 sparetimedevs and respective authors and developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,22 +42,23 @@ import com.sparetimedevs.ami.app.graphicmusicnotation.read.ReadGraphicMusicNotat
 @Composable
 internal fun GraphicMusicNotationMultiPaneContent(
     component: GraphicMusicNotationMultiPaneComponent,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val children by component.children.subscribeAsState()
 
     val saveableStateHolder = rememberSaveableStateHolder()
 
-    val topAppBarDetailsPane: @Composable (Child.Created<*, ScoreComponents>) -> Unit = remember {
-        movableContentOf { (config, components) ->
-            saveableStateHolder.SaveableStateProvider(key = config.javaClass.simpleName) {
-                MusicScoreDetailsContent(
-                    component = components.scoreCoreComponent,
-                    scoreDetailsComponent = components.scoreDetailsComponent
-                )
+    val topAppBarDetailsPane: @Composable (Child.Created<*, ScoreComponents>) -> Unit =
+        remember {
+            movableContentOf { (config, components) ->
+                saveableStateHolder.SaveableStateProvider(key = config.javaClass.simpleName) {
+                    MusicScoreDetailsContent(
+                        component = components.scoreCoreComponent,
+                        scoreDetailsComponent = components.scoreDetailsComponent,
+                    )
+                }
             }
         }
-    }
 
     val drawPane: @Composable (Child.Created<*, DrawGraphicMusicNotationComponent>) -> Unit =
         remember {
@@ -65,7 +66,7 @@ internal fun GraphicMusicNotationMultiPaneContent(
                 saveableStateHolder.SaveableStateProvider(key = config.javaClass.simpleName) {
                     DrawGraphicMusicNotationContent(
                         component = component,
-                        modifier = modifier.fillMaxSize()
+                        modifier = modifier.fillMaxSize(),
                     )
                 }
             }
@@ -77,7 +78,7 @@ internal fun GraphicMusicNotationMultiPaneContent(
                 saveableStateHolder.SaveableStateProvider(key = config.javaClass.simpleName) {
                     ReadGraphicMusicNotationContent(
                         component = component,
-                        modifier = modifier.fillMaxSize()
+                        modifier = modifier.fillMaxSize(),
                     )
                 }
             }
@@ -89,18 +90,19 @@ internal fun GraphicMusicNotationMultiPaneContent(
                 saveableStateHolder.SaveableStateProvider(key = config.javaClass.simpleName) {
                     PlaceGraphicMusicNotationContent(
                         component = component,
-                        modifier = modifier.fillMaxSize()
+                        modifier = modifier.fillMaxSize(),
                     )
                 }
             }
         }
 
     saveableStateHolder.OldDetailsKeyRemoved(
-        selectedDetailsKey = children.topAppBarDetailsChild.configuration.javaClass.simpleName
+        selectedDetailsKey = children.topAppBarDetailsChild.configuration.javaClass.simpleName,
     )
 
     val mode by
-        children.topAppBarDetailsChild.instance.scoreCoreComponent.modeValue.subscribeAsState()
+        children.topAppBarDetailsChild.instance.scoreCoreComponent.modeValue
+            .subscribeAsState()
 
     Column(modifier = modifier) {
         topAppBarDetailsPane(children.topAppBarDetailsChild)

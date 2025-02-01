@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 sparetimedevs and respective authors and developers.
+ * Copyright (c) 2023-2025 sparetimedevs and respective authors and developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -113,44 +113,45 @@ class DefaultMusicScoreDetailsComponentTest :
                                 NoteDuration(NoteValue.WHOLE),
                                 NoteAttributes(null, null, null, null),
                                 Pitch(NoteName.C, Octave.unsafeCreate(4)),
-                            )
+                            ),
                         ),
-                    )
+                    ),
                 )
             val expectedScore = score.replaceMeasures(expectedMeasures)
 
             result shouldBeRight expectedScore
         }
 
-        "updateAndGetScore should return updated score when there are changes made to it in drawing mode and Score part was empty" {
-            val score = createEmptyScore()
+        "updateAndGetScore should return updated score " +
+            "when there are changes made to it in drawing mode and Score part was empty" {
+                val score = createEmptyScore()
 
-            component.changeMode(GraphicMusicNotationMode.DRAWING)
-            component.onLoadScoreClicked(score)
+                component.changeMode(GraphicMusicNotationMode.DRAWING)
+                component.onLoadScoreClicked(score)
 
-            val pathData: List<PathNode> =
-                PathBuilder().moveTo(x = 87.5f, y = 700.0f).horizontalLineTo(x = 587.5f).nodes
-            pathDataStore.replacePathData(pathData)
+                val pathData: List<PathNode> =
+                    PathBuilder().moveTo(x = 87.5f, y = 700.0f).horizontalLineTo(x = 587.5f).nodes
+                pathDataStore.replacePathData(pathData)
 
-            val result = component.updateAndGetScore()
+                val result = component.updateAndGetScore()
 
-            val expectedMeasures: List<Measure> =
-                listOf(
-                    Measure(
-                        null,
-                        listOf(
-                            Note.Pitched(
-                                NoteDuration(NoteValue.WHOLE),
-                                NoteAttributes(null, null, null, null),
-                                Pitch(NoteName.C, Octave.unsafeCreate(4)),
-                            )
+                val expectedMeasures: List<Measure> =
+                    listOf(
+                        Measure(
+                            null,
+                            listOf(
+                                Note.Pitched(
+                                    NoteDuration(NoteValue.WHOLE),
+                                    NoteAttributes(null, null, null, null),
+                                    Pitch(NoteName.C, Octave.unsafeCreate(4)),
+                                ),
+                            ),
                         ),
                     )
-                )
-            val expectedScore = score.replaceMeasures(expectedMeasures)
+                val expectedScore = score.replaceMeasures(expectedMeasures)
 
-            result shouldBeRight expectedScore
-        }
+                result shouldBeRight expectedScore
+            }
 
         "updateAndGetScore should return validationErrors for score when there are validation errors in drawing mode" {
             val score = getExampleScoreHeighHoNobodyHome()
@@ -172,7 +173,9 @@ class DefaultMusicScoreDetailsComponentTest :
 
             val expectedDomainError: DomainError =
                 AccumulatedValidationErrors(
-                    "There were one or more errors while validating the input: Unable to map height to NoteName, Octave can't be lesser than -12, the input was -26, Input for note duration is not a valid value, the value is: -1.0",
+                    "There were one or more errors while validating the input: Unable to map height to NoteName, " +
+                        "Octave can't be lesser than -12, the input was -26, Input for note duration is not a valid " +
+                        "value, the value is: -1.0",
                     NonEmptyList(
                         ValidationError(
                             message = "Unable to map height to NoteName",

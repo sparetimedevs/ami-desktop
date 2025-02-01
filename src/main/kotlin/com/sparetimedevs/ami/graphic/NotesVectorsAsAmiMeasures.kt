@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 sparetimedevs and respective authors and developers.
+ * Copyright (c) 2023-2025 sparetimedevs and respective authors and developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,23 +40,21 @@ import com.sparetimedevs.ami.music.data.kotlin.note.Semitones
 import com.sparetimedevs.ami.music.input.validation.ValidationIdentifierForMeasure
 import com.sparetimedevs.ami.music.input.validation.ValidationIdentifierForNote
 
-fun asAmiMeasures(
-    notesVectorsPerMeasure: Map<Int, List<NoteVectors>>
-): EitherNel<ValidationError, List<Measure>> =
+fun asAmiMeasures(notesVectorsPerMeasure: Map<Int, List<NoteVectors>>): EitherNel<ValidationError, List<Measure>> =
     notesVectorsPerMeasure
         .map { notesVectorsForMeasure: Map.Entry<Int, List<NoteVectors>> ->
             val validationIdentifier: ValidationIdentifier =
                 ValidationIdentifierForMeasure(
                     notesVectorsForMeasure.key,
-                    NoValidationIdentifier /* Currently, there is no easy way to get part and score context. But they are implied. */
+                    NoValidationIdentifier, /* Currently, there is no easy way to get part and score context.
+                                              But they are implied. */
                 )
             asAmiMeasure(notesVectorsForMeasure.value, validationIdentifier)
-        }
-        .flattenOrAccumulate()
+        }.flattenOrAccumulate()
 
 fun asAmiMeasure(
     notesVectors: List<NoteVectors>,
-    validationIdentifier: ValidationIdentifier
+    validationIdentifier: ValidationIdentifier,
 ): EitherNel<ValidationError, Measure> {
     val measureOrErrors =
         asAmiNotes(validationIdentifier, notesVectors).combineAllValidationErrors().map { notes ->
@@ -68,10 +66,11 @@ fun asAmiMeasure(
 private tailrec fun asAmiNotes(
     validationIdentifier: ValidationIdentifier,
     notesVectors: List<NoteVectors>,
-    acc: List<EitherNel<ValidationError, Note>> = emptyList()
+    acc: List<EitherNel<ValidationError, Note>> = emptyList(),
 ): List<EitherNel<ValidationError, Note>> =
-    if (notesVectors.isEmpty()) acc
-    else {
+    if (notesVectors.isEmpty()) {
+        acc
+    } else {
         val validationIdentifierForNote =
             ValidationIdentifierForNote(acc.size, validationIdentifier)
 
@@ -93,7 +92,7 @@ private tailrec fun asAmiNotes(
         val noteOrError: EitherNel<ValidationError, Note> =
             Either.zipOrAccumulate(
                 noteDuration(width, validationIdentifierForNote),
-                pitch(startY, operatingFromOctave, validationIdentifierForNote)
+                pitch(startY, operatingFromOctave, validationIdentifierForNote),
             ) { noteDuration, pitch ->
                 Note.Pitched(noteDuration, NoteAttributes(null, null, null, null), pitch)
             }
@@ -106,26 +105,26 @@ private tailrec fun asAmiNotes(
 // `PathDataStore#addToPathData(nonnormalizedPathNode: PathNode): List<PathNode>`
 private fun noteDuration(
     width: Double,
-    validationIdentifier: ValidationIdentifier
+    validationIdentifier: ValidationIdentifier,
 ): EitherNel<ValidationError, NoteDuration> =
     NoteDuration.validate(
         input = width / WHOLE_NOTE_WIDTH,
-        validationIdentifier = validationIdentifier
+        validationIdentifier = validationIdentifier,
     )
 
 private fun pitch(
     height: Double,
     operatingFromOctave: Octave,
-    validationIdentifier: ValidationIdentifier
+    validationIdentifier: ValidationIdentifier,
 ): EitherNel<ValidationError, Pitch> {
     val remainderHeight = height % 6
     return Either.zipOrAccumulate(
         noteName(remainderHeight, validationIdentifier),
         Octave.validate(
             (operatingFromOctave.value + ((height - remainderHeight) / 6).toInt()).toByte(),
-            validationIdentifier
+            validationIdentifier,
         ),
-        Semitones.validate(0.0f) // Not yet implemented.
+        Semitones.validate(0.0f), // Not yet implemented.
     ) { noteName, octave, alter ->
         Pitch(noteName, octave, alter)
     }
@@ -133,9 +132,8 @@ private fun pitch(
 
 private fun noteName(
     height: Double,
-    validationIdentifier: ValidationIdentifier
+    validationIdentifier: ValidationIdentifier,
 ): EitherNel<ValidationError, NoteName> {
-
     val noteName =
         when (height) {
             0.0 -> NoteName.A_FLAT.right() // or G_SHARP from one lower octave
@@ -152,11 +150,10 @@ private fun noteName(
             5.5 -> NoteName.G.right()
             else ->
                 ValidationError(
-                        "Unable to map height to NoteName",
-                        ValidationErrorForProperty("height"),
-                        validationIdentifier
-                    )
-                    .nel()
+                    "Unable to map height to NoteName",
+                    ValidationErrorForProperty("height"),
+                    validationIdentifier,
+                ).nel()
                     .left()
         }
 

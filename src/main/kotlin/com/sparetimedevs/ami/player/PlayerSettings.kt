@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 sparetimedevs and respective authors and developers.
+ * Copyright (c) 2023-2025 sparetimedevs and respective authors and developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,5 +20,5 @@ data class PlayerSettings(
     val metronomePlayerChannelNumber: Int = 0,
     val scorePlayerChannelNumber: Int = 1,
     val metronome: Metronome = Metronome(beatsPerBar = 4, bpm = 120),
-    val isMetronomeEnabled: Boolean = false
+    val isMetronomeEnabled: Boolean = false,
 )

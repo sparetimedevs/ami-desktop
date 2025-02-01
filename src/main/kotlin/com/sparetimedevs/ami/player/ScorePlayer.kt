@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 sparetimedevs and respective authors and developers.
+ * Copyright (c) 2023-2025 sparetimedevs and respective authors and developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,26 +17,30 @@
 package com.sparetimedevs.ami.player
 
 import com.sparetimedevs.ami.music.data.kotlin.score.Score
-import java.time.LocalDateTime
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.runBlocking
+import java.time.LocalDateTime
 
-suspend fun play(score: Score, player: Player): Unit = coroutineScope {
-    try {
-        // score.parts[0] can throw `java.lang.IndexOutOfBoundsException: Empty list doesn't
-        // contain
-        // element at index 0`
-        // It would be good to avoid it.
-        player.play(score.parts[0].measures, LocalDateTime.now())
-        while (this.isActive) {
-            // Do nothing, just keep going while the coroutine is active.
-            // Do add a delay, else this while loop keeps on going too fast.
-            delay(500L)
+suspend fun play(
+    score: Score,
+    player: Player,
+): Unit =
+    coroutineScope {
+        try {
+            // score.parts[0] can throw `java.lang.IndexOutOfBoundsException: Empty list doesn't
+            // contain
+            // element at index 0`
+            // It would be good to avoid it.
+            player.play(score.parts[0].measures, LocalDateTime.now())
+            while (this.isActive) {
+                // Do nothing, just keep going while the coroutine is active.
+                // Do add a delay, else this while loop keeps on going too fast.
+                delay(500L)
+            }
+        } finally {
+            println("Stopping player...")
+            runBlocking { player.stop() }
         }
-    } finally {
-        println("Stopping player...")
-        runBlocking { player.stop() }
     }
-}

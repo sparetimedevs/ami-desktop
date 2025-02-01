@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 sparetimedevs and respective authors and developers.
+ * Copyright (c) 2023-2025 sparetimedevs and respective authors and developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,10 +52,10 @@ class NotesVectorsAsAmiMeasuresKtTest :
                             Note.Pitched(
                                 NoteDuration(NoteValue.WHOLE),
                                 NoteAttributes(null, null, null, null),
-                                Pitch(NoteName.C, Octave.unsafeCreate(4))
-                            )
-                        )
-                    )
+                                Pitch(NoteName.C, Octave.unsafeCreate(4)),
+                            ),
+                        ),
+                    ),
                 )
 
             val result = asAmiMeasures(notesVectorsPerMeasure)
@@ -71,15 +71,15 @@ class NotesVectorsAsAmiMeasuresKtTest :
                             NoteVectors(Vector(0.0, 26.0), Vector(100.0, 26.0)),
                             NoteVectors(Vector(100.0, 27.0), Vector(200.0, 27.0)),
                             NoteVectors(Vector(200.0, 27.5), Vector(300.0, 27.5)),
-                            NoteVectors(Vector(300.0, 28.5), Vector(400.0, 28.5))
+                            NoteVectors(Vector(300.0, 28.5), Vector(400.0, 28.5)),
                         ),
                     1 to
                         listOf<NoteVectors>(
                             NoteVectors(Vector(0.0, 29.5), Vector(100.0, 29.5)),
                             NoteVectors(Vector(100.0, 30.5), Vector(200.0, 30.5)),
                             NoteVectors(Vector(200.0, 31.0), Vector(300.0, 31.0)),
-                            NoteVectors(Vector(300.0, 32.0), Vector(400.0, 32.0))
-                        )
+                            NoteVectors(Vector(300.0, 32.0), Vector(400.0, 32.0)),
+                        ),
                 )
 
             val result = asAmiMeasures(notesVectorsPerMeasure)
@@ -95,7 +95,7 @@ class NotesVectorsAsAmiMeasuresKtTest :
                             NoteVectors(Vector(0.0, 26.0), Vector(100.0, 26.0)),
                             NoteVectors(Vector(100.0, 27.0), Vector(200.0, 27.0)),
                             NoteVectors(Vector(200.0, 27.5), Vector(300.0, 27.5)),
-                            NoteVectors(Vector(300.0, 28.5), Vector(400.0, 28.5))
+                            NoteVectors(Vector(300.0, 28.5), Vector(400.0, 28.5)),
                         ),
                     1 to
                         listOf(
@@ -103,10 +103,10 @@ class NotesVectorsAsAmiMeasuresKtTest :
                             NoteVectors(Vector(100.0, 30.5), Vector(593.827156, 30.5)),
                             NoteVectors(
                                 Vector(593.827156, 30.84567),
-                                Vector(1087.654312, 30.84567)
+                                Vector(1087.654312, 30.84567),
                             ),
-                            NoteVectors(Vector(1087.654312, 32.0), Vector(1187.654312, 32.0))
-                        )
+                            NoteVectors(Vector(1087.654312, 32.0), Vector(1187.654312, 32.0)),
+                        ),
                 )
 
             val result = asAmiMeasures(notesVectorsPerMeasure)
@@ -122,9 +122,9 @@ class NotesVectorsAsAmiMeasuresKtTest :
                                 validationIdentifierParent =
                                     ValidationIdentifierForMeasure(
                                         measureIndex = 1,
-                                        validationIdentifierParent = NoValidationIdentifier
-                                    )
-                            )
+                                        validationIdentifierParent = NoValidationIdentifier,
+                                    ),
+                            ),
                     ),
                     listOf(
                         ValidationError(
@@ -137,9 +137,9 @@ class NotesVectorsAsAmiMeasuresKtTest :
                                     validationIdentifierParent =
                                         ValidationIdentifierForMeasure(
                                             measureIndex = 1,
-                                            validationIdentifierParent = NoValidationIdentifier
-                                        )
-                                )
+                                            validationIdentifierParent = NoValidationIdentifier,
+                                        ),
+                                ),
                         ),
                         ValidationError(
                             message =
@@ -151,9 +151,9 @@ class NotesVectorsAsAmiMeasuresKtTest :
                                     validationIdentifierParent =
                                         ValidationIdentifierForMeasure(
                                             measureIndex = 1,
-                                            validationIdentifierParent = NoValidationIdentifier
-                                        )
-                                )
+                                            validationIdentifierParent = NoValidationIdentifier,
+                                        ),
+                                ),
                         ),
                         ValidationError(
                             message = "Unable to map height to NoteName",
@@ -164,11 +164,11 @@ class NotesVectorsAsAmiMeasuresKtTest :
                                     validationIdentifierParent =
                                         ValidationIdentifierForMeasure(
                                             measureIndex = 1,
-                                            validationIdentifierParent = NoValidationIdentifier
-                                        )
-                                )
-                        )
-                    )
+                                            validationIdentifierParent = NoValidationIdentifier,
+                                        ),
+                                ),
+                        ),
+                    ),
                 )
         }
 
@@ -187,24 +187,24 @@ class NotesVectorsAsAmiMeasuresKtTest :
                         Note.Pitched(
                             NoteDuration(NoteValue.QUARTER),
                             NoteAttributes(null, null, null, null),
-                            Pitch(NoteName.C, Octave.unsafeCreate(4))
+                            Pitch(NoteName.C, Octave.unsafeCreate(4)),
                         ),
                         Note.Pitched(
                             NoteDuration(NoteValue.QUARTER),
                             NoteAttributes(null, null, null, null),
-                            Pitch(NoteName.E, Octave.unsafeCreate(4))
+                            Pitch(NoteName.E, Octave.unsafeCreate(4)),
                         ),
                         Note.Pitched(
                             NoteDuration(NoteValue.QUARTER),
                             NoteAttributes(null, null, null, null),
-                            Pitch(NoteName.C, Octave.unsafeCreate(4))
+                            Pitch(NoteName.C, Octave.unsafeCreate(4)),
                         ),
                         Note.Pitched(
                             NoteDuration(NoteValue.QUARTER),
                             NoteAttributes(null, null, null, null),
-                            Pitch(NoteName.A_FLAT, Octave.unsafeCreate(5))
-                        )
-                    )
+                            Pitch(NoteName.A_FLAT, Octave.unsafeCreate(5)),
+                        ),
+                    ),
                 )
 
             val result = asAmiMeasure(notesVectorsForOneMeasure, ValidationIdentifierForTest(this))
@@ -218,7 +218,7 @@ class NotesVectorsAsAmiMeasuresKtTest :
                     NoteVectors(Vector(0.0, 26.0), Vector(100.0, 26.0)),
                     NoteVectors(Vector(300.0, 30.0), Vector(400.0, 30.0)),
                     NoteVectors(Vector(200.0, 26.0), Vector(300.0, 26.0)),
-                    NoteVectors(Vector(100.0, 28.0), Vector(200.0, 28.0))
+                    NoteVectors(Vector(100.0, 28.0), Vector(200.0, 28.0)),
                 )
             val expectedResult: Measure =
                 Measure(
@@ -227,24 +227,24 @@ class NotesVectorsAsAmiMeasuresKtTest :
                         Note.Pitched(
                             NoteDuration(NoteValue.QUARTER),
                             NoteAttributes(null, null, null, null),
-                            Pitch(NoteName.C, Octave.unsafeCreate(4))
+                            Pitch(NoteName.C, Octave.unsafeCreate(4)),
                         ),
                         Note.Pitched(
                             NoteDuration(NoteValue.QUARTER),
                             NoteAttributes(null, null, null, null),
-                            Pitch(NoteName.E, Octave.unsafeCreate(4))
+                            Pitch(NoteName.E, Octave.unsafeCreate(4)),
                         ),
                         Note.Pitched(
                             NoteDuration(NoteValue.QUARTER),
                             NoteAttributes(null, null, null, null),
-                            Pitch(NoteName.C, Octave.unsafeCreate(4))
+                            Pitch(NoteName.C, Octave.unsafeCreate(4)),
                         ),
                         Note.Pitched(
                             NoteDuration(NoteValue.QUARTER),
                             NoteAttributes(null, null, null, null),
-                            Pitch(NoteName.A_FLAT, Octave.unsafeCreate(5))
-                        )
-                    )
+                            Pitch(NoteName.A_FLAT, Octave.unsafeCreate(5)),
+                        ),
+                    ),
                 )
 
             val result = asAmiMeasure(notesVectorsForOneMeasure, ValidationIdentifierForTest(this))
@@ -267,7 +267,7 @@ class NotesVectorsAsAmiMeasuresKtTest :
                     NoteVectors(Vector(225.0, 28.5), Vector(250.0, 28.5)),
                     NoteVectors(Vector(250.0, 29.0), Vector(275.0, 29.0)),
                     NoteVectors(Vector(275.0, 29.5), Vector(300.0, 29.5)),
-                    NoteVectors(Vector(300.0, 30.0), Vector(325.0, 30.0))
+                    NoteVectors(Vector(300.0, 30.0), Vector(325.0, 30.0)),
                 )
             val expectedResult: Measure =
                 Measure(
@@ -288,9 +288,9 @@ class NotesVectorsAsAmiMeasuresKtTest :
                         createPitchedNote(
                             noteName = NoteName.A_FLAT,
                             duration = NoteValue._16TH,
-                            octave = Octave.unsafeCreate(5)
-                        )
-                    )
+                            octave = Octave.unsafeCreate(5),
+                        ),
+                    ),
                 )
 
             val result = asAmiMeasure(notesVectorsForOneMeasure, ValidationIdentifierForTest(this))
@@ -307,24 +307,24 @@ val ExpectedResult: List<Measure> =
                 Note.Pitched(
                     NoteDuration(NoteValue.QUARTER),
                     NoteAttributes(null, null, null, null),
-                    Pitch(NoteName.C, Octave.unsafeCreate(4))
+                    Pitch(NoteName.C, Octave.unsafeCreate(4)),
                 ),
                 Note.Pitched(
                     NoteDuration(NoteValue.QUARTER),
                     NoteAttributes(null, null, null, null),
-                    Pitch(NoteName.D, Octave.unsafeCreate(4))
+                    Pitch(NoteName.D, Octave.unsafeCreate(4)),
                 ),
                 Note.Pitched(
                     NoteDuration(NoteValue.QUARTER),
                     NoteAttributes(null, null, null, null),
-                    Pitch(NoteName.E_FLAT, Octave.unsafeCreate(4))
+                    Pitch(NoteName.E_FLAT, Octave.unsafeCreate(4)),
                 ),
                 Note.Pitched(
                     NoteDuration(NoteValue.QUARTER),
                     NoteAttributes(null, null, null, null),
-                    Pitch(NoteName.F, Octave.unsafeCreate(4))
+                    Pitch(NoteName.F, Octave.unsafeCreate(4)),
                 ),
-            )
+            ),
         ),
         Measure(
             null,
@@ -332,23 +332,23 @@ val ExpectedResult: List<Measure> =
                 Note.Pitched(
                     NoteDuration(NoteValue.QUARTER),
                     NoteAttributes(null, null, null, null),
-                    Pitch(NoteName.G, Octave.unsafeCreate(4))
+                    Pitch(NoteName.G, Octave.unsafeCreate(4)),
                 ),
                 Note.Pitched(
                     NoteDuration(NoteValue.QUARTER),
                     NoteAttributes(null, null, null, null),
-                    Pitch(NoteName.A, Octave.unsafeCreate(5))
+                    Pitch(NoteName.A, Octave.unsafeCreate(5)),
                 ),
                 Note.Pitched(
                     NoteDuration(NoteValue.QUARTER),
                     NoteAttributes(null, null, null, null),
-                    Pitch(NoteName.B_FLAT, Octave.unsafeCreate(5))
+                    Pitch(NoteName.B_FLAT, Octave.unsafeCreate(5)),
                 ),
                 Note.Pitched(
                     NoteDuration(NoteValue.QUARTER),
                     NoteAttributes(null, null, null, null),
-                    Pitch(NoteName.C, Octave.unsafeCreate(5))
-                )
-            )
-        )
+                    Pitch(NoteName.C, Octave.unsafeCreate(5)),
+                ),
+            ),
+        ),
     )

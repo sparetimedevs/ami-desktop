@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 sparetimedevs and respective authors and developers.
+ * Copyright (c) 2023-2025 sparetimedevs and respective authors and developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,7 +46,7 @@ class AmiMeasureAsNotesVectorsKtTest :
             val notes: List<Note> =
                 listOf(
                     createPitchedNote(noteName = NoteName.C, duration = NoteValue.HALF),
-                    createPitchedNote(noteName = NoteName.A, duration = NoteValue.HALF)
+                    createPitchedNote(noteName = NoteName.A, duration = NoteValue.HALF),
                 )
             val measure: Measure = Measure(null, notes)
 
@@ -55,7 +55,7 @@ class AmiMeasureAsNotesVectorsKtTest :
             result shouldBe
                 listOf(
                     NoteVectors(Vector(0.0, 26.0), Vector(200.0, 26.0)),
-                    NoteVectors(Vector(200.0, 24.5), Vector(400.0, 24.5))
+                    NoteVectors(Vector(200.0, 24.5), Vector(400.0, 24.5)),
                 )
         }
 
@@ -65,7 +65,7 @@ class AmiMeasureAsNotesVectorsKtTest :
                     createPitchedNote(noteName = NoteName.G, duration = NoteValue.QUARTER),
                     createRestNote(duration = NoteValue.QUARTER),
                     createPitchedNote(noteName = NoteName.D, duration = NoteValue.QUARTER),
-                    createRestNote(duration = NoteValue.QUARTER)
+                    createRestNote(duration = NoteValue.QUARTER),
                 )
             val measure: Measure = Measure(null, notes)
 
@@ -76,7 +76,7 @@ class AmiMeasureAsNotesVectorsKtTest :
                     NoteVectors(Vector(0.0, 29.5), Vector(100.0, 29.5)),
                     NoteVectors(Vector(100.0, -7.5), Vector(200.0, -7.5)),
                     NoteVectors(Vector(200.0, 27.0), Vector(300.0, 27.0)),
-                    NoteVectors(Vector(300.0, -7.5), Vector(400.0, -7.5))
+                    NoteVectors(Vector(300.0, -7.5), Vector(400.0, -7.5)),
                 )
         }
 
@@ -150,7 +150,7 @@ class AmiMeasureAsNotesVectorsKtTest :
                     createRestNote(duration = NoteValue._16TH),
                     createRestNote(duration = NoteValue._8TH),
                     createRestNote(duration = NoteValue.QUARTER),
-                    createRestNote(duration = NoteValue.HALF)
+                    createRestNote(duration = NoteValue.HALF),
                 )
 
             val measure: Measure = Measure(null, notes)
@@ -226,7 +226,7 @@ class AmiMeasureAsNotesVectorsKtTest :
                     NoteVectors(Vector(25.0, -7.5), Vector(50.0, -7.5)),
                     NoteVectors(Vector(50.0, -7.5), Vector(100.0, -7.5)),
                     NoteVectors(Vector(100.0, -7.5), Vector(200.0, -7.5)),
-                    NoteVectors(Vector(200.0, -7.5), Vector(400.0, -7.5))
+                    NoteVectors(Vector(200.0, -7.5), Vector(400.0, -7.5)),
                 )
         }
 
@@ -241,18 +241,18 @@ class AmiMeasureAsNotesVectorsKtTest :
                     createPitchedNote(
                         noteName = NoteName.A,
                         octave = Octave.unsafeCreate(5),
-                        duration = NoteValue._8TH
+                        duration = NoteValue._8TH,
                     ),
                     createPitchedNote(
                         noteName = NoteName.B,
                         octave = Octave.unsafeCreate(5),
-                        duration = NoteValue._8TH
+                        duration = NoteValue._8TH,
                     ),
                     createPitchedNote(
                         noteName = NoteName.C,
                         octave = Octave.unsafeCreate(5),
-                        duration = NoteValue._8TH
-                    )
+                        duration = NoteValue._8TH,
+                    ),
                 )
 
             val measure: Measure = Measure(null, notes)
@@ -268,7 +268,7 @@ class AmiMeasureAsNotesVectorsKtTest :
                     NoteVectors(Vector(200.0, 29.5), Vector(250.0, 29.5)),
                     NoteVectors(Vector(250.0, 30.5), Vector(300.0, 30.5)),
                     NoteVectors(Vector(300.0, 31.5), Vector(350.0, 31.5)),
-                    NoteVectors(Vector(350.0, 32.0), Vector(400.0, 32.0))
+                    NoteVectors(Vector(350.0, 32.0), Vector(400.0, 32.0)),
                 )
         }
 
@@ -283,18 +283,18 @@ class AmiMeasureAsNotesVectorsKtTest :
                     createPitchedNote(
                         noteName = NoteName.A,
                         octave = Octave.unsafeCreate(5),
-                        duration = NoteValue._8TH
+                        duration = NoteValue._8TH,
                     ),
                     createPitchedNote(
                         noteName = NoteName.B_FLAT,
                         octave = Octave.unsafeCreate(5),
-                        duration = NoteValue._8TH
+                        duration = NoteValue._8TH,
                     ),
                     createPitchedNote(
                         noteName = NoteName.C,
                         octave = Octave.unsafeCreate(5),
-                        duration = NoteValue._8TH
-                    )
+                        duration = NoteValue._8TH,
+                    ),
                 )
 
             val measure: Measure = Measure(null, notes)
@@ -310,7 +310,7 @@ class AmiMeasureAsNotesVectorsKtTest :
                     NoteVectors(Vector(200.0, 29.5), Vector(250.0, 29.5)),
                     NoteVectors(Vector(250.0, 30.5), Vector(300.0, 30.5)),
                     NoteVectors(Vector(300.0, 31.0), Vector(350.0, 31.0)),
-                    NoteVectors(Vector(350.0, 32.0), Vector(400.0, 32.0))
+                    NoteVectors(Vector(350.0, 32.0), Vector(400.0, 32.0)),
                 )
         }
 
@@ -323,9 +323,9 @@ class AmiMeasureAsNotesVectorsKtTest :
                         pitches =
                             listOf(
                                 Pitch(noteName = NoteName.B, octave = Octave.unsafeCreate(4)),
-                                Pitch(noteName = NoteName.D, octave = Octave.unsafeCreate(4))
+                                Pitch(noteName = NoteName.D, octave = Octave.unsafeCreate(4)),
                             ),
-                        duration = NoteValue.QUARTER
+                        duration = NoteValue.QUARTER,
                     ),
                     createRestNote(duration = NoteValue.QUARTER),
                     // D major
@@ -334,11 +334,11 @@ class AmiMeasureAsNotesVectorsKtTest :
                         pitches =
                             listOf(
                                 Pitch(noteName = NoteName.F_SHARP, octave = Octave.unsafeCreate(4)),
-                                Pitch(noteName = NoteName.A, octave = Octave.unsafeCreate(4))
+                                Pitch(noteName = NoteName.A, octave = Octave.unsafeCreate(4)),
                             ),
-                        duration = NoteValue.QUARTER
+                        duration = NoteValue.QUARTER,
                     ),
-                    createRestNote(duration = NoteValue.QUARTER)
+                    createRestNote(duration = NoteValue.QUARTER),
                 )
 
             val measure: Measure = Measure(null, notes)
@@ -354,7 +354,7 @@ class AmiMeasureAsNotesVectorsKtTest :
                     NoteVectors(Vector(200.0, 27.0), Vector(300.0, 27.0)),
                     NoteVectors(Vector(200.0, 29.0), Vector(300.0, 29.0)),
                     NoteVectors(Vector(200.0, 24.5), Vector(300.0, 24.5)),
-                    NoteVectors(Vector(300.0, -7.5), Vector(400.0, -7.5))
+                    NoteVectors(Vector(300.0, -7.5), Vector(400.0, -7.5)),
                 )
         }
     })

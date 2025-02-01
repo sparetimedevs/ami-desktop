@@ -24,7 +24,7 @@ Limitations:
 
 ## License
 
-    Copyright (c) 2023 sparetimedevs and respective authors and developers.
+    Copyright (c) 2023-2025 sparetimedevs and respective authors and developers.
    
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.

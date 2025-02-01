@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 sparetimedevs and respective authors and developers.
+ * Copyright (c) 2023-2025 sparetimedevs and respective authors and developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,13 +36,15 @@ fun List<Measure>.asPathData(graphicProperties: GraphicProperties): List<PathNod
 private fun asPathData(
     notesVectors: List<NoteVectors>,
     graphicProperties: GraphicProperties,
-    measureNumberOnDisplay: Int
+    measureNumberOnDisplay: Int,
 ): List<PathNode> {
     val measureOffsetX: Double =
-        if (measureNumberOnDisplay > 0)
+        if (measureNumberOnDisplay > 0) {
             (graphicProperties.measureWidth * measureNumberOnDisplay) +
                 (graphicProperties.spaceBetweenMeasures * measureNumberOnDisplay)
-        else 0.0
+        } else {
+            0.0
+        }
     return notesVectors.flatMap { vectors ->
         val startX: Double = calcX(vectors.start.x, graphicProperties, measureOffsetX)
         val startY: Double = calcY(vectors.start.y, graphicProperties)
@@ -50,7 +52,7 @@ private fun asPathData(
             calcX(
                 vectors.end.x - graphicProperties.cutOffXToReflectNoteIsEnding,
                 graphicProperties,
-                measureOffsetX
+                measureOffsetX,
             )
         val endY: Double = calcY(vectors.end.y, graphicProperties)
 
@@ -61,11 +63,18 @@ private fun asPathData(
     }
 }
 
-private fun calcX(x: Double, graphicProperties: GraphicProperties, measureOffsetX: Double): Double =
+private fun calcX(
+    x: Double,
+    graphicProperties: GraphicProperties,
+    measureOffsetX: Double,
+): Double =
     (x / WHOLE_NOTE_WIDTH * graphicProperties.measureWidth) +
         (graphicProperties.offsetX + measureOffsetX)
 
-private fun calcY(y: Double, graphicProperties: GraphicProperties): Double {
+private fun calcY(
+    y: Double,
+    graphicProperties: GraphicProperties,
+): Double {
     // We need to transform from bottom left 0,0 to top left 0,0 coordinate system.
     val height = 32 // Why 32? Not sure, but it is the same in PathDataAsAmiMeasures.kt.
 

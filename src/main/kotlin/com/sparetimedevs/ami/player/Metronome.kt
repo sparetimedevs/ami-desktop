@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 sparetimedevs and respective authors and developers.
+ * Copyright (c) 2023-2025 sparetimedevs and respective authors and developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,10 @@
 
 package com.sparetimedevs.ami.player
 
-data class Metronome(val bpm: Int, val beatsPerBar: Int = 16) {
+data class Metronome(
+    val bpm: Int,
+    val beatsPerBar: Int = 16,
+) {
     val millisPerBeat: Long
         get() = (secsPerBeat * 1000).toLong()
 

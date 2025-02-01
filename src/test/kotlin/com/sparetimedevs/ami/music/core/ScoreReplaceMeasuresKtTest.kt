@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 sparetimedevs and respective authors and developers.
+ * Copyright (c) 2023-2025 sparetimedevs and respective authors and developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package com.sparetimedevs.ami.core
+package com.sparetimedevs.ami.music.core
 
-import com.sparetimedevs.ami.music.core.replaceMeasures
 import com.sparetimedevs.ami.music.data.kotlin.measure.Measure
 import com.sparetimedevs.ami.music.data.kotlin.midi.MidiChannel
 import com.sparetimedevs.ami.music.data.kotlin.midi.MidiProgram
@@ -39,178 +38,184 @@ import io.kotest.matchers.types.shouldBeSameInstanceAs
 
 class ScoreReplaceMeasuresKtTest :
     StringSpec({
-        "replaceMeasures should return the score with new measures first followed by original measures when there are more original measures than measures to replace" {
-            val score = getExampleScoreHeighHoNobodyHome()
+        "replaceMeasures should return the score with new measures first followed by original measures " +
+            "when there are more original measures than measures to replace" {
+                val score = getExampleScoreHeighHoNobodyHome()
 
-            val newMeasures: List<Measure> =
-                listOf(
-                    Measure(
-                        null,
-                        listOf(
-                            createPitchedNote(noteName = NoteName.C, duration = NoteValue.WHOLE)
-                        ),
-                    ),
-                    Measure(
-                        null,
-                        listOf(
-                            createPitchedNote(noteName = NoteName.F, duration = NoteValue.WHOLE)
-                        ),
-                    ),
-                )
-
-            val result = score.replaceMeasures(newMeasures)
-
-            val expectedScore =
-                score.copy(
-                    parts =
-                        listOf(
-                            Part(
-                                id = PartId.unsafeCreate("p-1"),
-                                name = PartName.unsafeCreate("Part one"),
-                                instrument =
-                                    PartInstrument(
-                                        name = PartInstrumentName.unsafeCreate("Grand Piano"),
-                                        midiChannel = MidiChannel.unsafeCreate(0),
-                                        midiProgram = MidiProgram.unsafeCreate(1),
-                                    ),
-                                measures =
-                                    newMeasures +
-                                        getExampleScoreHeighHoNobodyHome()
-                                            .parts[0]
-                                            .measures
-                                            .drop(2),
-                            )
-                        )
-                )
-
-            result shouldBe expectedScore
-        }
-
-        "replaceMeasures should return the score with the new measures when the measures to replace are more than the amount of original measures" {
-            val score = getExampleScore()
-
-            val newMeasures: List<Measure> = getExampleScoreHeighHoNobodyHome().parts[0].measures
-
-            score.parts[0].measures.size shouldBeLessThan newMeasures.size
-
-            val result = score.replaceMeasures(newMeasures)
-
-            val expectedScore =
-                score.copy(
-                    parts =
-                        listOf(
-                            Part(
-                                id = PartId.unsafeCreate("p-1"),
-                                name = PartName.unsafeCreate("Part one"),
-                                instrument =
-                                    PartInstrument(
-                                        name = PartInstrumentName.unsafeCreate("Grand Piano"),
-                                        midiChannel = MidiChannel.unsafeCreate(0),
-                                        midiProgram = MidiProgram.unsafeCreate(1),
-                                    ),
-                                measures = newMeasures,
-                            )
-                        )
-                )
-
-            result shouldBe expectedScore
-        }
-
-        "replaceMeasures should return the score with the new measures when the measures to replace are the same amount as the amount of original measures" {
-            val score = getExampleScoreHeighHoNobodyHome()
-
-            val newMeasures: List<Measure> =
-                getExampleScoreHeighHoNobodyHome().parts[0].measures.dropLast(2) +
+                val newMeasures: List<Measure> =
                     listOf(
                         Measure(
                             null,
                             listOf(
-                                createPitchedNote(noteName = NoteName.C, duration = NoteValue.WHOLE)
+                                createPitchedNote(noteName = NoteName.C, duration = NoteValue.WHOLE),
                             ),
                         ),
                         Measure(
                             null,
                             listOf(
-                                createPitchedNote(noteName = NoteName.F, duration = NoteValue.WHOLE)
+                                createPitchedNote(noteName = NoteName.F, duration = NoteValue.WHOLE),
                             ),
                         ),
                     )
 
-            val result = score.replaceMeasures(newMeasures)
+                val result = score.replaceMeasures(newMeasures)
 
-            val expectedScore =
-                score.copy(
-                    parts =
+                val expectedScore =
+                    score.copy(
+                        parts =
+                            listOf(
+                                Part(
+                                    id = PartId.unsafeCreate("p-1"),
+                                    name = PartName.unsafeCreate("Part one"),
+                                    instrument =
+                                        PartInstrument(
+                                            name = PartInstrumentName.unsafeCreate("Grand Piano"),
+                                            midiChannel = MidiChannel.unsafeCreate(0),
+                                            midiProgram = MidiProgram.unsafeCreate(1),
+                                        ),
+                                    measures =
+                                        newMeasures +
+                                            getExampleScoreHeighHoNobodyHome()
+                                                .parts[0]
+                                                .measures
+                                                .drop(2),
+                                ),
+                            ),
+                    )
+
+                result shouldBe expectedScore
+            }
+
+        "replaceMeasures should return the score with the new measures " +
+            "when the measures to replace are more than the amount of original measures" {
+                val score = getExampleScore()
+
+                val newMeasures: List<Measure> = getExampleScoreHeighHoNobodyHome().parts[0].measures
+
+                score.parts[0].measures.size shouldBeLessThan newMeasures.size
+
+                val result = score.replaceMeasures(newMeasures)
+
+                val expectedScore =
+                    score.copy(
+                        parts =
+                            listOf(
+                                Part(
+                                    id = PartId.unsafeCreate("p-1"),
+                                    name = PartName.unsafeCreate("Part one"),
+                                    instrument =
+                                        PartInstrument(
+                                            name = PartInstrumentName.unsafeCreate("Grand Piano"),
+                                            midiChannel = MidiChannel.unsafeCreate(0),
+                                            midiProgram = MidiProgram.unsafeCreate(1),
+                                        ),
+                                    measures = newMeasures,
+                                ),
+                            ),
+                    )
+
+                result shouldBe expectedScore
+            }
+
+        "replaceMeasures should return the score with the new measures " +
+            "when the measures to replace are the same amount as the amount of original measures" {
+                val score = getExampleScoreHeighHoNobodyHome()
+
+                val newMeasures: List<Measure> =
+                    getExampleScoreHeighHoNobodyHome().parts[0].measures.dropLast(2) +
                         listOf(
-                            Part(
-                                id = PartId.unsafeCreate("p-1"),
-                                name = PartName.unsafeCreate("Part one"),
-                                instrument =
-                                    PartInstrument(
-                                        name = PartInstrumentName.unsafeCreate("Grand Piano"),
-                                        midiChannel = MidiChannel.unsafeCreate(0),
-                                        midiProgram = MidiProgram.unsafeCreate(1),
-                                    ),
-                                measures = newMeasures,
-                            )
+                            Measure(
+                                null,
+                                listOf(
+                                    createPitchedNote(noteName = NoteName.C, duration = NoteValue.WHOLE),
+                                ),
+                            ),
+                            Measure(
+                                null,
+                                listOf(
+                                    createPitchedNote(noteName = NoteName.F, duration = NoteValue.WHOLE),
+                                ),
+                            ),
                         )
-                )
 
-            result shouldBe expectedScore
-        }
+                val result = score.replaceMeasures(newMeasures)
 
-        "replaceMeasures should return the original empty score when the original score's measures is empty and the measures to replace is empty" {
-            val score: Score = createEmptyScore()
-            val newMeasures: List<Measure> = emptyList()
+                val expectedScore =
+                    score.copy(
+                        parts =
+                            listOf(
+                                Part(
+                                    id = PartId.unsafeCreate("p-1"),
+                                    name = PartName.unsafeCreate("Part one"),
+                                    instrument =
+                                        PartInstrument(
+                                            name = PartInstrumentName.unsafeCreate("Grand Piano"),
+                                            midiChannel = MidiChannel.unsafeCreate(0),
+                                            midiProgram = MidiProgram.unsafeCreate(1),
+                                        ),
+                                    measures = newMeasures,
+                                ),
+                            ),
+                    )
 
-            val result: Score = score.replaceMeasures(newMeasures)
+                result shouldBe expectedScore
+            }
 
-            result shouldBeSameInstanceAs score
-        }
+        "replaceMeasures should return the original empty score " +
+            "when the original score's measures is empty and the measures to replace is empty" {
+                val score: Score = createEmptyScore()
+                val newMeasures: List<Measure> = emptyList()
 
-        "replaceMeasures should return the original score when the original score's measures is not empty and the measures to replace is empty" {
-            val score = getExampleScoreHeighHoNobodyHome()
+                val result: Score = score.replaceMeasures(newMeasures)
 
-            val newMeasures: List<Measure> = emptyList()
+                result shouldBeSameInstanceAs score
+            }
 
-            val result = score.replaceMeasures(newMeasures)
+        "replaceMeasures should return the original score " +
+            "when the original score's measures is not empty and the measures to replace is empty" {
+                val score = getExampleScoreHeighHoNobodyHome()
 
-            result shouldBeSameInstanceAs score
-        }
+                val newMeasures: List<Measure> = emptyList()
 
-        "replaceMeasures should return the score with new measures when the measures to replace is not empty and the original measures is empty" {
-            val score: Score = createEmptyScore()
-            val newMeasures: List<Measure> =
-                listOf(
-                    Measure(
-                        null,
-                        listOf(
-                            createPitchedNote(noteName = NoteName.C, duration = NoteValue.WHOLE)
+                val result = score.replaceMeasures(newMeasures)
+
+                result shouldBeSameInstanceAs score
+            }
+
+        "replaceMeasures should return the score with new measures " +
+            "when the measures to replace is not empty and the original measures is empty" {
+                val score: Score = createEmptyScore()
+                val newMeasures: List<Measure> =
+                    listOf(
+                        Measure(
+                            null,
+                            listOf(
+                                createPitchedNote(noteName = NoteName.C, duration = NoteValue.WHOLE),
+                            ),
                         ),
-                    ),
-                    Measure(
-                        null,
-                        listOf(
-                            createPitchedNote(noteName = NoteName.F, duration = NoteValue.WHOLE)
+                        Measure(
+                            null,
+                            listOf(
+                                createPitchedNote(noteName = NoteName.F, duration = NoteValue.WHOLE),
+                            ),
                         ),
-                    ),
-                )
+                    )
 
-            val result: Score = score.replaceMeasures(newMeasures)
+                val result: Score = score.replaceMeasures(newMeasures)
 
-            val expectedScore =
-                score.copy(
-                    parts =
-                        listOf(
-                            Part(
-                                id = PartId.unsafeCreate("p-1"),
-                                name = null,
-                                instrument = null,
-                                measures = newMeasures,
-                            )
-                        )
-                )
+                val expectedScore =
+                    score.copy(
+                        parts =
+                            listOf(
+                                Part(
+                                    id = PartId.unsafeCreate("p-1"),
+                                    name = null,
+                                    instrument = null,
+                                    measures = newMeasures,
+                                ),
+                            ),
+                    )
 
-            result shouldBe expectedScore
-        }
+                result shouldBe expectedScore
+            }
     })

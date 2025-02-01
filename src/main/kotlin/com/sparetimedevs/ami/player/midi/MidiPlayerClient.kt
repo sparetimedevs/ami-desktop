@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 sparetimedevs and respective authors and developers.
+ * Copyright (c) 2023-2025 sparetimedevs and respective authors and developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@ import com.sparetimedevs.ami.player.play
 import kotlinx.coroutines.runBlocking
 
 fun main() {
-
     // On MacOS, this is the name I gave to the "Device Name" property in "MIDI Studio" in "Audio
     // MIDI Setup"
     // This is also the MIDI device I've selected as MIDI input in Surge XT.

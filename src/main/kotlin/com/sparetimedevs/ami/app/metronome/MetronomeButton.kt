@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 sparetimedevs and respective authors and developers.
+ * Copyright (c) 2023-2025 sparetimedevs and respective authors and developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,10 @@ import androidx.compose.ui.unit.dp
 
 @Preview
 @Composable
-fun MetronomeButton(enableMetronome: Boolean, onValueChanged: (Boolean) -> Unit) {
+fun MetronomeButton(
+    enableMetronome: Boolean,
+    onValueChanged: (Boolean) -> Unit,
+) {
     TextButton(
         modifier = Modifier.padding(10.dp),
         onClick = { onValueChanged(!enableMetronome) },
@@ -39,6 +42,6 @@ fun MetronomeButton(enableMetronome: Boolean, onValueChanged: (Boolean) -> Unit)
             }
         },
         colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colors.secondary),
-        elevation = ButtonDefaults.elevation()
+        elevation = ButtonDefaults.elevation(),
     )
 }

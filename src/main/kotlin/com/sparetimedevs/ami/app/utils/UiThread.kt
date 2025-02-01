@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 sparetimedevs and respective authors and developers.
+ * Copyright (c) 2023-2025 sparetimedevs and respective authors and developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,5 +37,6 @@ internal fun <T> runOnUiThread(block: () -> T): T {
 
     error?.also { throw it }
 
-    @Suppress("UNCHECKED_CAST") return result as T
+    @Suppress("UNCHECKED_CAST")
+    return result as T
 }
