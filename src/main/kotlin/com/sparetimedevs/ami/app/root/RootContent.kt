@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 sparetimedevs and respective authors and developers.
+ * Copyright (c) 2023-2025 sparetimedevs and respective authors and developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,7 +54,10 @@ import com.sparetimedevs.ami.app.root.RootComponent.Child.GraphicMusicNotationMu
 import com.sparetimedevs.ami.app.root.RootComponent.Child.PianoChild
 
 @Composable
-fun RootContent(component: RootComponent, modifier: Modifier = Modifier) {
+fun RootContent(
+    component: RootComponent,
+    modifier: Modifier = Modifier,
+) {
     val childStack by component.childStack.subscribeAsState()
     val activeComponent = childStack.active.instance
 
@@ -69,7 +72,7 @@ fun RootContent(component: RootComponent, modifier: Modifier = Modifier) {
                 is GraphicMusicNotationMultiPaneChild ->
                     GraphicMusicNotationMultiPaneContent(
                         component = child.component,
-                        modifier = modifier.fillMaxSize()
+                        modifier = modifier.fillMaxSize(),
                     )
             }
         }
@@ -83,7 +86,7 @@ fun RootContent(component: RootComponent, modifier: Modifier = Modifier) {
                         imageVector = AmiDesktopAppIcons.Piano,
                         contentDescription = "Piano",
                     )
-                }
+                },
             )
 
             BottomNavigationItem(
@@ -94,7 +97,7 @@ fun RootContent(component: RootComponent, modifier: Modifier = Modifier) {
                         imageVector = AmiDesktopAppIcons.Pencil,
                         contentDescription = "Graphic music notation",
                     )
-                }
+                },
             )
         }
     }
@@ -143,7 +146,6 @@ internal fun RootContentPreview() {
 }
 
 internal class PreviewRootComponent : RootComponent {
-
     val lifecycle = LifecycleRegistry()
     val stateKeeper = StateKeeperDispatcher(tryRestoreStateFromFile())
 
@@ -161,10 +163,10 @@ internal class PreviewRootComponent : RootComponent {
                                     DefaultComponentContext(
                                         lifecycle = lifecycle,
                                         stateKeeper = stateKeeper,
-                                    )
-                            )
-                    )
-            )
+                                    ),
+                            ),
+                    ),
+            ),
         )
 
     override fun onPianoTabClicked() {}

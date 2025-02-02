@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 sparetimedevs and respective authors and developers.
+ * Copyright (c) 2023-2025 sparetimedevs and respective authors and developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,14 +26,12 @@ import com.sparetimedevs.ami.graphic.vector.Vector
 import com.sparetimedevs.ami.graphic.vector.WHOLE_NOTE_WIDTH
 import com.sparetimedevs.ami.music.data.kotlin.measure.Measure
 
-fun List<PathNode>.asAmiMeasures(
-    graphicProperties: GraphicProperties
-): EitherNel<ValidationError, List<Measure>> =
+fun List<PathNode>.asAmiMeasures(graphicProperties: GraphicProperties): EitherNel<ValidationError, List<Measure>> =
     asAmiMeasures(asNotesVectorsPerMeasure(this, graphicProperties))
 
 fun asNotesVectorsPerMeasure(
     pathData: List<PathNode>,
-    graphicProperties: GraphicProperties
+    graphicProperties: GraphicProperties,
 ): Map<Int, List<NoteVectors>> {
     val pathDataPerMeasure: Map<Int, List<PathNode>> =
         pathData.fold(mutableMapOf()) { acc, pathNode ->
@@ -46,7 +44,9 @@ fun asNotesVectorsPerMeasure(
                         if (acc.entries.isNotEmpty()) {
                             val entry = acc.entries.find { it.value.last() is PathNode.MoveTo }
                             entry?.key ?: acc.entries.last().key
-                        } else null
+                        } else {
+                            null
+                        }
                 }
 
             if (maybeMeasureKey != null) {
@@ -58,7 +58,10 @@ fun asNotesVectorsPerMeasure(
     return pathDataPerMeasure.mapValues { asNotesVectorsForOneMeasure(it.value, graphicProperties) }
 }
 
-private fun measureKey(moveToXValue: Float, graphicProperties: GraphicProperties): Int {
+private fun measureKey(
+    moveToXValue: Float,
+    graphicProperties: GraphicProperties,
+): Int {
     val moveToXValueMinusOffset = moveToXValue - graphicProperties.offsetX
 
     val measureKey =
@@ -73,11 +76,15 @@ private fun measureKey(moveToXValue: Float, graphicProperties: GraphicProperties
                 1
             }
             moveToXValueMinusOffset <
-                ((graphicProperties.measureWidth * 3) +
-                    (graphicProperties.spaceBetweenMeasures * 2)) &&
+                (
+                    (graphicProperties.measureWidth * 3) +
+                        (graphicProperties.spaceBetweenMeasures * 2)
+                ) &&
                 moveToXValueMinusOffset >=
-                    ((graphicProperties.measureWidth * 2) +
-                        graphicProperties.spaceBetweenMeasures) -> {
+                (
+                    (graphicProperties.measureWidth * 2) +
+                        graphicProperties.spaceBetweenMeasures
+                ) -> {
                 2
             }
             moveToXValueMinusOffset >=
@@ -93,7 +100,7 @@ private fun measureKey(moveToXValue: Float, graphicProperties: GraphicProperties
 
 private fun asNotesVectorsForOneMeasure(
     pathDataForOneMeasure: List<PathNode>,
-    graphicProperties: GraphicProperties
+    graphicProperties: GraphicProperties,
 ): List<NoteVectors> {
     var tempStartVector = Vector(0.0, 0.0)
     val notesVectors = mutableListOf<NoteVectors>()
@@ -103,7 +110,7 @@ private fun asNotesVectorsForOneMeasure(
                 tempStartVector =
                     Vector(
                         calcX(pathNode.x, graphicProperties),
-                        calcY(pathNode.y, graphicProperties)
+                        calcY(pathNode.y, graphicProperties),
                     )
             }
             is PathNode.HorizontalTo -> {
@@ -114,7 +121,7 @@ private fun asNotesVectorsForOneMeasure(
                 val endVector =
                     Vector(
                         calcX(pathNode.x, graphicProperties),
-                        calcY(pathNode.y, graphicProperties)
+                        calcY(pathNode.y, graphicProperties),
                     )
                 notesVectors.add(NoteVectors(tempStartVector, endVector))
             }
@@ -140,10 +147,15 @@ private fun asNotesVectorsForOneMeasure(
     return notesVectors.toList()
 }
 
-private fun calcX(xFromPathNode: Float, graphicProperties: GraphicProperties): Double =
-    (xFromPathNode - graphicProperties.offsetX) * WHOLE_NOTE_WIDTH / graphicProperties.measureWidth
+private fun calcX(
+    xFromPathNode: Float,
+    graphicProperties: GraphicProperties,
+): Double = (xFromPathNode - graphicProperties.offsetX) * WHOLE_NOTE_WIDTH / graphicProperties.measureWidth
 
-private fun calcY(yFromPathNode: Float, graphicProperties: GraphicProperties): Double {
+private fun calcY(
+    yFromPathNode: Float,
+    graphicProperties: GraphicProperties,
+): Double {
     // We need to transform from upper left 0,0 to bottom left 0,0 coordinate system.
     val height = 32 // Why 32? Not sure, but it is the same in AmiMeasuresAsPathData.kt.
 

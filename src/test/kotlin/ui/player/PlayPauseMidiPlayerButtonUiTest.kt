@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 sparetimedevs and respective authors and developers.
+ * Copyright (c) 2023-2025 sparetimedevs and respective authors and developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,9 +46,10 @@ class PlayPauseMidiPlayerButtonUiTest :
     StringSpec({
         "Clicking the play button should play the score" {
             runComposeUiTest {
-                val getScore: suspend () -> Either<DomainError, Score> = suspend {
-                    getExampleScore().right()
-                }
+                val getScore: suspend () -> Either<DomainError, Score> =
+                    suspend {
+                        getExampleScore().right()
+                    }
 
                 val job = SupervisorJob()
                 val coroutineScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
@@ -84,7 +85,7 @@ class PlayPauseMidiPlayerButtonUiTest :
                         "Playing Pitched(duration=NoteDuration(noteValue=QUARTER, modifier=NONE), noteAttributes=NoteAttributes(attack=null, dynamics=null, endDynamics=null, release=null), pitch=Pitch(noteName=G, octave=Octave(value=4), alter=Semitones(value=0.0)))",
                         "Playing Pitched(duration=NoteDuration(noteValue=QUARTER, modifier=NONE), noteAttributes=NoteAttributes(attack=null, dynamics=null, endDynamics=null, release=null), pitch=Pitch(noteName=A, octave=Octave(value=5), alter=Semitones(value=0.0)))",
                         "Playing Pitched(duration=NoteDuration(noteValue=QUARTER, modifier=NONE), noteAttributes=NoteAttributes(attack=null, dynamics=null, endDynamics=null, release=null), pitch=Pitch(noteName=B, octave=Octave(value=5), alter=Semitones(value=0.0)))",
-                        "Playing Pitched(duration=NoteDuration(noteValue=QUARTER, modifier=NONE), noteAttributes=NoteAttributes(attack=null, dynamics=null, endDynamics=null, release=null), pitch=Pitch(noteName=C, octave=Octave(value=5), alter=Semitones(value=0.0)))"
+                        "Playing Pitched(duration=NoteDuration(noteValue=QUARTER, modifier=NONE), noteAttributes=NoteAttributes(attack=null, dynamics=null, endDynamics=null, release=null), pitch=Pitch(noteName=C, octave=Octave(value=5), alter=Semitones(value=0.0)))",
                     )
                 player.notesPlayed() shouldBe expectedNotesPlayed
             }

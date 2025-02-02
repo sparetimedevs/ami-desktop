@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 sparetimedevs and respective authors and developers.
+ * Copyright (c) 2023-2025 sparetimedevs and respective authors and developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,11 +28,11 @@ import androidx.compose.ui.geometry.Offset
 @Composable
 fun ReadGraphicMusicNotationContent(
     component: ReadGraphicMusicNotationComponent,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     var currentPosition by remember { mutableStateOf(Offset.Unspecified) }
 
     Text(
-        "Here we are going to make some nice graphic music representation of the whole score (all instruments/parts, all measures)"
+        "Here we are going to make some nice graphic music representation of the whole score (all instruments/parts, all measures)",
     )
 }

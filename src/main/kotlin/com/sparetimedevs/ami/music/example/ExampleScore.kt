@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 sparetimedevs and respective authors and developers.
+ * Copyright (c) 2023-2025 sparetimedevs and respective authors and developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ fun getExampleScore(): Score {
                     PartInstrument(
                         name = PartInstrumentName.unsafeCreate("Grand Piano"),
                         midiChannel = MidiChannel.unsafeCreate(0),
-                        midiProgram = MidiProgram.unsafeCreate(1)
+                        midiProgram = MidiProgram.unsafeCreate(1),
                     ),
                 listOf(
                     Measure(
@@ -53,24 +53,24 @@ fun getExampleScore(): Score {
                             Note.Pitched(
                                 NoteDuration(NoteValue.QUARTER),
                                 NoteAttributes(null, null, null, null),
-                                Pitch(NoteName.C, Octave.unsafeCreate(4))
+                                Pitch(NoteName.C, Octave.unsafeCreate(4)),
                             ),
                             Note.Pitched(
                                 NoteDuration(NoteValue.QUARTER),
                                 NoteAttributes(null, null, null, null),
-                                Pitch(NoteName.D, Octave.unsafeCreate(4))
+                                Pitch(NoteName.D, Octave.unsafeCreate(4)),
                             ),
                             Note.Pitched(
                                 NoteDuration(NoteValue.QUARTER),
                                 NoteAttributes(null, null, null, null),
-                                Pitch(NoteName.E, Octave.unsafeCreate(4))
+                                Pitch(NoteName.E, Octave.unsafeCreate(4)),
                             ),
                             Note.Pitched(
                                 NoteDuration(NoteValue.QUARTER),
                                 NoteAttributes(null, null, null, null),
-                                Pitch(NoteName.F, Octave.unsafeCreate(4))
+                                Pitch(NoteName.F, Octave.unsafeCreate(4)),
                             ),
-                        )
+                        ),
                     ),
                     Measure(
                         null,
@@ -78,27 +78,27 @@ fun getExampleScore(): Score {
                             Note.Pitched(
                                 NoteDuration(NoteValue.QUARTER),
                                 NoteAttributes(null, null, null, null),
-                                Pitch(NoteName.G, Octave.unsafeCreate(4))
+                                Pitch(NoteName.G, Octave.unsafeCreate(4)),
                             ),
                             Note.Pitched(
                                 NoteDuration(NoteValue.QUARTER),
                                 NoteAttributes(null, null, null, null),
-                                Pitch(NoteName.A, Octave.unsafeCreate(5))
+                                Pitch(NoteName.A, Octave.unsafeCreate(5)),
                             ),
                             Note.Pitched(
                                 NoteDuration(NoteValue.QUARTER),
                                 NoteAttributes(null, null, null, null),
-                                Pitch(NoteName.B, Octave.unsafeCreate(5))
+                                Pitch(NoteName.B, Octave.unsafeCreate(5)),
                             ),
                             Note.Pitched(
                                 NoteDuration(NoteValue.QUARTER),
                                 NoteAttributes(null, null, null, null),
-                                Pitch(NoteName.C, Octave.unsafeCreate(5))
-                            )
-                        )
+                                Pitch(NoteName.C, Octave.unsafeCreate(5)),
+                            ),
+                        ),
                     ),
-                )
-            )
+                ),
+            ),
         )
 
     return Score(ScoreId.unsafeCreate("example-score"), null, parts)

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 sparetimedevs and respective authors and developers.
+ * Copyright (c) 2023-2025 sparetimedevs and respective authors and developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,11 +54,11 @@ var motionEvent by mutableStateOf(ACTION_IDLE)
 @Composable
 fun PlaceGraphicMusicNotationContent(
     component: PlaceGraphicMusicNotationComponent,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Box(
         modifier =
-            modifier.verticalScroll(rememberScrollState()).horizontalScroll(rememberScrollState())
+            modifier.verticalScroll(rememberScrollState()).horizontalScroll(rememberScrollState()),
     ) {
         var currentPosition by remember { mutableStateOf(Offset.Unspecified) }
 
@@ -80,8 +80,9 @@ fun PlaceGraphicMusicNotationContent(
                             // more
                             val event: PointerEvent = awaitPointerEvent()
                             event.changes.forEach { pointerInputChange: PointerInputChange ->
-                                if (pointerInputChange.positionChange() != Offset.Zero)
+                                if (pointerInputChange.positionChange() != Offset.Zero) {
                                     pointerInputChange.consume()
+                                }
                             }
                             motionEvent = ACTION_MOVE
                             currentPosition = event.changes.first().position
@@ -89,7 +90,7 @@ fun PlaceGraphicMusicNotationContent(
 
                         motionEvent = ACTION_IDLE
                     }
-                }
+                },
         ) {
             when (motionEvent) {
                 ACTION_IDLE -> {
@@ -156,7 +157,7 @@ fun PlaceGraphicMusicNotationContent(
             drawPath(
                 path = pathData.asComposePath(),
                 color = circleColor,
-                style = Stroke(width = getCircleSize, cap = StrokeCap.Round)
+                style = Stroke(width = getCircleSize, cap = StrokeCap.Round),
             )
         }
     }

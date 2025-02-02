@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 sparetimedevs and respective authors and developers.
+ * Copyright (c) 2023-2025 sparetimedevs and respective authors and developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,9 +34,8 @@ val FeatureFlagForPlacingFunctionalityOn = false
 @Composable
 fun GraphicMusicNotationModeButton(
     currentMode: GraphicMusicNotationMode,
-    changeModeFunction: suspend (GraphicMusicNotationMode) -> Unit
+    changeModeFunction: suspend (GraphicMusicNotationMode) -> Unit,
 ) {
-
     val coroutineScope = rememberCoroutineScope()
 
     TextButton(
@@ -82,12 +81,12 @@ fun GraphicMusicNotationModeButton(
             }
         },
         colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colors.secondary),
-        elevation = ButtonDefaults.elevation()
+        elevation = ButtonDefaults.elevation(),
     )
 }
 
 enum class GraphicMusicNotationMode {
     DRAWING,
     READING,
-    PLACING
+    PLACING,
 }

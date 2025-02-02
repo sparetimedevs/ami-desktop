@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 sparetimedevs and respective authors and developers.
+ * Copyright (c) 2023-2025 sparetimedevs and respective authors and developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@ import com.sparetimedevs.ami.app.piano.PianoComponent
 
 // https://github.com/arkivanov/Decompose/blob/9afbe647a7345e458a7e39c5c198a6e9e19fb9ca/sample/shared/shared/src/commonMain/kotlin/com/arkivanov/sample/shared/root/RootComponent.kt#L10
 interface RootComponent {
-
     val childStack: Value<ChildStack<*, Child>>
 
     fun onPianoTabClicked()
@@ -31,11 +30,12 @@ interface RootComponent {
     fun onGraphicMusicNotationTabClicked()
 
     sealed class Child {
-
-        class PianoChild(val component: PianoComponent) : Child()
+        class PianoChild(
+            val component: PianoComponent,
+        ) : Child()
 
         class GraphicMusicNotationMultiPaneChild(
-            val component: GraphicMusicNotationMultiPaneComponent
+            val component: GraphicMusicNotationMultiPaneComponent,
         ) : Child()
     }
 }

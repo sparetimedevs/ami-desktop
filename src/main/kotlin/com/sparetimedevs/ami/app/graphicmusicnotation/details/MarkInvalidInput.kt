@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 sparetimedevs and respective authors and developers.
+ * Copyright (c) 2023-2025 sparetimedevs and respective authors and developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,14 +25,13 @@ import com.sparetimedevs.ami.music.input.validation.ValidationIdentifierForMeasu
 import com.sparetimedevs.ami.music.input.validation.ValidationIdentifierForNote
 
 class MarkInvalidInput {
-
     fun markInvalidNotesAndMeasuresRed(
         validationIdentifier: ValidationIdentifier,
         graphicProperties: GraphicProperties,
         pathData: List<PathNode>,
         accumulatedErrorMarkingPathData: List<PathNode> = emptyList(),
-    ): List<PathNode> {
-        return when (validationIdentifier) {
+    ): List<PathNode> =
+        when (validationIdentifier) {
             is ValidationIdentifierForNote ->
                 markNoteRed(
                     validationIdentifier,
@@ -48,7 +47,6 @@ class MarkInvalidInput {
                 )
             else -> accumulatedErrorMarkingPathData
         }
-    }
 
     private fun markNoteRed(
         validationIdentifierForNote: ValidationIdentifierForNote,
@@ -58,7 +56,7 @@ class MarkInvalidInput {
     ): List<PathNode> {
         val validationIdentifierForMeasure =
             returnFirstMeasureValidationIdentifier(
-                validationIdentifierForNote.validationIdentifierParent
+                validationIdentifierForNote.validationIdentifierParent,
             )
         val measureIndex = validationIdentifierForMeasure?.measureIndex
         val noteIndex = validationIdentifierForNote.noteIndex
@@ -76,11 +74,13 @@ class MarkInvalidInput {
     }
 
     private tailrec fun returnFirstMeasureValidationIdentifier(
-        validationIdentifier: ValidationIdentifier
+        validationIdentifier: ValidationIdentifier,
     ): ValidationIdentifierForMeasure? =
-        if (validationIdentifier is ValidationIdentifierForMeasure) validationIdentifier
-        else if (validationIdentifier is NoValidationIdentifier) null
-        else {
+        if (validationIdentifier is ValidationIdentifierForMeasure) {
+            validationIdentifier
+        } else if (validationIdentifier is NoValidationIdentifier) {
+            null
+        } else {
             returnFirstMeasureValidationIdentifier(validationIdentifier.validationIdentifierParent)
         }
 
@@ -90,10 +90,11 @@ class MarkInvalidInput {
         accumulatedErrorMarkingPathData: List<PathNode>,
     ): List<PathNode> {
         val xStart: Float =
-            (validationIdentifierForMeasure.measureIndex *
+            (
+                validationIdentifierForMeasure.measureIndex *
                     (graphicProperties.measureWidth + graphicProperties.spaceBetweenMeasures) +
-                    graphicProperties.offsetX)
-                .toFloat()
+                    graphicProperties.offsetX
+            ).toFloat()
 
         val errorMarkingPathData: List<PathNode> =
             PathBuilder()

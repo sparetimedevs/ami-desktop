@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 sparetimedevs and respective authors and developers.
+ * Copyright (c) 2023-2025 sparetimedevs and respective authors and developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,10 +30,11 @@ fun asNotesVectors(measure: Measure): List<NoteVectors> = vectors(notes = measur
 
 private tailrec fun vectors(
     acc: List<NoteVectors> = emptyList(),
-    notes: List<Note>
+    notes: List<Note>,
 ): List<NoteVectors> =
-    if (notes.isEmpty()) acc
-    else {
+    if (notes.isEmpty()) {
+        acc
+    } else {
         val note = notes.first()
         val (startX: Double, endX: Double) =
             if (acc.isEmpty()) {
@@ -50,11 +51,11 @@ private tailrec fun vectors(
                         .plus(note.pitches.map { vectorComponentY(it) })
                 is Note.Rest ->
                     listOf(
-                        -7.5
+                        -7.5,
                     ) // Probably want to reevaluate if this is a good value for a rest note.
                 is Note.Unpitched ->
                     listOf(
-                        570.0
+                        570.0,
                     ) // Probably want to reevaluate if this is a good value for unpitched note.
             }
 
@@ -63,29 +64,34 @@ private tailrec fun vectors(
         vectors(newAcc, notes.tail())
     }
 
-private fun vectorComponentXAtEnd(note: Note, currentX: Double): Double =
-    currentX + (note.duration.value * 400)
+private fun vectorComponentXAtEnd(
+    note: Note,
+    currentX: Double,
+): Double = currentX + (note.duration.value * 400)
 
-private fun vectorComponentY(pitch: Pitch): Double =
-    vectorComponentY(pitch.noteName) + (pitch.octave.value * 6)
+private fun vectorComponentY(pitch: Pitch): Double = vectorComponentY(pitch.noteName) + (pitch.octave.value * 6)
 
 private fun vectorComponentY(noteName: NoteName): Double =
     when (noteName) {
         NoteName.A_FLAT -> 0.0
         NoteName.A -> 0.5
         NoteName.A_SHARP,
-        NoteName.B_FLAT -> 1.0
+        NoteName.B_FLAT,
+        -> 1.0
         NoteName.B -> 1.5
         NoteName.C -> 2.0
         NoteName.C_SHARP,
-        NoteName.D_FLAT -> 2.5
+        NoteName.D_FLAT,
+        -> 2.5
         NoteName.D -> 3.0
         NoteName.D_SHARP,
-        NoteName.E_FLAT -> 3.5
+        NoteName.E_FLAT,
+        -> 3.5
         NoteName.E -> 4.0
         NoteName.F -> 4.5
         NoteName.F_SHARP,
-        NoteName.G_FLAT -> 5.0
+        NoteName.G_FLAT,
+        -> 5.0
         NoteName.G -> 5.5
         NoteName.G_SHARP -> 6.0
     }

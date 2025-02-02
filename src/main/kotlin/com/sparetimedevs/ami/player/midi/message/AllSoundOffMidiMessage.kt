@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 sparetimedevs and respective authors and developers.
+ * Copyright (c) 2023-2025 sparetimedevs and respective authors and developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,8 +37,9 @@ val AllSoundOffOnChannel13MidiMessage: MidiMessage = AllSoundOffMidiMessage(13)
 val AllSoundOffOnChannel14MidiMessage: MidiMessage = AllSoundOffMidiMessage(14)
 val AllSoundOffOnChannel15MidiMessage: MidiMessage = AllSoundOffMidiMessage(15)
 
-private class AllSoundOffMidiMessage(data: ByteArray) : MidiMessage(data) {
-
+private class AllSoundOffMidiMessage(
+    data: ByteArray,
+) : MidiMessage(data) {
     constructor(channel: Int) : this(ByteArray(3)) {
         // https://midi.org/summary-of-midi-1-0-messages
         // All sound off on channel specified

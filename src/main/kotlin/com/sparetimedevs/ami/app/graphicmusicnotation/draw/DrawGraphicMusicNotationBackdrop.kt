@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 sparetimedevs and respective authors and developers.
+ * Copyright (c) 2023-2025 sparetimedevs and respective authors and developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ val BackgroundColor: Color = Color.White
 fun DrawBackdrop(
     modifier: Modifier = Modifier,
     backdropLines: List<TheLineThatRepresentsAPitch>,
-    lineThickness: Float
+    lineThickness: Float,
 ) {
     Canvas(modifier = modifier.fillMaxSize().background(BackgroundColor)) {
         drawBackdrop(backdropLines, lineThickness)
@@ -40,13 +40,13 @@ fun DrawBackdrop(
 
 private fun DrawScope.drawBackdrop(
     backdropLines: List<TheLineThatRepresentsAPitch>,
-    lineThickness: Float
-): Unit {
+    lineThickness: Float,
+) {
     backdropLines.forEach { l: TheLineThatRepresentsAPitch ->
         drawPath(
             path = l.pathData.asComposePath(),
             color = l.color,
-            style = Stroke(width = lineThickness)
+            style = Stroke(width = lineThickness),
         )
     }
 }

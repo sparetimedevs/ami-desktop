@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 sparetimedevs and respective authors and developers.
+ * Copyright (c) 2023-2025 sparetimedevs and respective authors and developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,14 +25,15 @@ import com.sparetimedevs.ami.music.data.kotlin.note.NoteValue
 import com.sparetimedevs.ami.music.data.kotlin.note.Octave
 import com.sparetimedevs.ami.music.data.kotlin.note.Pitch
 import com.sparetimedevs.ami.player.midi.helperFunForDurationOfNoteToJavaTimeDuration
-import java.time.Duration
-import java.time.LocalDateTime
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.time.Duration
+import java.time.LocalDateTime
 
-abstract class Player(playerSettings: PlayerSettings) {
-
+abstract class Player(
+    playerSettings: PlayerSettings,
+) {
     private var playerSettings: PlayerSettings
 
     init {
@@ -56,37 +57,40 @@ abstract class Player(playerSettings: PlayerSettings) {
             Note.Pitched(
                 NoteDuration(NoteValue.QUARTER),
                 NoteAttributes(null, null, null, null),
-                Pitch(NoteName.G, Octave.unsafeCreate(4))
+                Pitch(NoteName.G, Octave.unsafeCreate(4)),
             ),
             Note.Pitched(
                 NoteDuration(NoteValue.QUARTER),
                 NoteAttributes(null, null, null, null),
-                Pitch(NoteName.E, Octave.unsafeCreate(4))
+                Pitch(NoteName.E, Octave.unsafeCreate(4)),
             ),
             Note.Pitched(
                 NoteDuration(NoteValue.QUARTER),
                 NoteAttributes(null, null, null, null),
-                Pitch(NoteName.E, Octave.unsafeCreate(4))
+                Pitch(NoteName.E, Octave.unsafeCreate(4)),
             ),
             Note.Pitched(
                 NoteDuration(NoteValue.QUARTER),
                 NoteAttributes(null, null, null, null),
-                Pitch(NoteName.E, Octave.unsafeCreate(4))
-            )
+                Pitch(NoteName.E, Octave.unsafeCreate(4)),
+            ),
         )
 
     open suspend fun stop() {
         stopEverything()
     }
 
-    suspend fun play(measures: List<Measure>, at: LocalDateTime) {
+    suspend fun play(
+        measures: List<Measure>,
+        at: LocalDateTime,
+    ) {
         coroutineScope {
             println("Playing measures $measures")
             launch {
                 play(
                     measures.flatMap { measure -> measure.notes },
                     at,
-                    playerSettings.scorePlayerChannelNumber
+                    playerSettings.scorePlayerChannelNumber,
                 )
             }
             launch {
@@ -95,14 +99,18 @@ abstract class Player(playerSettings: PlayerSettings) {
                     play(
                         metronomeNotesForAllMeasures,
                         at,
-                        playerSettings.metronomePlayerChannelNumber
+                        playerSettings.metronomePlayerChannelNumber,
                     )
                 }
             }
         }
     }
 
-    private suspend fun play(notes: List<Note>, at: LocalDateTime, onChannelNumber: Int) {
+    private suspend fun play(
+        notes: List<Note>,
+        at: LocalDateTime,
+        onChannelNumber: Int,
+    ) {
         val listOfNotesWithTheTotalDurationBeforeThatNoteIsPlayed =
             notes
                 .mapIndexed { index, note ->
@@ -113,14 +121,14 @@ abstract class Player(playerSettings: PlayerSettings) {
                             val previousNote: Note = notes[index - 1]
                             helperFunForDurationOfNoteToJavaTimeDuration(
                                 previousNote,
-                                playerSettings.metronome
+                                playerSettings.metronome,
                             )
                         }
                     durationOfPreviousNote to note
-                }
-                .runningReduce {
+                }.runningReduce {
                     (accDuration: Duration, _: Note),
-                    (nextNoteDuration: Duration, nextNote: Note) ->
+                    (nextNoteDuration: Duration, nextNote: Note),
+                    ->
                     accDuration.plus(nextNoteDuration) to nextNote
                 }
 
@@ -129,19 +137,28 @@ abstract class Player(playerSettings: PlayerSettings) {
             schedule(playAt) { playNote(note, onChannelNumber) }
             val noteOffAt =
                 playAt.plus(
-                    helperFunForDurationOfNoteToJavaTimeDuration(note, playerSettings.metronome)
+                    helperFunForDurationOfNoteToJavaTimeDuration(note, playerSettings.metronome),
                 )
             schedule(noteOffAt) { stopNote(note, onChannelNumber) }
         }
     }
 
-    abstract fun playNote(note: Note, onChannelNumber: Int)
+    abstract fun playNote(
+        note: Note,
+        onChannelNumber: Int,
+    )
 
-    abstract fun stopNote(note: Note, onChannelNumber: Int)
+    abstract fun stopNote(
+        note: Note,
+        onChannelNumber: Int,
+    )
 
     abstract fun stopEverything()
 
-    private suspend fun schedule(time: LocalDateTime, function: () -> Unit) = coroutineScope {
+    private suspend fun schedule(
+        time: LocalDateTime,
+        function: () -> Unit,
+    ) = coroutineScope {
         launch {
             delay(Duration.between(LocalDateTime.now(), time).toMillis())
             function()

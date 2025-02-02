@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 sparetimedevs and respective authors and developers.
+ * Copyright (c) 2023-2025 sparetimedevs and respective authors and developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,58 +31,61 @@ import io.kotest.matchers.shouldBe
 
 class ValidationIdentifierUtilsTest :
     StringSpec({
-        "containsValidationIdentifierForPart should return true when there is a ValidationIdentifierForPart with the given partId in the hierarchy" {
-            val scoreId = ScoreId.unsafeCreate("s-1")
-            val partId = PartId.unsafeCreate("p-1")
-            val validationIdentifierForScore =
-                ValidationIdentifierForScore(scoreId, NoValidationIdentifier)
-            val validationIdentifierForPart =
-                ValidationIdentifierForPart(partId, validationIdentifierForScore)
-            val validationIdentifierForMeasure =
-                ValidationIdentifierForMeasure(2, validationIdentifierForPart)
-            val validationIdentifierForNote =
-                ValidationIdentifierForNote(3, validationIdentifierForMeasure)
+        "containsValidationIdentifierForPart should return true " +
+            "when there is a ValidationIdentifierForPart with the given partId in the hierarchy" {
+                val scoreId = ScoreId.unsafeCreate("s-1")
+                val partId = PartId.unsafeCreate("p-1")
+                val validationIdentifierForScore =
+                    ValidationIdentifierForScore(scoreId, NoValidationIdentifier)
+                val validationIdentifierForPart =
+                    ValidationIdentifierForPart(partId, validationIdentifierForScore)
+                val validationIdentifierForMeasure =
+                    ValidationIdentifierForMeasure(2, validationIdentifierForPart)
+                val validationIdentifierForNote =
+                    ValidationIdentifierForNote(3, validationIdentifierForMeasure)
 
-            val result = containsValidationIdentifierForPart(validationIdentifierForNote, partId)
+                val result = containsValidationIdentifierForPart(validationIdentifierForNote, partId)
 
-            result shouldBe true
-        }
+                result shouldBe true
+            }
 
-        "containsValidationIdentifierForPart should return false when there is no ValidationIdentifierForPart with the given partId in the hierarchy" {
-            val scoreId = ScoreId.unsafeCreate("s-1")
-            val partId = PartId.unsafeCreate("p-1")
-            val validationIdentifierForScore =
-                ValidationIdentifierForScore(scoreId, NoValidationIdentifier)
-            val validationIdentifierForPart =
-                ValidationIdentifierForPart(partId, validationIdentifierForScore)
-            val validationIdentifierForMeasure =
-                ValidationIdentifierForMeasure(2, validationIdentifierForPart)
-            val validationIdentifierForNote =
-                ValidationIdentifierForNote(3, validationIdentifierForMeasure)
+        "containsValidationIdentifierForPart should return false " +
+            "when there is no ValidationIdentifierForPart with the given partId in the hierarchy" {
+                val scoreId = ScoreId.unsafeCreate("s-1")
+                val partId = PartId.unsafeCreate("p-1")
+                val validationIdentifierForScore =
+                    ValidationIdentifierForScore(scoreId, NoValidationIdentifier)
+                val validationIdentifierForPart =
+                    ValidationIdentifierForPart(partId, validationIdentifierForScore)
+                val validationIdentifierForMeasure =
+                    ValidationIdentifierForMeasure(2, validationIdentifierForPart)
+                val validationIdentifierForNote =
+                    ValidationIdentifierForNote(3, validationIdentifierForMeasure)
 
-            val result =
-                containsValidationIdentifierForPart(
-                    validationIdentifierForNote,
-                    PartId.unsafeCreate("p-2"),
-                )
+                val result =
+                    containsValidationIdentifierForPart(
+                        validationIdentifierForNote,
+                        PartId.unsafeCreate("p-2"),
+                    )
 
-            result shouldBe false
-        }
+                result shouldBe false
+            }
 
-        "containsValidationIdentifierForPart should return false when there is no ValidationIdentifierForPart and there is no NoValidationIdentifier in the hierarchy" {
-            val validationIdentifierForMeasure =
-                ValidationIdentifierForMeasure(2, NoValidationIdentifierForTest)
-            val validationIdentifierForNote =
-                ValidationIdentifierForNote(3, validationIdentifierForMeasure)
+        "containsValidationIdentifierForPart should return false " +
+            "when there is no ValidationIdentifierForPart and there is no NoValidationIdentifier in the hierarchy" {
+                val validationIdentifierForMeasure =
+                    ValidationIdentifierForMeasure(2, NoValidationIdentifierForTest)
+                val validationIdentifierForNote =
+                    ValidationIdentifierForNote(3, validationIdentifierForMeasure)
 
-            val result =
-                containsValidationIdentifierForPart(
-                    validationIdentifierForNote,
-                    PartId.unsafeCreate("p-1"),
-                )
+                val result =
+                    containsValidationIdentifierForPart(
+                        validationIdentifierForNote,
+                        PartId.unsafeCreate("p-1"),
+                    )
 
-            result shouldBe false
-        }
+                result shouldBe false
+            }
     })
 
 object NoValidationIdentifierForTest : ValidationIdentifier {

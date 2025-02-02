@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 sparetimedevs and respective authors and developers.
+ * Copyright (c) 2023-2025 sparetimedevs and respective authors and developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,11 +48,9 @@ import com.sparetimedevs.ami.music.input.validation.ValidationIdentifierForScore
 internal class DefaultScoreDetailsComponent(
     componentContext: ComponentContext,
     private val scoreStore: ScoreStore,
-) :
-    ScoreDetailsComponent,
+) : ScoreDetailsComponent,
     ComponentContext by componentContext,
     DisposableScope by componentContext.disposableScope() {
-
     override val scoreValue: Value<Score> = scoreStore.scoreValue
 
     override fun createNewPart() {
@@ -60,9 +58,9 @@ internal class DefaultScoreDetailsComponent(
             scoreValue.value.copy(
                 parts =
                     scoreValue.value.parts.plus(
-                        Part(id = PartId(), name = null, instrument = null, measures = emptyList())
-                    )
-            )
+                        Part(id = PartId(), name = null, instrument = null, measures = emptyList()),
+                    ),
+            ),
         )
     }
 
@@ -97,7 +95,8 @@ internal class DefaultScoreDetailsComponent(
             Either.zipOrAccumulate(validatedScoreId, validatedScoreTitle, validatedParts) {
                 id: ScoreId,
                 title: ScoreTitle?,
-                parts: List<Part> ->
+                parts: List<Part>,
+                ->
                 scoreValue.value.copy(id = id, title = title, parts = parts)
             }
         return accumulatedValidatedFields.map { score: Score -> scoreStore.saveScore(score) }
@@ -120,8 +119,7 @@ internal class DefaultScoreDetailsComponent(
                             s,
                             ValidationIdentifierForPart(partId, validationIdentifier),
                         )
-                }
-                .toMap()
+                }.toMap()
                 .let { m -> either { mapOrAccumulate(m) { it.value.bindNel() } } }
 
         val validatedPartNames: EitherNel<ValidationError, Map<PartId, PartName?>> =
@@ -132,8 +130,7 @@ internal class DefaultScoreDetailsComponent(
                             s,
                             ValidationIdentifierForPart(partId, validationIdentifier),
                         )
-                }
-                .toMap()
+                }.toMap()
                 .let { m -> either { mapOrAccumulate(m) { it.value.bindNel() } } }
 
         val validatedPartInstrumentNames:
@@ -145,57 +142,52 @@ internal class DefaultScoreDetailsComponent(
                             s,
                             ValidationIdentifierForPart(partId, validationIdentifier),
                         )
-                }
-                .toMap()
+                }.toMap()
                 .let { m -> either { mapOrAccumulate(m) { it.value.bindNel() } } }
 
         val validatedPartInstrumentMidiChannels =
             partInstrumentMidiChannels
                 .map { (partId: PartId, s: String?) ->
-                    Either.catch { s?.toByte() }
+                    Either
+                        .catch { s?.toByte() }
                         .mapLeft {
                             ValidationError(
-                                    message = "MIDI channel should be a number but was $s",
-                                    validationErrorForProperty =
-                                        validationErrorForProperty<MidiChannel>(),
-                                    validationIdentifier =
-                                        ValidationIdentifierForPart(partId, validationIdentifier),
-                                )
-                                .nel()
-                        }
-                        .flatMap { byte ->
-                            MidiChannel.validate(
+                                message = "MIDI channel should be a number but was $s",
+                                validationErrorForProperty =
+                                    validationErrorForProperty<MidiChannel>(),
+                                validationIdentifier =
+                                    ValidationIdentifierForPart(partId, validationIdentifier),
+                            ).nel()
+                        }.flatMap { byte ->
+                            MidiChannel
+                                .validate(
                                     byte,
                                     ValidationIdentifierForPart(partId, validationIdentifier),
-                                )
-                                .map { midiChannel -> partId to midiChannel }
+                                ).map { midiChannel -> partId to midiChannel }
                         }
-                }
-                .let { l -> either { mapOrAccumulate(l) { it.bindNel() }.toMap() } }
+                }.let { l -> either { mapOrAccumulate(l) { it.bindNel() }.toMap() } }
 
         val validatedPartInstrumentMidiPrograms =
             partInstrumentMidiPrograms
                 .map { (partId: PartId, s: String?) ->
-                    Either.catch { s?.toByte() }
+                    Either
+                        .catch { s?.toByte() }
                         .mapLeft {
                             ValidationError(
-                                    message = "MIDI program should be a number but was $s",
-                                    validationErrorForProperty =
-                                        validationErrorForProperty<MidiProgram>(),
-                                    validationIdentifier =
-                                        ValidationIdentifierForPart(partId, validationIdentifier),
-                                )
-                                .nel()
-                        }
-                        .flatMap { byte ->
-                            MidiProgram.validate(
+                                message = "MIDI program should be a number but was $s",
+                                validationErrorForProperty =
+                                    validationErrorForProperty<MidiProgram>(),
+                                validationIdentifier =
+                                    ValidationIdentifierForPart(partId, validationIdentifier),
+                            ).nel()
+                        }.flatMap { byte ->
+                            MidiProgram
+                                .validate(
                                     byte,
                                     ValidationIdentifierForPart(partId, validationIdentifier),
-                                )
-                                .map { midiProgram -> partId to midiProgram }
+                                ).map { midiProgram -> partId to midiProgram }
                         }
-                }
-                .let { l -> either { mapOrAccumulate(l) { it.bindNel() }.toMap() } }
+                }.let { l -> either { mapOrAccumulate(l) { it.bindNel() }.toMap() } }
 
         return Either.zipOrAccumulate(
             validatedPartIds,
@@ -208,7 +200,8 @@ internal class DefaultScoreDetailsComponent(
             partNames,
             partInstrumentNames,
             partInstrumentMidiChannels,
-            partInstrumentMidiPrograms ->
+            partInstrumentMidiPrograms,
+            ->
             existingParts
                 .map { part: Part ->
                     if (partNames.containsKey(part.id)) {
@@ -216,49 +209,45 @@ internal class DefaultScoreDetailsComponent(
                     } else {
                         part
                     }
-                }
-                .map { part: Part ->
+                }.map { part: Part ->
                     if (partInstrumentNames.containsKey(part.id)) {
                         part.copy(
                             instrument =
                                 part.instrument?.copy(name = partInstrumentNames.getValue(part.id))
-                                    ?: PartInstrument(name = partInstrumentNames.getValue(part.id))
+                                    ?: PartInstrument(name = partInstrumentNames.getValue(part.id)),
                         )
                     } else {
                         part
                     }
-                }
-                .map { part: Part ->
+                }.map { part: Part ->
                     if (partInstrumentMidiChannels.containsKey(part.id)) {
                         part.copy(
                             instrument =
                                 part.instrument?.copy(
-                                    midiChannel = partInstrumentMidiChannels.getValue(part.id)
+                                    midiChannel = partInstrumentMidiChannels.getValue(part.id),
                                 )
                                     ?: PartInstrument(
-                                        midiChannel = partInstrumentMidiChannels.getValue(part.id)
-                                    )
+                                        midiChannel = partInstrumentMidiChannels.getValue(part.id),
+                                    ),
                         )
                     } else {
                         part
                     }
-                }
-                .map { part: Part ->
+                }.map { part: Part ->
                     if (partInstrumentMidiPrograms.containsKey(part.id)) {
                         part.copy(
                             instrument =
                                 part.instrument?.copy(
-                                    midiProgram = partInstrumentMidiPrograms.getValue(part.id)
+                                    midiProgram = partInstrumentMidiPrograms.getValue(part.id),
                                 )
                                     ?: PartInstrument(
-                                        midiProgram = partInstrumentMidiPrograms.getValue(part.id)
-                                    )
+                                        midiProgram = partInstrumentMidiPrograms.getValue(part.id),
+                                    ),
                         )
                     } else {
                         part
                     }
-                }
-                .map { part: Part ->
+                }.map { part: Part ->
                     // Changing the part ID if it was changed as last, else the other changes
                     // wouldn't work because the part ID is used as a key in the maps
                     if (partIds.containsKey(part.id)) {

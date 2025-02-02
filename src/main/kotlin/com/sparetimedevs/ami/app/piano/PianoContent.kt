@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 sparetimedevs and respective authors and developers.
+ * Copyright (c) 2023-2025 sparetimedevs and respective authors and developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,9 +58,10 @@ fun PianoContent() {
     Box(modifier = Modifier.fillMaxSize()) {
         Row(
             modifier =
-                Modifier.wrapContentSize()
+                Modifier
+                    .wrapContentSize()
                     .align(Alignment.BottomCenter)
-                    .absolutePadding(10.dp, 10.dp, 10.dp, 10.dp)
+                    .absolutePadding(10.dp, 10.dp, 10.dp, 10.dp),
         ) {
             PianoKeysForOctave(Octave.unsafeCreate(3), player, playerSettings)
             PianoKeysForOctave(Octave.unsafeCreate(4), player, playerSettings)
@@ -70,7 +71,11 @@ fun PianoContent() {
 }
 
 @Composable
-fun PianoKeysForOctave(octave: Octave, player: Player, playerSettings: PlayerSettings): Unit {
+fun PianoKeysForOctave(
+    octave: Octave,
+    player: Player,
+    playerSettings: PlayerSettings,
+) {
     PianoKey(Pitch(noteName = NoteName.C, octave = octave), player, playerSettings)
     PianoKeyBlack(Pitch(noteName = NoteName.C_SHARP, octave = octave), player, playerSettings)
     PianoKey(Pitch(noteName = NoteName.D, octave = octave), player, playerSettings)
@@ -83,22 +88,26 @@ fun PianoKeysForOctave(octave: Octave, player: Player, playerSettings: PlayerSet
     PianoKey(
         Pitch(noteName = NoteName.A, octave = Octave.unsafeCreate(octave.value.inc())),
         player,
-        playerSettings
+        playerSettings,
     )
     PianoKeyBlack(
         Pitch(noteName = NoteName.A_SHARP, octave = Octave.unsafeCreate(octave.value.inc())),
         player,
-        playerSettings
+        playerSettings,
     )
     PianoKey(
         Pitch(noteName = NoteName.B, octave = Octave.unsafeCreate(octave.value.inc())),
         player,
-        playerSettings
+        playerSettings,
     )
 }
 
 @Composable
-fun PianoKey(pitch: Pitch, player: Player, playerSettings: PlayerSettings): Unit {
+fun PianoKey(
+    pitch: Pitch,
+    player: Player,
+    playerSettings: PlayerSettings,
+) {
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
 
@@ -108,7 +117,7 @@ fun PianoKey(pitch: Pitch, player: Player, playerSettings: PlayerSettings): Unit
         println("Pressed : ${pitch.noteName}")
         player.playNote(
             wrapInNoteUntilWeHaveSomethingBetter,
-            playerSettings.scorePlayerChannelNumber
+            playerSettings.scorePlayerChannelNumber,
         )
         // Use if + DisposableEffect to wait for the press action is completed
         DisposableEffect(Unit) {
@@ -116,7 +125,7 @@ fun PianoKey(pitch: Pitch, player: Player, playerSettings: PlayerSettings): Unit
                 println("released : ${pitch.noteName}")
                 player.stopNote(
                     wrapInNoteUntilWeHaveSomethingBetter,
-                    playerSettings.scorePlayerChannelNumber
+                    playerSettings.scorePlayerChannelNumber,
                 )
             }
         }
@@ -127,14 +136,18 @@ fun PianoKey(pitch: Pitch, player: Player, playerSettings: PlayerSettings): Unit
         interactionSource = interactionSource,
         colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFFFF0)),
         modifier = Modifier.height(100.dp).width(30.dp),
-        contentPadding = PaddingValues(0.dp)
+        contentPadding = PaddingValues(0.dp),
     ) {
         pitch.toText()
     }
 }
 
 @Composable
-fun PianoKeyBlack(pitch: Pitch, player: Player, playerSettings: PlayerSettings): Unit {
+fun PianoKeyBlack(
+    pitch: Pitch,
+    player: Player,
+    playerSettings: PlayerSettings,
+) {
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
 
@@ -144,7 +157,7 @@ fun PianoKeyBlack(pitch: Pitch, player: Player, playerSettings: PlayerSettings):
         println("Pressed : ${pitch.noteName}")
         player.playNote(
             wrapInNoteUntilWeHaveSomethingBetter,
-            playerSettings.scorePlayerChannelNumber
+            playerSettings.scorePlayerChannelNumber,
         )
         // Use if + DisposableEffect to wait for the press action is completed
         DisposableEffect(Unit) {
@@ -152,7 +165,7 @@ fun PianoKeyBlack(pitch: Pitch, player: Player, playerSettings: PlayerSettings):
                 println("released : ${pitch.noteName}")
                 player.stopNote(
                     wrapInNoteUntilWeHaveSomethingBetter,
-                    playerSettings.scorePlayerChannelNumber
+                    playerSettings.scorePlayerChannelNumber,
                 )
             }
         }
@@ -163,7 +176,7 @@ fun PianoKeyBlack(pitch: Pitch, player: Player, playerSettings: PlayerSettings):
         interactionSource = interactionSource,
         colors = ButtonDefaults.buttonColors(backgroundColor = Color.DarkGray),
         modifier = Modifier.height(100.dp).width(30.dp),
-        contentPadding = PaddingValues(0.dp)
+        contentPadding = PaddingValues(0.dp),
     ) {
         pitch.toText()
     }

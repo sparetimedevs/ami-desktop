@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 sparetimedevs and respective authors and developers.
+ * Copyright (c) 2023-2025 sparetimedevs and respective authors and developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,9 +35,8 @@ import com.sparetimedevs.ami.player.PlayerContext
 internal fun MusicScoreDetailsContent(
     component: MusicScoreDetailsComponent,
     scoreDetailsComponent: ScoreDetailsComponent,
-    player: Player = dependencyModule.player
+    player: Player = dependencyModule.player,
 ) {
-
     val score by component.scoreValue.subscribeAsState()
 
     val mode by component.modeValue.subscribeAsState()
@@ -56,14 +55,13 @@ internal fun MusicScoreDetailsContent(
             TopAppBarTitleDropDown(
                 text = scoreDisplayTitle,
                 scoreCoreComponent = component,
-                scoreDetailsComponent = scoreDetailsComponent
+                scoreDetailsComponent = scoreDetailsComponent,
             ) { state ->
                 playerContext = playerContext.copy(playerState = state)
             }
         },
         actions = {
-            PlayPauseMidiPlayerButton({ component.updateAndGetScore() }, playerContext, player) {
-                context ->
+            PlayPauseMidiPlayerButton({ component.updateAndGetScore() }, playerContext, player) { context ->
                 playerContext = context
             }
             MetronomeButton(playerSettings.isMetronomeEnabled) { isMetronomeEnabled ->
@@ -72,6 +70,6 @@ internal fun MusicScoreDetailsContent(
             }
             GraphicMusicNotationModeButton(mode, component::changeMode)
             Text(text = "More")
-        }
+        },
     )
 }

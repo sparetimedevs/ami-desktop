@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 sparetimedevs and respective authors and developers.
+ * Copyright (c) 2023-2025 sparetimedevs and respective authors and developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,8 +23,9 @@ import com.sparetimedevs.ami.graphic.GraphicProperties
 import com.sparetimedevs.ami.music.data.kotlin.note.NoteDuration
 import com.sparetimedevs.ami.music.data.kotlin.note.NoteValue
 
-class PathDataStore(private val graphicProperties: GraphicProperties) {
-
+class PathDataStore(
+    private val graphicProperties: GraphicProperties,
+) {
     private val pathData = mutableStateListOf<PathNode>()
 
     private val errorMarkingPathData = mutableStateListOf<PathNode>()
@@ -61,9 +62,8 @@ class PathDataStore(private val graphicProperties: GraphicProperties) {
         return pathData
     }
 
-    private fun correctPathNodeOnXAxes(pathNode: PathNode): PathNode {
-
-        return when (pathNode) {
+    private fun correctPathNodeOnXAxes(pathNode: PathNode): PathNode =
+        when (pathNode) {
             is PathNode.ArcTo -> TODO()
             is PathNode.Close -> TODO()
             is PathNode.CurveTo -> TODO()
@@ -84,7 +84,6 @@ class PathDataStore(private val graphicProperties: GraphicProperties) {
             is PathNode.RelativeVerticalTo -> TODO()
             is PathNode.VerticalTo -> TODO()
         }
-    }
 
     private fun correctPathNodeOnXAxes(x: Float): Float =
         if (x <= graphicProperties.offsetX) {
@@ -95,198 +94,201 @@ class PathDataStore(private val graphicProperties: GraphicProperties) {
             calculatePointOnXAxes(graphicProperties, 1, 0)
         } else if (
             x > calculatePointOnXAxes(graphicProperties, 1, 0) &&
-                x <= calculatePointOnXAxes(graphicProperties, 2, 0)
+            x <= calculatePointOnXAxes(graphicProperties, 2, 0)
         ) {
             calculatePointOnXAxes(graphicProperties, 2, 0)
         } else if (
             x > calculatePointOnXAxes(graphicProperties, 2, 0) &&
-                x <= calculatePointOnXAxes(graphicProperties, 3, 0)
+            x <= calculatePointOnXAxes(graphicProperties, 3, 0)
         ) {
             calculatePointOnXAxes(graphicProperties, 3, 0)
         } else if (
             x > calculatePointOnXAxes(graphicProperties, 3, 0) &&
-                x <= calculatePointOnXAxes(graphicProperties, 4, 0)
+            x <= calculatePointOnXAxes(graphicProperties, 4, 0)
         ) {
             calculatePointOnXAxes(graphicProperties, 4, 0)
         } else if (
             x > calculatePointOnXAxes(graphicProperties, 4, 0) &&
-                x <= calculatePointOnXAxes(graphicProperties, 5, 0)
+            x <= calculatePointOnXAxes(graphicProperties, 5, 0)
         ) {
             calculatePointOnXAxes(graphicProperties, 5, 0)
         } else if (
             x > calculatePointOnXAxes(graphicProperties, 5, 0) &&
-                x <= calculatePointOnXAxes(graphicProperties, 6, 0)
+            x <= calculatePointOnXAxes(graphicProperties, 6, 0)
         ) {
             calculatePointOnXAxes(graphicProperties, 6, 0)
         } else if (
             x > calculatePointOnXAxes(graphicProperties, 6, 0) &&
-                x <= calculatePointOnXAxes(graphicProperties, 7, 0)
+            x <= calculatePointOnXAxes(graphicProperties, 7, 0)
         ) {
             calculatePointOnXAxes(graphicProperties, 7, 0)
         } else if (
             x > calculatePointOnXAxes(graphicProperties, 7, 0) &&
-                x <= calculatePointOnXAxes(graphicProperties, 8, 0)
+            x <= calculatePointOnXAxes(graphicProperties, 8, 0)
         ) {
             calculatePointOnXAxes(graphicProperties, 8, 0)
         } else if (
             x > calculatePointOnXAxes(graphicProperties, 8, 0) &&
-                x <= calculatePointOnXAxes(graphicProperties, 8, 1)
+            x <= calculatePointOnXAxes(graphicProperties, 8, 1)
         ) {
             calculatePointOnXAxes(graphicProperties, 8, 1)
         } else if (
             x > calculatePointOnXAxes(graphicProperties, 8, 1) &&
-                x <= calculatePointOnXAxes(graphicProperties, 9, 1)
+            x <= calculatePointOnXAxes(graphicProperties, 9, 1)
         ) {
             calculatePointOnXAxes(graphicProperties, 9, 1)
         } else if (
             x > calculatePointOnXAxes(graphicProperties, 9, 1) &&
-                x <= calculatePointOnXAxes(graphicProperties, 10, 1)
+            x <= calculatePointOnXAxes(graphicProperties, 10, 1)
         ) {
             calculatePointOnXAxes(graphicProperties, 10, 1)
         } else if (
             x > calculatePointOnXAxes(graphicProperties, 10, 1) &&
-                x <= calculatePointOnXAxes(graphicProperties, 11, 1)
+            x <= calculatePointOnXAxes(graphicProperties, 11, 1)
         ) {
             calculatePointOnXAxes(graphicProperties, 11, 1)
         } else if (
             x > calculatePointOnXAxes(graphicProperties, 11, 1) &&
-                x <= calculatePointOnXAxes(graphicProperties, 12, 1)
+            x <= calculatePointOnXAxes(graphicProperties, 12, 1)
         ) {
             calculatePointOnXAxes(graphicProperties, 12, 1)
         } else if (
             x > calculatePointOnXAxes(graphicProperties, 12, 1) &&
-                x <= calculatePointOnXAxes(graphicProperties, 13, 1)
+            x <= calculatePointOnXAxes(graphicProperties, 13, 1)
         ) {
             calculatePointOnXAxes(graphicProperties, 13, 1)
         } else if (
             x > calculatePointOnXAxes(graphicProperties, 13, 1) &&
-                x <= calculatePointOnXAxes(graphicProperties, 14, 1)
+            x <= calculatePointOnXAxes(graphicProperties, 14, 1)
         ) {
             calculatePointOnXAxes(graphicProperties, 14, 1)
         } else if (
             x > calculatePointOnXAxes(graphicProperties, 14, 1) &&
-                x <= calculatePointOnXAxes(graphicProperties, 15, 1)
+            x <= calculatePointOnXAxes(graphicProperties, 15, 1)
         ) {
             calculatePointOnXAxes(graphicProperties, 15, 1)
         } else if (
             x > calculatePointOnXAxes(graphicProperties, 15, 1) &&
-                x <= calculatePointOnXAxes(graphicProperties, 16, 1)
+            x <= calculatePointOnXAxes(graphicProperties, 16, 1)
         ) {
             calculatePointOnXAxes(graphicProperties, 16, 1)
         } else if (
             x > calculatePointOnXAxes(graphicProperties, 16, 1) &&
-                x <= calculatePointOnXAxes(graphicProperties, 16, 2)
+            x <= calculatePointOnXAxes(graphicProperties, 16, 2)
         ) {
             calculatePointOnXAxes(graphicProperties, 16, 2)
         } else if (
             x > calculatePointOnXAxes(graphicProperties, 16, 2) &&
-                x <= calculatePointOnXAxes(graphicProperties, 17, 2)
+            x <= calculatePointOnXAxes(graphicProperties, 17, 2)
         ) {
             calculatePointOnXAxes(graphicProperties, 17, 2)
         } else if (
             x > calculatePointOnXAxes(graphicProperties, 17, 2) &&
-                x <= calculatePointOnXAxes(graphicProperties, 18, 2)
+            x <= calculatePointOnXAxes(graphicProperties, 18, 2)
         ) {
             calculatePointOnXAxes(graphicProperties, 18, 2)
         } else if (
             x > calculatePointOnXAxes(graphicProperties, 18, 2) &&
-                x <= calculatePointOnXAxes(graphicProperties, 19, 2)
+            x <= calculatePointOnXAxes(graphicProperties, 19, 2)
         ) {
             calculatePointOnXAxes(graphicProperties, 19, 2)
         } else if (
             x > calculatePointOnXAxes(graphicProperties, 19, 2) &&
-                x <= calculatePointOnXAxes(graphicProperties, 20, 2)
+            x <= calculatePointOnXAxes(graphicProperties, 20, 2)
         ) {
             calculatePointOnXAxes(graphicProperties, 20, 2)
         } else if (
             x > calculatePointOnXAxes(graphicProperties, 20, 2) &&
-                x <= calculatePointOnXAxes(graphicProperties, 21, 2)
+            x <= calculatePointOnXAxes(graphicProperties, 21, 2)
         ) {
             calculatePointOnXAxes(graphicProperties, 21, 2)
         } else if (
             x > calculatePointOnXAxes(graphicProperties, 21, 2) &&
-                x <= calculatePointOnXAxes(graphicProperties, 22, 2)
+            x <= calculatePointOnXAxes(graphicProperties, 22, 2)
         ) {
             calculatePointOnXAxes(graphicProperties, 22, 2)
         } else if (
             x > calculatePointOnXAxes(graphicProperties, 22, 2) &&
-                x <= calculatePointOnXAxes(graphicProperties, 23, 2)
+            x <= calculatePointOnXAxes(graphicProperties, 23, 2)
         ) {
             calculatePointOnXAxes(graphicProperties, 23, 2)
         } else if (
             x > calculatePointOnXAxes(graphicProperties, 23, 2) &&
-                x <= calculatePointOnXAxes(graphicProperties, 24, 2)
+            x <= calculatePointOnXAxes(graphicProperties, 24, 2)
         ) {
             calculatePointOnXAxes(graphicProperties, 24, 2)
         } else if (
             x > calculatePointOnXAxes(graphicProperties, 24, 2) &&
-                x <= calculatePointOnXAxes(graphicProperties, 24, 3)
+            x <= calculatePointOnXAxes(graphicProperties, 24, 3)
         ) {
             calculatePointOnXAxes(graphicProperties, 24, 3)
         } else if (
             x > calculatePointOnXAxes(graphicProperties, 24, 3) &&
-                x <= calculatePointOnXAxes(graphicProperties, 25, 3)
+            x <= calculatePointOnXAxes(graphicProperties, 25, 3)
         ) {
             calculatePointOnXAxes(graphicProperties, 25, 3)
         } else if (
             x > calculatePointOnXAxes(graphicProperties, 25, 3) &&
-                x <= calculatePointOnXAxes(graphicProperties, 26, 3)
+            x <= calculatePointOnXAxes(graphicProperties, 26, 3)
         ) {
             calculatePointOnXAxes(graphicProperties, 26, 3)
         } else if (
             x > calculatePointOnXAxes(graphicProperties, 26, 3) &&
-                x <= calculatePointOnXAxes(graphicProperties, 27, 3)
+            x <= calculatePointOnXAxes(graphicProperties, 27, 3)
         ) {
             calculatePointOnXAxes(graphicProperties, 27, 3)
         } else if (
             x > calculatePointOnXAxes(graphicProperties, 27, 3) &&
-                x <= calculatePointOnXAxes(graphicProperties, 28, 3)
+            x <= calculatePointOnXAxes(graphicProperties, 28, 3)
         ) {
             calculatePointOnXAxes(graphicProperties, 28, 3)
         } else if (
             x > calculatePointOnXAxes(graphicProperties, 28, 3) &&
-                x <= calculatePointOnXAxes(graphicProperties, 29, 3)
+            x <= calculatePointOnXAxes(graphicProperties, 29, 3)
         ) {
             calculatePointOnXAxes(graphicProperties, 29, 3)
         } else if (
             x > calculatePointOnXAxes(graphicProperties, 29, 3) &&
-                x <= calculatePointOnXAxes(graphicProperties, 30, 3)
+            x <= calculatePointOnXAxes(graphicProperties, 30, 3)
         ) {
             calculatePointOnXAxes(graphicProperties, 30, 3)
         } else if (
             x > calculatePointOnXAxes(graphicProperties, 30, 3) &&
-                x <= calculatePointOnXAxes(graphicProperties, 31, 3)
+            x <= calculatePointOnXAxes(graphicProperties, 31, 3)
         ) {
             calculatePointOnXAxes(graphicProperties, 31, 3)
         } else if (
             x > calculatePointOnXAxes(graphicProperties, 31, 3) &&
-                x <= calculatePointOnXAxes(graphicProperties, 32, 3)
+            x <= calculatePointOnXAxes(graphicProperties, 32, 3)
         ) {
             calculatePointOnXAxes(graphicProperties, 32, 3)
         } else {
-            (graphicProperties.offsetX +
+            (
+                graphicProperties.offsetX +
                     graphicProperties.measureWidth +
                     graphicProperties.spaceBetweenMeasures +
                     graphicProperties.measureWidth +
                     graphicProperties.spaceBetweenMeasures +
                     graphicProperties.measureWidth +
                     graphicProperties.spaceBetweenMeasures +
-                    graphicProperties.measureWidth)
-                .toFloat()
+                    graphicProperties.measureWidth
+            ).toFloat()
         }
 
     private fun calculatePointOnXAxes(
         graphicProperties: GraphicProperties,
         noteDurationMultiplier: Int,
         spaceBetweenMeasuresMultiplier: Int,
-    ): Float {
-        return ((graphicProperties.offsetX +
-                graphicProperties.measureWidth *
+    ): Float =
+        (
+            (
+                graphicProperties.offsetX +
+                    graphicProperties.measureWidth *
                     NoteDuration(NoteValue._8TH).value *
-                    noteDurationMultiplier) +
-                (graphicProperties.spaceBetweenMeasures * spaceBetweenMeasuresMultiplier))
-            .toFloat()
-    }
+                    noteDurationMultiplier
+            ) +
+                (graphicProperties.spaceBetweenMeasures * spaceBetweenMeasuresMultiplier)
+        ).toFloat()
 
     private fun isStartOfNewNote(pathNode: PathNode): Boolean =
         when (pathNode) {
@@ -299,7 +301,7 @@ class PathDataStore(private val graphicProperties: GraphicProperties) {
         return this.add(pathNode)
     }
 
-    private fun SnapshotStateList<PathNode>.removeLastIfExists(): Unit {
+    private fun SnapshotStateList<PathNode>.removeLastIfExists() {
         if (this.isNotEmpty()) {
             this.removeAt(this.size - 1)
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 sparetimedevs and respective authors and developers.
+ * Copyright (c) 2023-2025 sparetimedevs and respective authors and developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,24 +27,28 @@ import com.sparetimedevs.ami.music.data.kotlin.note.Pitch
 fun createPitchedNote(
     noteName: NoteName,
     octave: Octave = Octave.unsafeCreate(4),
-    duration: NoteValue
+    duration: NoteValue,
 ): Note.Pitched =
     Note.Pitched(
         duration = NoteDuration(duration),
         noteAttributes = NoteAttributes(null, null, null, null),
-        pitch = Pitch(noteName = noteName, octave = octave)
+        pitch = Pitch(noteName = noteName, octave = octave),
     )
 
-fun createChord(rootNote: Pitch, pitches: List<Pitch>, duration: NoteValue): Note.Chord =
+fun createChord(
+    rootNote: Pitch,
+    pitches: List<Pitch>,
+    duration: NoteValue,
+): Note.Chord =
     Note.Chord(
         duration = NoteDuration(duration),
         noteAttributes = NoteAttributes(null, null, null, null),
         rootNote = rootNote,
-        pitches = pitches
+        pitches = pitches,
     )
 
 fun createRestNote(duration: NoteValue): Note.Rest =
     Note.Rest(
         duration = NoteDuration(duration),
-        noteAttributes = NoteAttributes(null, null, null, null)
+        noteAttributes = NoteAttributes(null, null, null, null),
     )

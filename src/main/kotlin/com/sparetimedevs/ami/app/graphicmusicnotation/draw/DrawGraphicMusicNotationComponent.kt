@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 sparetimedevs and respective authors and developers.
+ * Copyright (c) 2023-2025 sparetimedevs and respective authors and developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,6 @@ import com.sparetimedevs.ami.music.data.kotlin.note.Octave
 import com.sparetimedevs.ami.music.data.kotlin.note.Pitch
 
 interface DrawGraphicMusicNotationComponent {
-
     fun getLineThickness(): Float
 
     fun getErrorLineThickness(): Float
@@ -44,9 +43,9 @@ interface DrawGraphicMusicNotationComponent {
 
 class DefaultDrawGraphicMusicNotationComponent(
     componentContext: ComponentContext,
-    private val pathDataStore: PathDataStore
-) : DrawGraphicMusicNotationComponent, ComponentContext by componentContext {
-
+    private val pathDataStore: PathDataStore,
+) : DrawGraphicMusicNotationComponent,
+    ComponentContext by componentContext {
     override fun getLineThickness(): Float = THICKNESS_OF_LINES
 
     override fun getErrorLineThickness(): Float = THICKNESS_OF_ERROR_LINES
@@ -55,10 +54,9 @@ class DefaultDrawGraphicMusicNotationComponent(
 
     override fun getErrorMarkingPathData(): List<PathNode> = pathDataStore.getErrorMarkingPathData()
 
-    override fun addToPathData(pathNode: PathNode): List<PathNode> =
-        pathDataStore.addToPathData(pathNode)
+    override fun addToPathData(pathNode: PathNode): List<PathNode> = pathDataStore.addToPathData(pathNode)
 
-    override fun undoLastCreatedLine(): Unit {
+    override fun undoLastCreatedLine() {
         pathDataStore.undoLastCreatedLine()
     }
 
@@ -81,42 +79,42 @@ class DefaultDrawGraphicMusicNotationComponent(
             width = width,
             thicknessOfLines = thicknessOfLines,
             offsetX = offsetX,
-            offsetY = offsetY
+            offsetY = offsetY,
         ) +
             getTheLinesThatRepresentsAnOctave(
                 octave = Octave.unsafeCreate(4),
                 width = width,
                 thicknessOfLines = thicknessOfLines,
                 offsetX = offsetX,
-                offsetY = offsetY + (12 * thicknessOfLines)
+                offsetY = offsetY + (12 * thicknessOfLines),
             ) +
             getTheLinesThatRepresentsAnOctave( // Measure 2
                 octave = Octave.unsafeCreate(5),
                 width = width,
                 thicknessOfLines = thicknessOfLines,
                 offsetX = offsetX + width + spaceBetweenMeasures,
-                offsetY = offsetY
+                offsetY = offsetY,
             ) +
             getTheLinesThatRepresentsAnOctave(
                 octave = Octave.unsafeCreate(4),
                 width = width,
                 thicknessOfLines = thicknessOfLines,
                 offsetX = offsetX + width + spaceBetweenMeasures,
-                offsetY = offsetY + (12 * thicknessOfLines)
+                offsetY = offsetY + (12 * thicknessOfLines),
             ) +
             getTheLinesThatRepresentsAnOctave( // Measure 3
                 octave = Octave.unsafeCreate(5),
                 width = width,
                 thicknessOfLines = thicknessOfLines,
                 offsetX = offsetX + width + spaceBetweenMeasures + width + spaceBetweenMeasures,
-                offsetY = offsetY
+                offsetY = offsetY,
             ) +
             getTheLinesThatRepresentsAnOctave(
                 octave = Octave.unsafeCreate(4),
                 width = width,
                 thicknessOfLines = thicknessOfLines,
                 offsetX = offsetX + width + spaceBetweenMeasures + width + spaceBetweenMeasures,
-                offsetY = offsetY + (12 * thicknessOfLines)
+                offsetY = offsetY + (12 * thicknessOfLines),
             ) +
             getTheLinesThatRepresentsAnOctave( // Measure 4
                 octave = Octave.unsafeCreate(5),
@@ -130,7 +128,7 @@ class DefaultDrawGraphicMusicNotationComponent(
                         spaceBetweenMeasures +
                         width +
                         spaceBetweenMeasures,
-                offsetY = offsetY
+                offsetY = offsetY,
             ) +
             getTheLinesThatRepresentsAnOctave(
                 octave = Octave.unsafeCreate(4),
@@ -144,7 +142,7 @@ class DefaultDrawGraphicMusicNotationComponent(
                         spaceBetweenMeasures +
                         width +
                         spaceBetweenMeasures,
-                offsetY = offsetY + (12 * thicknessOfLines)
+                offsetY = offsetY + (12 * thicknessOfLines),
             )
     }
 
@@ -153,7 +151,7 @@ class DefaultDrawGraphicMusicNotationComponent(
         width: Float,
         thicknessOfLines: Float,
         offsetX: Float,
-        offsetY: Float
+        offsetY: Float,
     ): List<TheLineThatRepresentsAPitch> {
         // See https://chroma-notes.com/ for colors.
         return listOf(
@@ -164,7 +162,7 @@ class DefaultDrawGraphicMusicNotationComponent(
                     PathBuilder()
                         .moveTo(0f + offsetX, 1 * thicknessOfLines + offsetY)
                         .horizontalLineTo(width + offsetX)
-                        .nodes
+                        .nodes,
             ),
             TheLineThatRepresentsAPitch(
                 pitch = Pitch(noteName = NoteName.A_SHARP, octave = octave),
@@ -173,7 +171,7 @@ class DefaultDrawGraphicMusicNotationComponent(
                     PathBuilder()
                         .moveTo(0f + offsetX, 2 * thicknessOfLines + offsetY)
                         .horizontalLineTo(width + offsetX)
-                        .nodes
+                        .nodes,
             ),
             TheLineThatRepresentsAPitch(
                 pitch = Pitch(noteName = NoteName.A, octave = octave),
@@ -182,7 +180,7 @@ class DefaultDrawGraphicMusicNotationComponent(
                     PathBuilder()
                         .moveTo(0f + offsetX, 3 * thicknessOfLines + offsetY)
                         .horizontalLineTo(width + offsetX)
-                        .nodes
+                        .nodes,
             ),
             TheLineThatRepresentsAPitch(
                 pitch = Pitch(noteName = NoteName.G_SHARP, octave = octave),
@@ -191,7 +189,7 @@ class DefaultDrawGraphicMusicNotationComponent(
                     PathBuilder()
                         .moveTo(0f + offsetX, 4 * thicknessOfLines + offsetY)
                         .horizontalLineTo(width + offsetX)
-                        .nodes
+                        .nodes,
             ),
             TheLineThatRepresentsAPitch(
                 pitch = Pitch(noteName = NoteName.G, octave = octave),
@@ -200,7 +198,7 @@ class DefaultDrawGraphicMusicNotationComponent(
                     PathBuilder()
                         .moveTo(0f + offsetX, 5 * thicknessOfLines + offsetY)
                         .horizontalLineTo(width + offsetX)
-                        .nodes
+                        .nodes,
             ),
             TheLineThatRepresentsAPitch(
                 pitch = Pitch(noteName = NoteName.F_SHARP, octave = octave),
@@ -209,7 +207,7 @@ class DefaultDrawGraphicMusicNotationComponent(
                     PathBuilder()
                         .moveTo(0f + offsetX, 6 * thicknessOfLines + offsetY)
                         .horizontalLineTo(width + offsetX)
-                        .nodes
+                        .nodes,
             ),
             TheLineThatRepresentsAPitch(
                 pitch = Pitch(noteName = NoteName.F, octave = octave),
@@ -218,7 +216,7 @@ class DefaultDrawGraphicMusicNotationComponent(
                     PathBuilder()
                         .moveTo(0f + offsetX, 7 * thicknessOfLines + offsetY)
                         .horizontalLineTo(width + offsetX)
-                        .nodes
+                        .nodes,
             ),
             TheLineThatRepresentsAPitch(
                 pitch = Pitch(noteName = NoteName.E, octave = octave),
@@ -227,7 +225,7 @@ class DefaultDrawGraphicMusicNotationComponent(
                     PathBuilder()
                         .moveTo(0f + offsetX, 8 * thicknessOfLines + offsetY)
                         .horizontalLineTo(width + offsetX)
-                        .nodes
+                        .nodes,
             ),
             TheLineThatRepresentsAPitch(
                 pitch = Pitch(noteName = NoteName.D_SHARP, octave = octave),
@@ -236,7 +234,7 @@ class DefaultDrawGraphicMusicNotationComponent(
                     PathBuilder()
                         .moveTo(0f + offsetX, 9 * thicknessOfLines + offsetY)
                         .horizontalLineTo(width + offsetX)
-                        .nodes
+                        .nodes,
             ),
             TheLineThatRepresentsAPitch(
                 pitch = Pitch(noteName = NoteName.D, octave = octave),
@@ -245,7 +243,7 @@ class DefaultDrawGraphicMusicNotationComponent(
                     PathBuilder()
                         .moveTo(0f + offsetX, 10 * thicknessOfLines + offsetY)
                         .horizontalLineTo(width + offsetX)
-                        .nodes
+                        .nodes,
             ),
             TheLineThatRepresentsAPitch(
                 pitch = Pitch(noteName = NoteName.C_SHARP, octave = octave),
@@ -254,7 +252,7 @@ class DefaultDrawGraphicMusicNotationComponent(
                     PathBuilder()
                         .moveTo(0f + offsetX, 11 * thicknessOfLines + offsetY)
                         .horizontalLineTo(width + offsetX)
-                        .nodes
+                        .nodes,
             ),
             TheLineThatRepresentsAPitch(
                 pitch = Pitch(noteName = NoteName.C, octave = octave),
@@ -263,8 +261,8 @@ class DefaultDrawGraphicMusicNotationComponent(
                     PathBuilder()
                         .moveTo(0f + offsetX, 12 * thicknessOfLines + offsetY)
                         .horizontalLineTo(width + offsetX)
-                        .nodes
-            )
+                        .nodes,
+            ),
         )
     }
 
@@ -277,5 +275,5 @@ class DefaultDrawGraphicMusicNotationComponent(
 data class TheLineThatRepresentsAPitch(
     val pitch: Pitch,
     val color: Color,
-    val pathData: List<PathNode>
+    val pathData: List<PathNode>,
 )

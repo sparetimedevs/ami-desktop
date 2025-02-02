@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 sparetimedevs and respective authors and developers.
+ * Copyright (c) 2023-2025 sparetimedevs and respective authors and developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,11 +54,11 @@ var motionEvent by mutableStateOf(ACTION_IDLE)
 @Composable
 fun DrawGraphicMusicNotationContent(
     component: DrawGraphicMusicNotationComponent,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Box(
         modifier =
-            modifier.verticalScroll(rememberScrollState()).horizontalScroll(rememberScrollState())
+            modifier.verticalScroll(rememberScrollState()).horizontalScroll(rememberScrollState()),
     ) {
         var currentPosition by remember { mutableStateOf(Offset.Unspecified) }
 
@@ -78,8 +78,9 @@ fun DrawGraphicMusicNotationContent(
                             // more
                             val event: PointerEvent = awaitPointerEvent()
                             event.changes.forEach { pointerInputChange: PointerInputChange ->
-                                if (pointerInputChange.positionChange() != Offset.Zero)
+                                if (pointerInputChange.positionChange() != Offset.Zero) {
                                     pointerInputChange.consume()
+                                }
                             }
                             motionEvent = ACTION_MOVE
                             currentPosition = event.changes.first().position
@@ -87,7 +88,7 @@ fun DrawGraphicMusicNotationContent(
 
                         motionEvent = ACTION_IDLE
                     }
-                }
+                },
         ) {
             when (motionEvent) {
                 ACTION_IDLE -> {
@@ -111,12 +112,12 @@ fun DrawGraphicMusicNotationContent(
             drawPath(
                 path = component.getPathData().asComposePath(),
                 color = Color.Black,
-                style = Stroke(width = component.getLineThickness())
+                style = Stroke(width = component.getLineThickness()),
             )
             drawPath(
                 path = component.getErrorMarkingPathData().asComposePath(),
                 color = Color.Red,
-                style = Stroke(width = component.getErrorLineThickness())
+                style = Stroke(width = component.getErrorLineThickness()),
             )
         }
     }
@@ -124,8 +125,8 @@ fun DrawGraphicMusicNotationContent(
 
 private fun processFirstPoint(
     component: DrawGraphicMusicNotationComponent,
-    currentPosition: Offset
-): Unit {
+    currentPosition: Offset,
+) {
     val yValuesOfBackdrop =
         component.getBackdrop().flatMap { it.pathData.map { pathNode -> getYValue(pathNode) } }
     val yOnBackdrop: Float =
@@ -134,9 +135,11 @@ private fun processFirstPoint(
             val differenceBetweenAccYAndCurrentPositionY = (acc - currentPosition.y).absoluteValue
             if (
                 differenceBetweenNextYAndCurrentPositionY < differenceBetweenAccYAndCurrentPositionY
-            )
+            ) {
                 next
-            else acc
+            } else {
+                acc
+            }
         }
 
     val newPathNodeForStartingPoint: PathNode =
@@ -174,7 +177,7 @@ fun List<PathNode>.asComposePath(): Path {
     return parser.addPathNodes(this).toPath(path)
 }
 
-private fun performUndoWhenApplicable(component: DrawGraphicMusicNotationComponent): Unit {
+private fun performUndoWhenApplicable(component: DrawGraphicMusicNotationComponent) {
     if (shouldUndoLastCreatedLine()) component.undoLastCreatedLine()
     // And then set the boolean we checked to false.
 }

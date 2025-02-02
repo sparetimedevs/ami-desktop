@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 sparetimedevs and respective authors and developers.
+ * Copyright (c) 2023-2025 sparetimedevs and respective authors and developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,9 +41,10 @@ import com.sparetimedevs.ami.app.graphicmusicnotation.store.ScoreStore
 import com.sparetimedevs.ami.graphic.GraphicProperties
 import kotlinx.serialization.Serializable
 
-internal class DefaultGraphicMusicNotationMultiPaneComponent(componentContext: ComponentContext) :
-    GraphicMusicNotationMultiPaneComponent, ComponentContext by componentContext {
-
+internal class DefaultGraphicMusicNotationMultiPaneComponent(
+    componentContext: ComponentContext,
+) : GraphicMusicNotationMultiPaneComponent,
+    ComponentContext by componentContext {
     private val navigation = SimpleNavigation<(NavigationState) -> NavigationState>()
     private val navState = BehaviorSubject<NavigationState?>(null)
 
@@ -88,7 +89,10 @@ internal class DefaultGraphicMusicNotationMultiPaneComponent(componentContext: C
             childFactory = ::child,
         )
 
-    private fun child(config: Config, componentContext: ComponentContext): Any =
+    private fun child(
+        config: Config,
+        componentContext: ComponentContext,
+    ): Any =
         when (config) {
             is Config.TopAppBarDetailsPane -> topAppBarDetailsComponent(componentContext)
             is Config.DrawPane -> drawingGraphicMusicNotationComponent(componentContext)
@@ -113,7 +117,7 @@ internal class DefaultGraphicMusicNotationMultiPaneComponent(componentContext: C
     }
 
     private fun drawingGraphicMusicNotationComponent(
-        componentContext: ComponentContext
+        componentContext: ComponentContext,
     ): DrawGraphicMusicNotationComponent =
         DefaultDrawGraphicMusicNotationComponent(
             componentContext = componentContext,
@@ -121,7 +125,7 @@ internal class DefaultGraphicMusicNotationMultiPaneComponent(componentContext: C
         )
 
     private fun readGraphicMusicNotationComponent(
-        componentContext: ComponentContext
+        componentContext: ComponentContext,
     ): ReadGraphicMusicNotationComponent =
         DefaultReadGraphicMusicNotationComponent(
             componentContext = componentContext,
@@ -129,7 +133,7 @@ internal class DefaultGraphicMusicNotationMultiPaneComponent(componentContext: C
         )
 
     private fun placeGraphicMusicNotationComponent(
-        componentContext: ComponentContext
+        componentContext: ComponentContext,
     ): PlaceGraphicMusicNotationComponent =
         DefaultPlaceGraphicMusicNotationComponent(
             componentContext = componentContext,
@@ -137,7 +141,6 @@ internal class DefaultGraphicMusicNotationMultiPaneComponent(componentContext: C
         )
 
     private sealed interface Config {
-
         @Serializable object TopAppBarDetailsPane : Config
 
         @Serializable object DrawPane : Config
@@ -148,7 +151,9 @@ internal class DefaultGraphicMusicNotationMultiPaneComponent(componentContext: C
     }
 
     @Serializable
-    private data class NavigationState(val placeholder: String = "placeholder") : NavState<Config> {
+    private data class NavigationState(
+        val placeholder: String = "placeholder",
+    ) : NavState<Config> {
         override val children: List<ChildNavState<Config>>
             get() =
                 listOfNotNull(

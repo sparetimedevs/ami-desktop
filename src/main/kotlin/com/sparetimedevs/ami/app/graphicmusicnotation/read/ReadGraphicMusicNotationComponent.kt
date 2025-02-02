@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 sparetimedevs and respective authors and developers.
+ * Copyright (c) 2023-2025 sparetimedevs and respective authors and developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@ import com.arkivanov.decompose.ComponentContext
 import com.sparetimedevs.ami.app.graphicmusicnotation.store.PathDataStore
 
 interface ReadGraphicMusicNotationComponent {
-
     fun getLineThickness(): Float
 
     fun getPathData(): List<PathNode>
@@ -29,9 +28,9 @@ interface ReadGraphicMusicNotationComponent {
 
 class DefaultReadGraphicMusicNotationComponent(
     componentContext: ComponentContext,
-    private val pathDataStore: PathDataStore
-) : ReadGraphicMusicNotationComponent, ComponentContext by componentContext {
-
+    private val pathDataStore: PathDataStore,
+) : ReadGraphicMusicNotationComponent,
+    ComponentContext by componentContext {
     override fun getLineThickness(): Float = THICKNESS_OF_LINES
 
     override fun getPathData(): List<PathNode> = pathDataStore.getPathData()

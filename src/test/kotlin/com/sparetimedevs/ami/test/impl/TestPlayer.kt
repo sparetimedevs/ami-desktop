@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 sparetimedevs and respective authors and developers.
+ * Copyright (c) 2023-2025 sparetimedevs and respective authors and developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,25 +22,31 @@ import com.sparetimedevs.ami.player.Player
 import com.sparetimedevs.ami.player.PlayerSettings
 
 class TestDevice {
-
     private val allTheThings = mutableStateListOf<String>()
 
-    fun send(message: String): Unit {
+    fun send(message: String) {
         allTheThings.add(message)
     }
 
     fun notesPlayed(): List<String> = allTheThings.toList()
 }
 
-class TestPlayer(settings: PlayerSettings = PlayerSettings()) : Player(settings) {
-
+class TestPlayer(
+    settings: PlayerSettings = PlayerSettings(),
+) : Player(settings) {
     private val testDevice: TestDevice = TestDevice()
 
-    override fun playNote(note: Note, onChannelNumber: Int) {
+    override fun playNote(
+        note: Note,
+        onChannelNumber: Int,
+    ) {
         testDevice.send("Playing $note")
     }
 
-    override fun stopNote(note: Note, onChannelNumber: Int) {
+    override fun stopNote(
+        note: Note,
+        onChannelNumber: Int,
+    ) {
         // No test implementation yet.
     }
 

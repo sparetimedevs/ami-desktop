@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 sparetimedevs and respective authors and developers.
+ * Copyright (c) 2023-2025 sparetimedevs and respective authors and developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -93,7 +93,13 @@ class DefaultScoreDetailsComponentTest :
             scoreCoreComponent.onLoadScoreClicked(score)
 
             val superLongString =
-                "Some super long string, some super long string, Some super long string, Some super long string, Some super long string, some super long string, Some super long string, Some super long string, Some super long string, some super long string, Some super long string, Some super long string, Some super long string, some super long string, Some super long string, Some super long string, Some super long string, some super long string, Some super long string, Some super long string, Some super long string, some super long string, Some super long string, Some super long string, Some super long string."
+                "Some super long string, some super long string, Some super long string, Some super long string, " +
+                    "Some super long string, some super long string, Some super long string, Some super long string, " +
+                    "Some super long string, some super long string, Some super long string, Some super long string, " +
+                    "Some super long string, some super long string, Some super long string, Some super long string, " +
+                    "Some super long string, some super long string, Some super long string, Some super long string, " +
+                    "Some super long string, some super long string, Some super long string, Some super long string, " +
+                    "Some super long string."
 
             val result =
                 component.saveScoreDetails(
@@ -115,7 +121,7 @@ class DefaultScoreDetailsComponentTest :
                             ValidationIdentifierForScore(
                                 identifier =
                                     ScoreId.unsafeCreate(
-                                        input = "1064db99-3726-43d7-b0ed-3fc0281bfc02"
+                                        input = "1064db99-3726-43d7-b0ed-3fc0281bfc02",
                                     ),
                                 validationIdentifierParent = NoValidationIdentifier,
                             ),
@@ -133,7 +139,7 @@ class DefaultScoreDetailsComponentTest :
                                         ValidationIdentifierForScore(
                                             identifier =
                                                 ScoreId.unsafeCreate(
-                                                    input = "1064db99-3726-43d7-b0ed-3fc0281bfc02"
+                                                    input = "1064db99-3726-43d7-b0ed-3fc0281bfc02",
                                                 ),
                                             validationIdentifierParent = NoValidationIdentifier,
                                         ),
@@ -149,7 +155,7 @@ class DefaultScoreDetailsComponentTest :
                                         ValidationIdentifierForScore(
                                             identifier =
                                                 ScoreId.unsafeCreate(
-                                                    input = "1064db99-3726-43d7-b0ed-3fc0281bfc02"
+                                                    input = "1064db99-3726-43d7-b0ed-3fc0281bfc02",
                                                 ),
                                             validationIdentifierParent = NoValidationIdentifier,
                                         ),

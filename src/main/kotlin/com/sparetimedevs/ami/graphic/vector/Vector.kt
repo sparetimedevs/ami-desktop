@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 sparetimedevs and respective authors and developers.
+ * Copyright (c) 2023-2025 sparetimedevs and respective authors and developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,4 +21,7 @@ package com.sparetimedevs.ami.graphic.vector
  * describes the vector in terms of a particular ordered basis. Vectors are placed on a
  * 2-dimensional area with Vector(0.0, 0.0) starting at the bottom left.
  */
-data class Vector(val x: Double, val y: Double)
+data class Vector(
+    val x: Double,
+    val y: Double,
+)

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 sparetimedevs and respective authors and developers.
+ * Copyright (c) 2023-2025 sparetimedevs and respective authors and developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,13 +36,16 @@ import com.sparetimedevs.ami.music.data.kotlin.note.Pitch
 val BackgroundColor: Color = Color(0xFFFAF5F0)
 
 @Composable
-fun PlaceGraphicMusicNotationBackdrop(modifier: Modifier = Modifier, lineThickness: Float) {
+fun PlaceGraphicMusicNotationBackdrop(
+    modifier: Modifier = Modifier,
+    lineThickness: Float,
+) {
     Canvas(modifier = modifier.height(800.dp).width(2000.dp).background(BackgroundColor)) {
         drawGridOfCrosses(lineThickness)
     }
 }
 
-private fun DrawScope.drawGridOfCrosses(lineThickness: Float): Unit {
+private fun DrawScope.drawGridOfCrosses(lineThickness: Float) {
     val octave: Octave = Octave.unsafeCreate(4)
     val size: Float = 24f
     val offsetX: Float = 57.5f
@@ -52,63 +55,63 @@ private fun DrawScope.drawGridOfCrosses(lineThickness: Float): Unit {
             PitchAndColor(
                 pitch = Pitch(noteName = NoteName.B, octave = octave),
                 color = Color(0xFFD000C9),
-                contrastColor = Color(0xFF444444)
+                contrastColor = Color(0xFF444444),
             ),
             PitchAndColor(
                 pitch = Pitch(noteName = NoteName.A_SHARP, octave = octave),
                 color = Color(0xFF9B00FB),
-                contrastColor = Color.Gray
+                contrastColor = Color.Gray,
             ),
             PitchAndColor(
                 pitch = Pitch(noteName = NoteName.A, octave = octave),
                 color = Color(0xFF4823AC),
-                contrastColor = Color(0xFFFAF5F0)
+                contrastColor = Color(0xFFFAF5F0),
             ),
             PitchAndColor(
                 pitch = Pitch(noteName = NoteName.G_SHARP, octave = octave),
                 color = Color(0xFF2846DA),
-                contrastColor = Color(0xFFFAF5F0)
+                contrastColor = Color(0xFFFAF5F0),
             ),
             PitchAndColor(
                 pitch = Pitch(noteName = NoteName.G, octave = octave),
                 color = Color(0xFF355D4B),
-                contrastColor = Color(0xFFFAF5F0)
+                contrastColor = Color(0xFFFAF5F0),
             ),
             PitchAndColor(
                 pitch = Pitch(noteName = NoteName.F_SHARP, octave = octave),
                 color = Color(0xFF60AA28),
-                contrastColor = Color(0xFF444444)
+                contrastColor = Color(0xFF444444),
             ),
             PitchAndColor(
                 pitch = Pitch(noteName = NoteName.F, octave = octave),
                 color = Color(0xFFA6F138),
-                contrastColor = Color(0xFF444444)
+                contrastColor = Color(0xFF444444),
             ),
             PitchAndColor(
                 pitch = Pitch(noteName = NoteName.E, octave = octave),
                 color = Color(0xFFF3F33A),
-                contrastColor = Color(0xFF444444)
+                contrastColor = Color(0xFF444444),
             ),
             PitchAndColor(
                 pitch = Pitch(noteName = NoteName.D_SHARP, octave = octave),
                 color = Color(0xFFF2C82F),
-                contrastColor = Color(0xFF444444)
+                contrastColor = Color(0xFF444444),
             ),
             PitchAndColor(
                 pitch = Pitch(noteName = NoteName.D, octave = octave),
                 color = Color(0xFFDB9423),
-                contrastColor = Color.Gray
+                contrastColor = Color.Gray,
             ),
             PitchAndColor(
                 pitch = Pitch(noteName = NoteName.C_SHARP, octave = octave),
                 color = Color(0xFFDD5812),
-                contrastColor = Color.Gray
+                contrastColor = Color.Gray,
             ),
             PitchAndColor(
                 pitch = Pitch(noteName = NoteName.C, octave = octave),
                 color = Color(0xFFD00040),
-                contrastColor = Color.Gray
-            )
+                contrastColor = Color.Gray,
+            ),
         )
     oneOctave.forEachIndexed { crossColumnNumber, pitchAndColor ->
         val y: Float = calcY(offsetY, crossColumnNumber, size)
@@ -116,7 +119,7 @@ private fun DrawScope.drawGridOfCrosses(lineThickness: Float): Unit {
             pitchAndColor.contrastColor,
             Offset(offsetX, y),
             Offset(offsetX + 2000f, y),
-            size * 2
+            size * 2,
         )
         this.drawLineOfCrosses(
             crossColumnNumber,
@@ -124,7 +127,7 @@ private fun DrawScope.drawGridOfCrosses(lineThickness: Float): Unit {
             lineThickness,
             size,
             offsetX,
-            offsetY
+            offsetY,
         )
     }
 }
@@ -135,8 +138,8 @@ private fun DrawScope.drawLineOfCrosses(
     lineThickness: Float,
     size: Float,
     offsetX: Float,
-    offsetY: Float
-): Unit {
+    offsetY: Float,
+) {
     val color: Color = pitchAndColor.color
     (1..500).toList().forEach { crossRowNumber ->
         this.drawCross(
@@ -146,7 +149,7 @@ private fun DrawScope.drawLineOfCrosses(
             lineThickness,
             size,
             offsetX,
-            offsetY
+            offsetY,
         )
     }
 }
@@ -158,8 +161,8 @@ private fun DrawScope.drawCross(
     lineThickness: Float,
     size: Float,
     offsetX: Float,
-    offsetY: Float
-): Unit {
+    offsetY: Float,
+) {
     val x: Float = calcX(offsetX, crossRowNumber, size)
     val y: Float = calcY(offsetY, crossColumnNumber, size)
     drawPath(
@@ -172,14 +175,24 @@ private fun DrawScope.drawCross(
                 .nodes
                 .asComposePath(),
         color = color,
-        style = Stroke(width = lineThickness)
+        style = Stroke(width = lineThickness),
     )
 }
 
-data class PitchAndColor(val pitch: Pitch, val color: Color, val contrastColor: Color)
+data class PitchAndColor(
+    val pitch: Pitch,
+    val color: Color,
+    val contrastColor: Color,
+)
 
-fun calcX(offsetX: Float, crossRowNumber: Int, size: Float): Float =
-    offsetX + (crossRowNumber * size * 2f)
+fun calcX(
+    offsetX: Float,
+    crossRowNumber: Int,
+    size: Float,
+): Float = offsetX + (crossRowNumber * size * 2f)
 
-fun calcY(offsetY: Float, crossColumnNumber: Int, size: Float): Float =
-    offsetY + (crossColumnNumber * size * 2f)
+fun calcY(
+    offsetY: Float,
+    crossColumnNumber: Int,
+    size: Float,
+): Float = offsetY + (crossColumnNumber * size * 2f)
