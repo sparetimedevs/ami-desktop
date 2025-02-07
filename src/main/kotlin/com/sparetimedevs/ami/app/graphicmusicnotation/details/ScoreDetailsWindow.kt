@@ -46,6 +46,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogWindow
 import androidx.compose.ui.window.rememberDialogState
@@ -141,7 +142,8 @@ fun ScoreDetailsWindow(
                     .background(color = Color.DarkGray)
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState())
-                    .horizontalScroll(rememberScrollState()),
+                    .horizontalScroll(rememberScrollState())
+                    .testTag("score-details-window"),
         ) {
             Column(modifier = Modifier.padding(10.dp)) {
                 ScoreDetailRow<ScoreId>(
