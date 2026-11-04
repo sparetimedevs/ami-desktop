@@ -19,11 +19,15 @@ package com.sparetimedevs.ami.graphic
 import com.sparetimedevs.ami.graphic.vector.NoteVectors
 import com.sparetimedevs.ami.graphic.vector.Vector
 import com.sparetimedevs.ami.music.data.kotlin.measure.Measure
+import com.sparetimedevs.ami.music.data.kotlin.measure.MeasureAttributes
 import com.sparetimedevs.ami.music.data.kotlin.note.Note
 import com.sparetimedevs.ami.music.data.kotlin.note.NoteName
 import com.sparetimedevs.ami.music.data.kotlin.note.NoteValue
 import com.sparetimedevs.ami.music.data.kotlin.note.Octave
 import com.sparetimedevs.ami.music.data.kotlin.note.Pitch
+import com.sparetimedevs.ami.music.data.kotlin.timesignature.BeatType
+import com.sparetimedevs.ami.music.data.kotlin.timesignature.Beats
+import com.sparetimedevs.ami.music.data.kotlin.timesignature.TimeSignature
 import com.sparetimedevs.ami.test.data.createChord
 import com.sparetimedevs.ami.test.data.createPitchedNote
 import com.sparetimedevs.ami.test.data.createRestNote
@@ -32,10 +36,14 @@ import io.kotest.matchers.shouldBe
 
 class AmiMeasureAsNotesVectorsKtTest :
     StringSpec({
+
+        val timeSignature = TimeSignature(Beats.unsafeCreate(4), BeatType.unsafeCreate(4))
+        val measureAttributes = MeasureAttributes(timeSignature = timeSignature)
+
         "asNotesVectors should create NoteVectors for one note" {
             val note: List<Note> =
                 listOf(createPitchedNote(noteName = NoteName.C, duration = NoteValue.WHOLE))
-            val measure: Measure = Measure(null, note)
+            val measure: Measure = Measure(measureAttributes, note)
 
             val result: List<NoteVectors> = asNotesVectors(measure)
 
@@ -48,7 +56,7 @@ class AmiMeasureAsNotesVectorsKtTest :
                     createPitchedNote(noteName = NoteName.C, duration = NoteValue.HALF),
                     createPitchedNote(noteName = NoteName.A, duration = NoteValue.HALF),
                 )
-            val measure: Measure = Measure(null, notes)
+            val measure: Measure = Measure(measureAttributes, notes)
 
             val result: List<NoteVectors> = asNotesVectors(measure)
 
@@ -67,7 +75,7 @@ class AmiMeasureAsNotesVectorsKtTest :
                     createPitchedNote(noteName = NoteName.D, duration = NoteValue.QUARTER),
                     createRestNote(duration = NoteValue.QUARTER),
                 )
-            val measure: Measure = Measure(null, notes)
+            val measure: Measure = Measure(measureAttributes, notes)
 
             val result: List<NoteVectors> = asNotesVectors(measure)
 
@@ -153,7 +161,7 @@ class AmiMeasureAsNotesVectorsKtTest :
                     createRestNote(duration = NoteValue.HALF),
                 )
 
-            val measure: Measure = Measure(null, notes)
+            val measure: Measure = Measure(measureAttributes, notes)
 
             val result: List<NoteVectors> = asNotesVectors(measure)
 
@@ -255,7 +263,7 @@ class AmiMeasureAsNotesVectorsKtTest :
                     ),
                 )
 
-            val measure: Measure = Measure(null, notes)
+            val measure: Measure = Measure(measureAttributes, notes)
 
             val result: List<NoteVectors> = asNotesVectors(measure)
 
@@ -297,7 +305,7 @@ class AmiMeasureAsNotesVectorsKtTest :
                     ),
                 )
 
-            val measure: Measure = Measure(null, notes)
+            val measure: Measure = Measure(measureAttributes, notes)
 
             val result: List<NoteVectors> = asNotesVectors(measure)
 
@@ -341,7 +349,7 @@ class AmiMeasureAsNotesVectorsKtTest :
                     createRestNote(duration = NoteValue.QUARTER),
                 )
 
-            val measure: Measure = Measure(null, notes)
+            val measure: Measure = Measure(measureAttributes, notes)
 
             val result: List<NoteVectors> = asNotesVectors(measure)
 

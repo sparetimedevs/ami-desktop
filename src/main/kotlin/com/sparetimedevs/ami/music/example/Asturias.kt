@@ -17,6 +17,7 @@
 package com.sparetimedevs.ami.music.example
 
 import com.sparetimedevs.ami.music.data.kotlin.measure.Measure
+import com.sparetimedevs.ami.music.data.kotlin.measure.MeasureAttributes
 import com.sparetimedevs.ami.music.data.kotlin.midi.MidiChannel
 import com.sparetimedevs.ami.music.data.kotlin.midi.MidiProgram
 import com.sparetimedevs.ami.music.data.kotlin.note.Note
@@ -34,6 +35,12 @@ import com.sparetimedevs.ami.music.data.kotlin.part.PartName
 import com.sparetimedevs.ami.music.data.kotlin.score.Score
 import com.sparetimedevs.ami.music.data.kotlin.score.ScoreId
 import com.sparetimedevs.ami.music.data.kotlin.score.ScoreTitle
+import com.sparetimedevs.ami.music.data.kotlin.timesignature.BeatType
+import com.sparetimedevs.ami.music.data.kotlin.timesignature.Beats
+import com.sparetimedevs.ami.music.data.kotlin.timesignature.TimeSignature
+
+private val FOUR_FOUR: TimeSignature = TimeSignature(Beats.unsafeCreate(4), BeatType.unsafeCreate(4))
+private val ATTRIBUTES_IN_FOUR_FOUR: MeasureAttributes = MeasureAttributes(timeSignature = FOUR_FOUR)
 
 // TODO create more examples. Maybe also Asturias ?
 fun getExampleScoreAsturias(): Score {
@@ -49,7 +56,7 @@ fun getExampleScoreAsturias(): Score {
                 ),
                 listOf(
                     Measure(
-                        null,
+                        ATTRIBUTES_IN_FOUR_FOUR,
                         listOf(
                             Note.Pitched(
                                 NoteDuration(NoteValue.QUARTER),
@@ -74,7 +81,7 @@ fun getExampleScoreAsturias(): Score {
                         ),
                     ),
                     Measure(
-                        null,
+                        ATTRIBUTES_IN_FOUR_FOUR,
                         listOf(
                             Note.Pitched(
                                 NoteDuration(NoteValue.QUARTER),

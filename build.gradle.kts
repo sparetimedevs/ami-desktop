@@ -17,7 +17,7 @@ repositories {
     mavenCentral()
     maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
     google()
-    maven("https://oss.sonatype.org/content/repositories/snapshots/")
+    maven("https://central.sonatype.com/repository/maven-snapshots/")
 }
 
 dependencies {
@@ -69,7 +69,6 @@ compose.desktop {
 tasks.withType<KotlinCompile> {
     compilerOptions {
         freeCompilerArgs.addAll(
-            "-Xcontext-receivers",
             "-Xbackend-threads=4",
         )
         jvmTarget.set(JvmTarget.JVM_21)

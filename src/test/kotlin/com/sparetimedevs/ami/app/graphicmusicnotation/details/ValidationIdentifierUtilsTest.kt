@@ -20,6 +20,7 @@ import com.sparetimedevs.ami.core.Id
 import com.sparetimedevs.ami.core.IdOrIndex
 import com.sparetimedevs.ami.core.validation.NoValidationIdentifier
 import com.sparetimedevs.ami.core.validation.ValidationIdentifier
+import com.sparetimedevs.ami.core.validation.ValidationLocationKind
 import com.sparetimedevs.ami.music.data.kotlin.part.PartId
 import com.sparetimedevs.ami.music.data.kotlin.score.ScoreId
 import com.sparetimedevs.ami.music.input.validation.ValidationIdentifierForMeasure
@@ -89,6 +90,7 @@ class ValidationIdentifierUtilsTest :
     })
 
 object NoValidationIdentifierForTest : ValidationIdentifier {
+    override val kind: ValidationLocationKind? = null
     override val identifier: IdOrIndex = NoIdForTest
     override val validationIdentifierParent: ValidationIdentifier = this
 }

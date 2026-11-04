@@ -49,6 +49,7 @@ private tailrec fun vectors(
                 is Note.Chord ->
                     listOf(vectorComponentY(note.rootNote))
                         .plus(note.pitches.map { vectorComponentY(it) })
+
                 is Note.Rest ->
                     listOf(
                         -7.5,
@@ -78,20 +79,24 @@ private fun vectorComponentY(noteName: NoteName): Double =
         NoteName.A_SHARP,
         NoteName.B_FLAT,
         -> 1.0
-        NoteName.B -> 1.5
-        NoteName.C -> 2.0
+
+        NoteName.B, NoteName.C_FLAT -> 1.5
+        NoteName.B_SHARP, NoteName.C -> 2.0
         NoteName.C_SHARP,
         NoteName.D_FLAT,
         -> 2.5
+
         NoteName.D -> 3.0
         NoteName.D_SHARP,
         NoteName.E_FLAT,
         -> 3.5
-        NoteName.E -> 4.0
-        NoteName.F -> 4.5
+
+        NoteName.E, NoteName.F_FLAT -> 4.0
+        NoteName.E_SHARP, NoteName.F -> 4.5
         NoteName.F_SHARP,
         NoteName.G_FLAT,
         -> 5.0
+
         NoteName.G -> 5.5
         NoteName.G_SHARP -> 6.0
     }

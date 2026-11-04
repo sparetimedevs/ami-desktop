@@ -17,6 +17,7 @@
 package com.sparetimedevs.ami.music.core
 
 import com.sparetimedevs.ami.music.data.kotlin.measure.Measure
+import com.sparetimedevs.ami.music.data.kotlin.measure.MeasureAttributes
 import com.sparetimedevs.ami.music.data.kotlin.midi.MidiChannel
 import com.sparetimedevs.ami.music.data.kotlin.midi.MidiProgram
 import com.sparetimedevs.ami.music.data.kotlin.note.NoteName
@@ -27,6 +28,9 @@ import com.sparetimedevs.ami.music.data.kotlin.part.PartInstrument
 import com.sparetimedevs.ami.music.data.kotlin.part.PartInstrumentName
 import com.sparetimedevs.ami.music.data.kotlin.part.PartName
 import com.sparetimedevs.ami.music.data.kotlin.score.Score
+import com.sparetimedevs.ami.music.data.kotlin.timesignature.BeatType
+import com.sparetimedevs.ami.music.data.kotlin.timesignature.Beats
+import com.sparetimedevs.ami.music.data.kotlin.timesignature.TimeSignature
 import com.sparetimedevs.ami.music.example.getExampleScore
 import com.sparetimedevs.ami.music.example.getExampleScoreHeighHoNobodyHome
 import com.sparetimedevs.ami.test.data.createEmptyScore
@@ -38,6 +42,9 @@ import io.kotest.matchers.types.shouldBeSameInstanceAs
 
 class ScoreReplaceMeasuresKtTest :
     StringSpec({
+        val timeSignature = TimeSignature(Beats.unsafeCreate(4), BeatType.unsafeCreate(4))
+        val measureAttributes = MeasureAttributes(timeSignature = timeSignature)
+
         "replaceMeasures should return the score with new measures first followed by original measures " +
             "when there are more original measures than measures to replace" {
                 val score = getExampleScoreHeighHoNobodyHome()
@@ -45,13 +52,13 @@ class ScoreReplaceMeasuresKtTest :
                 val newMeasures: List<Measure> =
                     listOf(
                         Measure(
-                            null,
+                            measureAttributes,
                             listOf(
                                 createPitchedNote(noteName = NoteName.C, duration = NoteValue.WHOLE),
                             ),
                         ),
                         Measure(
-                            null,
+                            measureAttributes,
                             listOf(
                                 createPitchedNote(noteName = NoteName.F, duration = NoteValue.WHOLE),
                             ),
@@ -125,13 +132,13 @@ class ScoreReplaceMeasuresKtTest :
                     getExampleScoreHeighHoNobodyHome().parts[0].measures.dropLast(2) +
                         listOf(
                             Measure(
-                                null,
+                                measureAttributes,
                                 listOf(
                                     createPitchedNote(noteName = NoteName.C, duration = NoteValue.WHOLE),
                                 ),
                             ),
                             Measure(
-                                null,
+                                measureAttributes,
                                 listOf(
                                     createPitchedNote(noteName = NoteName.F, duration = NoteValue.WHOLE),
                                 ),
@@ -188,13 +195,13 @@ class ScoreReplaceMeasuresKtTest :
                 val newMeasures: List<Measure> =
                     listOf(
                         Measure(
-                            null,
+                            measureAttributes,
                             listOf(
                                 createPitchedNote(noteName = NoteName.C, duration = NoteValue.WHOLE),
                             ),
                         ),
                         Measure(
-                            null,
+                            measureAttributes,
                             listOf(
                                 createPitchedNote(noteName = NoteName.F, duration = NoteValue.WHOLE),
                             ),

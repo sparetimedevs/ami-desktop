@@ -32,6 +32,7 @@ import com.sparetimedevs.ami.getTestComponentContext
 import com.sparetimedevs.ami.graphic.GraphicProperties
 import com.sparetimedevs.ami.music.core.replaceMeasures
 import com.sparetimedevs.ami.music.data.kotlin.measure.Measure
+import com.sparetimedevs.ami.music.data.kotlin.measure.MeasureAttributes
 import com.sparetimedevs.ami.music.data.kotlin.note.Note
 import com.sparetimedevs.ami.music.data.kotlin.note.NoteAttributes
 import com.sparetimedevs.ami.music.data.kotlin.note.NoteDuration
@@ -39,6 +40,9 @@ import com.sparetimedevs.ami.music.data.kotlin.note.NoteName
 import com.sparetimedevs.ami.music.data.kotlin.note.NoteValue
 import com.sparetimedevs.ami.music.data.kotlin.note.Octave
 import com.sparetimedevs.ami.music.data.kotlin.note.Pitch
+import com.sparetimedevs.ami.music.data.kotlin.timesignature.BeatType
+import com.sparetimedevs.ami.music.data.kotlin.timesignature.Beats
+import com.sparetimedevs.ami.music.data.kotlin.timesignature.TimeSignature
 import com.sparetimedevs.ami.music.example.getExampleScoreHeighHoNobodyHome
 import com.sparetimedevs.ami.music.input.validation.ValidationIdentifierForMeasure
 import com.sparetimedevs.ami.music.input.validation.ValidationIdentifierForNote
@@ -61,6 +65,8 @@ class DefaultMusicScoreDetailsComponentTest :
                 wholeStepExpressedInY = 50.0,
             )
         val pathDataStore = PathDataStore(graphicProperties)
+        val timeSignature = TimeSignature(Beats.unsafeCreate(4), BeatType.unsafeCreate(4))
+        val measureAttributes = MeasureAttributes(timeSignature = timeSignature)
         val markInvalidInput = MarkInvalidInput()
         val component: MusicScoreDetailsComponent =
             DefaultMusicScoreDetailsComponent(
@@ -107,7 +113,7 @@ class DefaultMusicScoreDetailsComponentTest :
             val expectedMeasures: List<Measure> =
                 listOf(
                     Measure(
-                        null,
+                        measureAttributes,
                         listOf(
                             Note.Pitched(
                                 NoteDuration(NoteValue.WHOLE),
@@ -138,7 +144,7 @@ class DefaultMusicScoreDetailsComponentTest :
                 val expectedMeasures: List<Measure> =
                     listOf(
                         Measure(
-                            null,
+                            measureAttributes,
                             listOf(
                                 Note.Pitched(
                                     NoteDuration(NoteValue.WHOLE),

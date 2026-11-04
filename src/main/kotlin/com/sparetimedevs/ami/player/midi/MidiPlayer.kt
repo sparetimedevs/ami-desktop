@@ -134,15 +134,15 @@ fun helperFunForPitchToMidiNoteValue(noteName: NoteName): Int =
         NoteName.A -> 57
         NoteName.A_SHARP -> 58
         NoteName.B_FLAT -> 58
-        NoteName.B -> 59
-        NoteName.C -> 60
+        NoteName.B, NoteName.C_FLAT -> 59
+        NoteName.B_SHARP, NoteName.C -> 60
         NoteName.C_SHARP -> 61
         NoteName.D_FLAT -> 61
         NoteName.D -> 62
         NoteName.D_SHARP -> 63
         NoteName.E_FLAT -> 63
-        NoteName.E -> 64
-        NoteName.F -> 65
+        NoteName.E, NoteName.F_FLAT -> 64
+        NoteName.E_SHARP, NoteName.F -> 65
         NoteName.F_SHARP -> 66
         NoteName.G_FLAT -> 66
         NoteName.G -> 67

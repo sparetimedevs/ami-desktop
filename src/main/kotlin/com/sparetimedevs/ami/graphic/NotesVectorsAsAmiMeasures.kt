@@ -30,6 +30,7 @@ import com.sparetimedevs.ami.core.validation.combineAllValidationErrors
 import com.sparetimedevs.ami.graphic.vector.NoteVectors
 import com.sparetimedevs.ami.graphic.vector.WHOLE_NOTE_WIDTH
 import com.sparetimedevs.ami.music.data.kotlin.measure.Measure
+import com.sparetimedevs.ami.music.data.kotlin.measure.MeasureAttributes
 import com.sparetimedevs.ami.music.data.kotlin.note.Note
 import com.sparetimedevs.ami.music.data.kotlin.note.NoteAttributes
 import com.sparetimedevs.ami.music.data.kotlin.note.NoteDuration
@@ -37,6 +38,9 @@ import com.sparetimedevs.ami.music.data.kotlin.note.NoteName
 import com.sparetimedevs.ami.music.data.kotlin.note.Octave
 import com.sparetimedevs.ami.music.data.kotlin.note.Pitch
 import com.sparetimedevs.ami.music.data.kotlin.note.Semitones
+import com.sparetimedevs.ami.music.data.kotlin.timesignature.BeatType
+import com.sparetimedevs.ami.music.data.kotlin.timesignature.Beats
+import com.sparetimedevs.ami.music.data.kotlin.timesignature.TimeSignature
 import com.sparetimedevs.ami.music.input.validation.ValidationIdentifierForMeasure
 import com.sparetimedevs.ami.music.input.validation.ValidationIdentifierForNote
 
@@ -56,9 +60,12 @@ fun asAmiMeasure(
     notesVectors: List<NoteVectors>,
     validationIdentifier: ValidationIdentifier,
 ): EitherNel<ValidationError, Measure> {
+    // We should probably make measureAttributes configurable in one way or another.
+    val measureAttributes: MeasureAttributes =
+        MeasureAttributes(timeSignature = TimeSignature(Beats.unsafeCreate(4), BeatType.unsafeCreate(4)))
     val measureOrErrors =
         asAmiNotes(validationIdentifier, notesVectors).combineAllValidationErrors().map { notes ->
-            Measure(null, notes)
+            Measure(measureAttributes, notes)
         }
     return measureOrErrors
 }
@@ -121,7 +128,7 @@ private fun pitch(
     return Either.zipOrAccumulate(
         noteName(remainderHeight, validationIdentifier),
         Octave.validate(
-            (operatingFromOctave.value + ((height - remainderHeight) / 6).toInt()).toByte(),
+            (operatingFromOctave.value + ((height - remainderHeight) / 6).toInt()),
             validationIdentifier,
         ),
         Semitones.validate(0.0f), // Not yet implemented.

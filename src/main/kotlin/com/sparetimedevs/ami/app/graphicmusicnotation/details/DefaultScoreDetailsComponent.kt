@@ -149,7 +149,7 @@ internal class DefaultScoreDetailsComponent(
             partInstrumentMidiChannels
                 .map { (partId: PartId, s: String?) ->
                     Either
-                        .catch { s?.toByte() }
+                        .catch { s?.toInt() }
                         .mapLeft {
                             ValidationError(
                                 message = "MIDI channel should be a number but was $s",
@@ -158,10 +158,10 @@ internal class DefaultScoreDetailsComponent(
                                 validationIdentifier =
                                     ValidationIdentifierForPart(partId, validationIdentifier),
                             ).nel()
-                        }.flatMap { byte ->
+                        }.flatMap { int ->
                             MidiChannel
                                 .validate(
-                                    byte,
+                                    int,
                                     ValidationIdentifierForPart(partId, validationIdentifier),
                                 ).map { midiChannel -> partId to midiChannel }
                         }
@@ -171,7 +171,7 @@ internal class DefaultScoreDetailsComponent(
             partInstrumentMidiPrograms
                 .map { (partId: PartId, s: String?) ->
                     Either
-                        .catch { s?.toByte() }
+                        .catch { s?.toInt() }
                         .mapLeft {
                             ValidationError(
                                 message = "MIDI program should be a number but was $s",
@@ -180,10 +180,10 @@ internal class DefaultScoreDetailsComponent(
                                 validationIdentifier =
                                     ValidationIdentifierForPart(partId, validationIdentifier),
                             ).nel()
-                        }.flatMap { byte ->
+                        }.flatMap { int ->
                             MidiProgram
                                 .validate(
-                                    byte,
+                                    int,
                                     ValidationIdentifierForPart(partId, validationIdentifier),
                                 ).map { midiProgram -> partId to midiProgram }
                         }

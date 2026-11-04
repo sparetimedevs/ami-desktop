@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.vector.PathBuilder
 import androidx.compose.ui.graphics.vector.PathNode
 import com.sparetimedevs.ami.graphic.GraphicProperties
 import com.sparetimedevs.ami.music.data.kotlin.measure.Measure
+import com.sparetimedevs.ami.music.data.kotlin.measure.MeasureAttributes
 import com.sparetimedevs.ami.music.data.kotlin.note.Note
 import com.sparetimedevs.ami.music.data.kotlin.note.NoteAttributes
 import com.sparetimedevs.ami.music.data.kotlin.note.NoteDuration
@@ -27,12 +28,17 @@ import com.sparetimedevs.ami.music.data.kotlin.note.NoteName
 import com.sparetimedevs.ami.music.data.kotlin.note.NoteValue
 import com.sparetimedevs.ami.music.data.kotlin.note.Octave
 import com.sparetimedevs.ami.music.data.kotlin.note.Pitch
+import com.sparetimedevs.ami.music.data.kotlin.timesignature.BeatType
+import com.sparetimedevs.ami.music.data.kotlin.timesignature.Beats
+import com.sparetimedevs.ami.music.data.kotlin.timesignature.TimeSignature
 import com.sparetimedevs.ami.music.example.getExampleScoreHeighHoNobodyHome
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 
 class AmiMeasuresAsPathDataKtTest :
     StringSpec({
+        val timeSignature = TimeSignature(Beats.unsafeCreate(4), BeatType.unsafeCreate(4))
+        val measureAttributes = MeasureAttributes(timeSignature = timeSignature)
         val graphicProperties =
             GraphicProperties(
                 offsetX = 87.5,
@@ -47,7 +53,7 @@ class AmiMeasuresAsPathDataKtTest :
             val measure: List<Measure> =
                 listOf(
                     Measure(
-                        null,
+                        measureAttributes,
                         listOf(
                             Note.Pitched(
                                 NoteDuration(NoteValue.WHOLE),
@@ -70,7 +76,7 @@ class AmiMeasuresAsPathDataKtTest :
             val measures: List<Measure> =
                 listOf(
                     Measure(
-                        null,
+                        measureAttributes,
                         listOf(
                             Note.Pitched(
                                 NoteDuration(NoteValue.WHOLE),
@@ -80,7 +86,7 @@ class AmiMeasuresAsPathDataKtTest :
                         ),
                     ),
                     Measure(
-                        null,
+                        measureAttributes,
                         listOf(
                             Note.Pitched(
                                 NoteDuration(NoteValue.WHOLE),

@@ -24,6 +24,7 @@ import com.sparetimedevs.ami.core.Id
 import com.sparetimedevs.ami.core.validation.NoValidationIdentifier
 import com.sparetimedevs.ami.core.validation.ValidationError
 import com.sparetimedevs.ami.core.validation.ValidationIdentifier
+import com.sparetimedevs.ami.core.validation.ValidationLocationKind
 import com.sparetimedevs.ami.core.validation.getOrThrowFirstValidationError
 import com.sparetimedevs.ami.core.validation.validationErrorForProperty
 import io.kotest.core.test.TestScope
@@ -56,6 +57,7 @@ value class TestId private constructor(
 data class ValidationIdentifierForTest(
     val testScope: TestScope,
 ) : ValidationIdentifier {
+    override val kind: ValidationLocationKind? = null
     override val identifier: Id = TestId.unsafeCreate(testScope.testCase.name.originalName)
     override val validationIdentifierParent: ValidationIdentifier = NoValidationIdentifier
 }

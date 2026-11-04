@@ -24,6 +24,7 @@ import com.sparetimedevs.ami.core.validation.validationErrorForProperty
 import com.sparetimedevs.ami.graphic.vector.NoteVectors
 import com.sparetimedevs.ami.graphic.vector.Vector
 import com.sparetimedevs.ami.music.data.kotlin.measure.Measure
+import com.sparetimedevs.ami.music.data.kotlin.measure.MeasureAttributes
 import com.sparetimedevs.ami.music.data.kotlin.note.Note
 import com.sparetimedevs.ami.music.data.kotlin.note.NoteAttributes
 import com.sparetimedevs.ami.music.data.kotlin.note.NoteDuration
@@ -31,6 +32,9 @@ import com.sparetimedevs.ami.music.data.kotlin.note.NoteName
 import com.sparetimedevs.ami.music.data.kotlin.note.NoteValue
 import com.sparetimedevs.ami.music.data.kotlin.note.Octave
 import com.sparetimedevs.ami.music.data.kotlin.note.Pitch
+import com.sparetimedevs.ami.music.data.kotlin.timesignature.BeatType
+import com.sparetimedevs.ami.music.data.kotlin.timesignature.Beats
+import com.sparetimedevs.ami.music.data.kotlin.timesignature.TimeSignature
 import com.sparetimedevs.ami.music.input.validation.ValidationIdentifierForMeasure
 import com.sparetimedevs.ami.music.input.validation.ValidationIdentifierForNote
 import com.sparetimedevs.ami.test.data.createPitchedNote
@@ -47,7 +51,7 @@ class NotesVectorsAsAmiMeasuresKtTest :
             val expectedResult: List<Measure> =
                 listOf(
                     Measure(
-                        null,
+                        measureAttributes,
                         listOf(
                             Note.Pitched(
                                 NoteDuration(NoteValue.WHOLE),
@@ -182,7 +186,7 @@ class NotesVectorsAsAmiMeasuresKtTest :
                 )
             val expectedResult: Measure =
                 Measure(
-                    null,
+                    measureAttributes,
                     listOf(
                         Note.Pitched(
                             NoteDuration(NoteValue.QUARTER),
@@ -222,7 +226,7 @@ class NotesVectorsAsAmiMeasuresKtTest :
                 )
             val expectedResult: Measure =
                 Measure(
-                    null,
+                    measureAttributes,
                     listOf(
                         Note.Pitched(
                             NoteDuration(NoteValue.QUARTER),
@@ -271,7 +275,7 @@ class NotesVectorsAsAmiMeasuresKtTest :
                 )
             val expectedResult: Measure =
                 Measure(
-                    null,
+                    measureAttributes,
                     listOf(
                         createPitchedNote(noteName = NoteName.A_FLAT, duration = NoteValue._16TH),
                         createPitchedNote(noteName = NoteName.A, duration = NoteValue._16TH),
@@ -299,10 +303,13 @@ class NotesVectorsAsAmiMeasuresKtTest :
         }
     })
 
+private val timeSignature = TimeSignature(Beats.unsafeCreate(4), BeatType.unsafeCreate(4))
+private val measureAttributes = MeasureAttributes(timeSignature = timeSignature)
+
 val ExpectedResult: List<Measure> =
     listOf(
         Measure(
-            null,
+            measureAttributes,
             listOf(
                 Note.Pitched(
                     NoteDuration(NoteValue.QUARTER),
@@ -327,7 +334,7 @@ val ExpectedResult: List<Measure> =
             ),
         ),
         Measure(
-            null,
+            measureAttributes,
             listOf(
                 Note.Pitched(
                     NoteDuration(NoteValue.QUARTER),
